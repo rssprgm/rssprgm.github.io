@@ -45,6 +45,7 @@ if (!prefersReducedMotion) {
 
 const joinDialog = document.querySelector("#join-dialog");
 const joinForm = document.querySelector("#join-form");
+const joinSuccess = document.querySelector("#join-success");
 const joinStatus = document.querySelector("[data-join-status]");
 const turnstileContainer = document.querySelector("#join-turnstile");
 let joinStartedAt = Date.now();
@@ -55,6 +56,7 @@ document.querySelectorAll("[data-open-join]").forEach((button) => {
   button.addEventListener("click", () => {
     joinStartedAt = Date.now();
     turnstileToken = "";
+    showJoinForm();
     joinStatus.textContent = "";
     joinStatus.removeAttribute("data-tone");
     joinDialog.showModal();
@@ -122,8 +124,7 @@ joinForm.addEventListener("submit", async (event) => {
     }
 
     joinForm.reset();
-    refreshTurnstile();
-    setJoinStatus("You are on the list. We will reach out soon.", "success");
+    showJoinSuccess();
   } catch (error) {
     refreshTurnstile();
     setJoinStatus(error.message, "error");
@@ -134,6 +135,17 @@ joinForm.addEventListener("submit", async (event) => {
 
 function closeJoinDialog() {
   joinDialog.close();
+}
+
+function showJoinForm() {
+  joinForm.hidden = false;
+  joinSuccess.hidden = true;
+}
+
+function showJoinSuccess() {
+  joinForm.hidden = true;
+  joinSuccess.hidden = false;
+  turnstileToken = "";
 }
 
 function setJoinStatus(message, tone) {

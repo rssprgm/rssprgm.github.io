@@ -8,6 +8,10 @@
   --panel-strong: rgba(255, 255, 255, 0.09);
   --space: clamp(27px, 2.2vw, 32px);
   --shell: min(100% - (var(--space) * 2), 1440px);
+  --modal-inset: clamp(22px, 3.2vw, 28px);
+  --modal-action-height: 52px;
+  --modal-action-radius: calc(var(--modal-action-height) / 2);
+  --modal-radius: calc(var(--modal-inset) + var(--modal-action-radius) + 1px);
 }
 
 * {
@@ -208,14 +212,17 @@ h1 {
 }
 
 .join-dialog {
+  position: relative;
   width: min(100% - 32px, 560px);
+  max-height: calc(100svh - 32px);
   margin: auto;
   border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 28px;
+  border-radius: var(--modal-radius);
   padding: 0;
   background: rgba(16, 16, 17, 0.96);
   color: var(--text);
   box-shadow: 0 24px 90px rgba(0, 0, 0, 0.58);
+  overflow: auto;
 }
 
 .join-dialog::backdrop {
@@ -223,22 +230,27 @@ h1 {
   backdrop-filter: blur(10px);
 }
 
-.join-form {
+.join-form,
+.join-success {
   display: grid;
-  gap: 18px;
-  padding: clamp(22px, 4vw, 34px);
+  gap: 14px;
+  padding: var(--modal-inset);
+}
+
+.join-form[hidden],
+.join-success[hidden] {
+  display: none;
 }
 
 .join-form-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+  display: block;
   margin-bottom: 4px;
+  padding-right: calc(44px + 16px);
 }
 
-.join-form h2 {
-  font-size: clamp(32px, 4vw, 48px);
+.join-form h2,
+.join-success h2 {
+  font-size: clamp(30px, 3.6vw, 42px);
   line-height: 0.98;
   letter-spacing: -0.055em;
   font-weight: 650;
@@ -246,27 +258,47 @@ h1 {
 
 .join-close {
   appearance: none;
-  border: 0;
+  position: absolute;
+  top: var(--modal-inset);
+  right: var(--modal-inset);
+  display: inline-grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid transparent;
   border-radius: 999px;
-  padding: 9px 13px;
+  padding: 0;
   background: rgba(255, 255, 255, 0.08);
   color: var(--muted);
   cursor: pointer;
-  font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 12px;
   transition:
     background 180ms ease,
+    border-color 180ms ease,
     color 180ms ease;
 }
 
 .join-close:hover {
   background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.08);
   color: var(--text);
+}
+
+.join-close svg {
+  width: 18px;
+  height: 18px;
+}
+
+.join-close path {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.2;
 }
 
 .join-form label {
   display: grid;
-  gap: 8px;
+  gap: 7px;
   color: var(--muted);
   font-size: 14px;
 }
@@ -277,17 +309,45 @@ h1 {
   letter-spacing: 0.02em;
 }
 
+.join-form label .select-shell {
+  position: relative;
+  display: block;
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: 0;
+}
+
+.select-shell::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 18px;
+  width: 9px;
+  height: 9px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  pointer-events: none;
+  transform: translateY(-65%) rotate(45deg);
+}
+
 .join-form input,
 .join-form select,
 .join-form textarea {
+  appearance: none;
   width: 100%;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 16px;
-  padding: 13px 14px;
+  border-radius: 22px;
+  padding: 14px 16px;
   background: rgba(255, 255, 255, 0.06);
   color: var(--text);
+  font-size: 16px;
   outline: none;
   resize: vertical;
+}
+
+.join-form input,
+.join-form select {
+  min-height: 52px;
 }
 
 .join-form input:focus,
@@ -298,6 +358,7 @@ h1 {
 }
 
 .join-form select {
+  padding-right: 44px;
   color-scheme: dark;
 }
 
@@ -306,7 +367,7 @@ h1 {
 }
 
 .turnstile-box {
-  min-height: 65px;
+  min-height: 62px;
 }
 
 .join-status {
@@ -314,6 +375,10 @@ h1 {
   color: var(--muted);
   font-size: 14px;
   line-height: 1.35;
+}
+
+.join-status:empty {
+  display: none;
 }
 
 .join-status[data-tone="success"] {
@@ -324,8 +389,45 @@ h1 {
   color: #ffb4a8;
 }
 
+.join-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 6px;
+}
+
+.join-actions .button {
+  width: 100%;
+  height: var(--modal-action-height);
+  border-radius: 999px;
+  min-width: 132px;
+  min-height: var(--modal-action-height);
+  padding-block: 0;
+  padding-inline: 26px;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.join-actions .button span {
+  display: block;
+  transform: translateY(1px);
+}
+
 .join-submit {
-  width: fit-content;
+  width: 100%;
+}
+
+.join-success {
+  align-content: start;
+  gap: 20px;
+}
+
+.join-success p {
+  max-width: 32ch;
+  color: var(--muted);
+  font-size: clamp(18px, 1.5vw, 22px);
+  line-height: 1.28;
+  letter-spacing: -0.02em;
 }
 
 .footer {

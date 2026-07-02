@@ -109,8 +109,10 @@
       <form class="join-form" id="join-form">
         <div class="join-form-head">
           <h2 id="join-title">Join the club</h2>
-          <button class="join-close" type="button" data-close-join aria-label="Close">
-            Close
+          <button class="join-close" type="button" data-close-join aria-label="Close dialog">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
           </button>
         </div>
 
@@ -121,15 +123,17 @@
 
         <label>
           <span>Grade</span>
-          <select name="grade" required>
-            <option value="">Select</option>
-            <option>8</option>
-            <option>9</option>
-            <option>10</option>
-            <option>11</option>
-            <option>12</option>
-            <option>Other</option>
-          </select>
+          <span class="select-shell">
+            <select name="grade" required>
+              <option value="">Select</option>
+              <option>8</option>
+              <option>9</option>
+              <option>10</option>
+              <option>11</option>
+              <option>12</option>
+              <option>Other</option>
+            </select>
+          </span>
         </label>
 
         <label>
@@ -154,10 +158,33 @@
 
         <p class="join-status" data-join-status role="status" aria-live="polite"></p>
 
-        <button class="button button-primary join-submit" type="submit">
-          Submit
-        </button>
+        <div class="join-actions">
+          <button class="button button-primary join-submit" type="submit">
+            <span>Submit</span>
+          </button>
+        </div>
       </form>
+
+      <div class="join-success" id="join-success" hidden>
+        <div class="join-form-head">
+          <h2>You're on the list</h2>
+          <button class="join-close" type="button" data-close-join aria-label="Close dialog">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </div>
+
+        <p>
+          We got your signup. You will be added to our teams channel shortly.
+        </p>
+
+        <div class="join-actions">
+          <button class="button button-primary" type="button" data-close-join>
+            <span>Done</span>
+          </button>
+        </div>
+      </div>
     </dialog>
 
     <script type="module" src="./main.js"></script>
