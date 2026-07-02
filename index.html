@@ -106,99 +106,101 @@
     </footer>
 
     <dialog class="join-dialog" id="join-dialog" aria-labelledby="join-title">
-      <form class="join-form" id="join-form">
-        <div class="join-form-head">
-          <h2 id="join-title">Join the club</h2>
-          <button class="join-close" type="button" data-close-join aria-label="Close dialog">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M6 6l12 12M18 6L6 18" />
-            </svg>
-          </button>
-        </div>
+      <div class="join-panel">
+        <form class="join-form" id="join-form">
+          <div class="join-form-head">
+            <h2 id="join-title">Join the club</h2>
+            <button class="join-close" type="button" data-close-join aria-label="Close dialog">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            </button>
+          </div>
 
-        <label>
-          <span>Name</span>
-          <input name="name" autocomplete="name" maxlength="80" required />
-        </label>
+          <label>
+            <span>Name</span>
+            <input name="name" autocomplete="name" maxlength="80" required />
+          </label>
 
-        <label>
-          <span>Student number</span>
-          <input
-            name="student_number"
-            inputmode="numeric"
-            autocomplete="off"
-            maxlength="20"
-            required />
-        </label>
+          <label>
+            <span>Student number</span>
+            <input
+              name="student_number"
+              inputmode="numeric"
+              autocomplete="off"
+              maxlength="20"
+              required />
+          </label>
 
-        <label>
-          <span>Grade</span>
-          <span class="select-shell">
-            <select name="grade" required>
-              <option value="">Select</option>
-              <option>8</option>
-              <option>9</option>
-              <option>10</option>
-              <option>11</option>
-              <option>12</option>
-              <option>Other</option>
-            </select>
-          </span>
-        </label>
+          <label>
+            <span>Grade</span>
+            <span class="select-shell">
+              <select name="grade" required>
+                <option value="">Select</option>
+                <option>8</option>
+                <option>9</option>
+                <option>10</option>
+                <option>11</option>
+                <option>12</option>
+                <option>Other</option>
+              </select>
+            </span>
+          </label>
 
-        <label>
-          <span>Personal email for updates (optional)</span>
-          <input
-            name="personal_email"
-            type="email"
-            autocomplete="email"
-            maxlength="254"
-            aria-describedby="personal-email-message" />
-          <small class="field-message" id="personal-email-message" aria-live="polite"></small>
-        </label>
+          <label>
+            <span>Personal email for updates (optional)</span>
+            <input
+              name="personal_email"
+              type="email"
+              autocomplete="email"
+              maxlength="254"
+              aria-describedby="personal-email-message" />
+            <small class="field-message" id="personal-email-message" aria-live="polite"></small>
+          </label>
 
-        <label>
-          <span>What do you want to build? (optional)</span>
-          <textarea name="interest" rows="4" maxlength="500"></textarea>
-        </label>
+          <label>
+            <span>What do you want to build? (optional)</span>
+            <textarea name="interest" rows="4" maxlength="500"></textarea>
+          </label>
 
-        <label class="trap-field" aria-hidden="true">
-          <span>Website</span>
-          <input name="website" tabindex="-1" autocomplete="off" />
-        </label>
+          <label class="trap-field" aria-hidden="true">
+            <span>Website</span>
+            <input name="website" tabindex="-1" autocomplete="off" />
+          </label>
 
-        <div
-          class="turnstile-box"
-          id="join-turnstile"
-          aria-label="Human verification"></div>
+          <div
+            class="turnstile-box"
+            id="join-turnstile"
+            aria-label="Human verification"></div>
 
-        <p class="join-status" data-join-status role="status" aria-live="polite"></p>
+          <p class="join-status" data-join-status role="status" aria-live="polite"></p>
 
-        <div class="join-actions">
-          <button class="button button-primary join-submit" type="submit">
-            <span>Submit</span>
-          </button>
-        </div>
-      </form>
+          <div class="join-actions">
+            <button class="button button-primary join-submit" type="submit">
+              <span>Submit</span>
+            </button>
+          </div>
+        </form>
 
-      <div class="join-success" id="join-success" hidden>
-        <div class="join-form-head">
-          <h2>You're on the list</h2>
-          <button class="join-close" type="button" data-close-join aria-label="Close dialog">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M6 6l12 12M18 6L6 18" />
-            </svg>
-          </button>
-        </div>
+        <div class="join-success" id="join-success" hidden>
+          <div class="join-form-head">
+            <h2>You're on the list</h2>
+            <button class="join-close" type="button" data-close-join aria-label="Close dialog">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            </button>
+          </div>
 
-        <p>
-          We got your signup. You will be added to our teams channel shortly.
-        </p>
+          <p>
+            We got your signup. You will be added to our teams channel shortly.
+          </p>
 
-        <div class="join-actions">
-          <button class="button button-primary" type="button" data-close-join>
-            <span>Done</span>
-          </button>
+          <div class="join-actions">
+            <button class="button button-primary" type="button" data-close-join>
+              <span>Done</span>
+            </button>
+          </div>
         </div>
       </div>
     </dialog>

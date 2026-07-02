@@ -224,13 +224,19 @@ h1 {
   background: rgba(16, 16, 17, 0.96);
   color: var(--text);
   box-shadow: 0 24px 90px rgba(0, 0, 0, 0.58);
-  overflow: auto;
+  overflow: hidden;
   transform: translate(-50%, -50%);
 }
 
 .join-dialog::backdrop {
   background: rgba(0, 0, 0, 0.68);
   backdrop-filter: blur(10px);
+}
+
+.join-panel {
+  max-height: calc(100svh - 32px);
+  overflow: auto;
+  overscroll-behavior: contain;
 }
 
 .join-form,
@@ -501,6 +507,64 @@ h1 {
   .button {
     min-height: 54px;
     padding-inline: 24px;
+  }
+
+  .join-dialog {
+    inset: max(14px, env(safe-area-inset-top)) 16px
+      max(92px, calc(env(safe-area-inset-bottom) + 28px));
+    width: auto;
+    max-height: none;
+    transform: none;
+  }
+
+  .join-panel {
+    max-height: none;
+    height: 100%;
+  }
+
+  .join-form,
+  .join-success {
+    gap: 12px;
+    min-height: 100%;
+    padding: 22px;
+  }
+
+  .join-form-head {
+    padding-right: 56px;
+  }
+
+  .join-form h2,
+  .join-success h2 {
+    font-size: clamp(32px, 12vw, 42px);
+  }
+
+  .join-close {
+    top: 22px;
+    right: 22px;
+  }
+
+  .join-form label {
+    gap: 6px;
+  }
+
+  .join-form input,
+  .join-form select,
+  .join-form textarea {
+    border-radius: 20px;
+    padding: 12px 14px;
+  }
+
+  .join-form input,
+  .join-form select {
+    min-height: 48px;
+  }
+
+  .join-form textarea {
+    min-height: 104px;
+  }
+
+  .turnstile-box {
+    min-height: 58px;
   }
 
   .footer-inner {
