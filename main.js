@@ -14,6 +14,7 @@ if (!prefersReducedMotion) {
     smoothWheel: true,
     smoothTouch: false,
     wheelMultiplier: 0.9,
+    prevent: (node) => Boolean(node.closest?.("[data-lenis-prevent]")),
   });
 
   function raf(time) {
@@ -53,6 +54,7 @@ const turnstileContainer = document.querySelector("#join-turnstile");
 let joinStartedAt = Date.now();
 let turnstileToken = "";
 let turnstileWidgetId;
+let lockedScrollY = 0;
 
 document.querySelectorAll("[data-open-join]").forEach((button) => {
   button.addEventListener("click", () => {
@@ -61,8 +63,10 @@ document.querySelectorAll("[data-open-join]").forEach((button) => {
     showJoinForm();
     joinStatus.textContent = "";
     joinStatus.removeAttribute("data-tone");
-    joinDialog.showModal();
-    lenis?.stop();
+    lockPageScroll();
+    joinDialog.hidden = false;
+    joinDialog.scrollTop = 0;
+    joinDialog.focus({ preventScroll: true });
     refreshTurnstile();
   });
 });
@@ -77,8 +81,10 @@ joinDialog.addEventListener("click", (event) => {
   }
 });
 
-joinDialog.addEventListener("close", () => {
-  lenis?.start();
+document.addEventListener("keydown", (event) => {
+  if (!joinDialog.hidden && event.key === "Escape") {
+    closeJoinDialog();
+  }
 });
 
 personalEmailInput.addEventListener("input", validatePersonalEmail);
@@ -145,7 +151,30 @@ joinForm.addEventListener("submit", async (event) => {
 });
 
 function closeJoinDialog() {
-  joinDialog.close();
+  joinDialog.hidden = true;
+  unlockPageScroll();
+}
+
+function lockPageScroll() {
+  lockedScrollY = window.scrollY;
+  document.body.classList.add("join-page-locked");
+  document.body.style.position = "fixed";
+  document.body.style.top = `-${lockedScrollY}px`;
+  document.body.style.left = "0";
+  document.body.style.right = "0";
+  document.body.style.width = "100%";
+}
+
+function unlockPageScroll() {
+  if (!document.body.classList.contains("join-page-locked")) return;
+
+  document.body.classList.remove("join-page-locked");
+  document.body.style.position = "";
+  document.body.style.top = "";
+  document.body.style.left = "";
+  document.body.style.right = "";
+  document.body.style.width = "";
+  window.scrollTo(0, lockedScrollY);
 }
 
 function showJoinForm() {

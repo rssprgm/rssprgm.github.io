@@ -105,8 +105,17 @@
       </div>
     </footer>
 
-    <dialog class="join-dialog" id="join-dialog" aria-labelledby="join-title">
-      <div class="join-panel">
+    <div
+      class="join-overlay"
+      id="join-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="join-title"
+      tabindex="-1"
+      data-lenis-prevent
+      hidden>
+      <div class="join-dialog">
+        <div class="join-panel">
         <form class="join-form" id="join-form">
           <div class="join-form-head">
             <h2 id="join-title">Join the club</h2>
@@ -202,8 +211,9 @@
             </button>
           </div>
         </div>
+        </div>
       </div>
-    </dialog>
+    </div>
 
     <script type="module" src="./main.js"></script>
   </body>

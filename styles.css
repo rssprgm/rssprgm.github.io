@@ -40,6 +40,10 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+body.join-page-locked {
+  overflow: hidden;
+}
+
 ::selection {
   background-color: var(--selection-color, var(--selection-default));
   color: var(--text);
@@ -212,12 +216,37 @@ h1 {
   background: rgba(255, 255, 255, 0.055);
 }
 
-.join-dialog {
+.join-overlay {
   position: fixed;
-  inset: 50% auto auto 50%;
-  width: min(100% - 32px, 560px);
-  max-height: calc(100svh - 32px);
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  padding: max(16px, env(safe-area-inset-top)) 16px
+    max(16px, env(safe-area-inset-bottom));
   margin: 0;
+  background: rgba(0, 0, 0, 0.68);
+  backdrop-filter: blur(10px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+@supports (align-items: safe center) {
+  .join-overlay {
+    align-items: safe center;
+  }
+}
+
+.join-overlay[hidden] {
+  display: none;
+}
+
+.join-dialog {
+  position: relative;
+  width: min(100%, 560px);
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: var(--modal-radius);
   padding: 0;
@@ -225,18 +254,10 @@ h1 {
   color: var(--text);
   box-shadow: 0 24px 90px rgba(0, 0, 0, 0.58);
   overflow: hidden;
-  transform: translate(-50%, -50%);
-}
-
-.join-dialog::backdrop {
-  background: rgba(0, 0, 0, 0.68);
-  backdrop-filter: blur(10px);
 }
 
 .join-panel {
-  max-height: calc(100svh - 32px);
-  overflow: auto;
-  overscroll-behavior: contain;
+  overflow: visible;
 }
 
 .join-form,
@@ -509,17 +530,14 @@ h1 {
     padding-inline: 24px;
   }
 
-  .join-dialog {
-    inset: max(14px, env(safe-area-inset-top)) 16px
+  .join-overlay {
+    align-items: start;
+    padding: max(14px, env(safe-area-inset-top)) 16px
       max(92px, calc(env(safe-area-inset-bottom) + 28px));
-    width: auto;
-    max-height: none;
-    transform: none;
   }
 
-  .join-panel {
-    max-height: none;
-    height: 100%;
+  .join-dialog {
+    width: 100%;
   }
 
   .join-form,
