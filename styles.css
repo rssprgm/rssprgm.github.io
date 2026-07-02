@@ -530,10 +530,14 @@ h1 {
     padding-inline: 24px;
   }
 
-  .join-overlay {
+  .join-overlay[data-mode="form"] {
     align-items: start;
     padding: max(14px, env(safe-area-inset-top)) 16px
       max(92px, calc(env(safe-area-inset-bottom) + 28px));
+  }
+
+  .join-overlay[data-mode="success"] {
+    padding-bottom: max(14px, env(safe-area-inset-bottom));
   }
 
   .join-dialog {

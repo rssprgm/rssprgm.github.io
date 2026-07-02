@@ -178,12 +178,15 @@ function unlockPageScroll() {
 }
 
 function showJoinForm() {
+  joinDialog.dataset.mode = "form";
   joinForm.hidden = false;
   joinSuccess.hidden = true;
   validatePersonalEmail();
 }
 
 function showJoinSuccess() {
+  joinDialog.dataset.mode = "success";
+  joinDialog.scrollTop = 0;
   joinForm.hidden = true;
   joinSuccess.hidden = false;
   turnstileToken = "";
