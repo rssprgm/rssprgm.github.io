@@ -12,20 +12,26 @@
     <link
       href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap"
       rel="stylesheet" />
+    <link rel="icon" href="data:," />
     <link rel="stylesheet" href="./styles.css" />
+    <script
+      src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
+      defer></script>
   </head>
   <body>
     <div class="page-grid" aria-hidden="true"></div>
 
     <header class="site-header">
-      <a class="brand" href="#" aria-label="RSS Programming Club home"
-        >RSSPRGM</a
-      >
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="#work">Projects</a>
-        <a href="#meetings">Meetings</a>
-        <a href="#join">Join</a>
-      </nav>
+      <div class="site-header-inner">
+        <a class="brand" href="#" aria-label="RSS Programming Club home"
+          >RSSPRGM</a
+        >
+        <nav class="nav" aria-label="Primary navigation">
+          <a href="#work">Projects</a>
+          <a href="#meetings">Meetings</a>
+          <button type="button" data-open-join>Join</button>
+        </nav>
+      </div>
     </header>
 
     <main>
@@ -37,10 +43,16 @@
             you have discovered this page via a link, the git commit history, or
             some other means, we're glad you're here.
           </p>
+          <div class="hero-actions" aria-label="Primary actions">
+            <button class="button button-primary" type="button" data-open-join>
+              Join
+            </button>
+            <a class="button button-secondary" href="#learn-more">Learn more</a>
+          </div>
         </div>
       </section>
 
-      <section class="section intro" aria-label="Placeholder introduction">
+      <section id="learn-more" class="section intro" aria-label="Placeholder introduction">
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut mattis
           turpis nec ligula gravida, in fermentum velit euismod. Aenean ligula
@@ -87,9 +99,66 @@
     </main>
 
     <footer class="footer">
-      <span>rssprgm.github.io</span>
-      <span>Richmond Secondary School</span>
+      <div class="footer-inner">
+        <span>rssprgm.github.io</span>
+        <span>Richmond Secondary School</span>
+      </div>
     </footer>
+
+    <dialog class="join-dialog" id="join-dialog" aria-labelledby="join-title">
+      <form class="join-form" id="join-form">
+        <div class="join-form-head">
+          <h2 id="join-title">Join the club</h2>
+          <button class="join-close" type="button" data-close-join aria-label="Close">
+            Close
+          </button>
+        </div>
+
+        <label>
+          <span>Name</span>
+          <input name="name" autocomplete="name" maxlength="80" required />
+        </label>
+
+        <label>
+          <span>Grade</span>
+          <select name="grade" required>
+            <option value="">Select</option>
+            <option>8</option>
+            <option>9</option>
+            <option>10</option>
+            <option>11</option>
+            <option>12</option>
+            <option>Other</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Email</span>
+          <input name="email" type="email" autocomplete="email" maxlength="254" required />
+        </label>
+
+        <label>
+          <span>What do you want to build?</span>
+          <textarea name="interest" rows="4" maxlength="500"></textarea>
+        </label>
+
+        <label class="trap-field" aria-hidden="true">
+          <span>Website</span>
+          <input name="website" tabindex="-1" autocomplete="off" />
+        </label>
+
+        <div
+          class="turnstile-box"
+          id="join-turnstile"
+          aria-label="Human verification"></div>
+
+        <p class="join-status" data-join-status role="status" aria-live="polite"></p>
+
+        <button class="button button-primary join-submit" type="submit">
+          Submit
+        </button>
+      </form>
+    </dialog>
 
     <script type="module" src="./main.js"></script>
   </body>
