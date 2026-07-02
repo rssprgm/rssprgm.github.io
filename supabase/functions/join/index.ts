@@ -2,8 +2,9 @@ import { withSupabase } from "jsr:@supabase/server@^1";
 
 type JoinPayload = {
   name?: unknown;
+  studentNumber?: unknown;
   grade?: unknown;
-  email?: unknown;
+  personalEmail?: unknown;
   interest?: unknown;
   source?: unknown;
   startedAt?: unknown;
@@ -52,20 +53,38 @@ export default {
     }
 
     const name = clean(payload.name, 80);
+    const studentNumber = clean(payload.studentNumber, 20);
     const grade = clean(payload.grade, 20);
-    const email = clean(payload.email, 254).toLowerCase();
+    const personalEmail = cleanOptional(payload.personalEmail, 254)?.toLowerCase() ?? null;
     const interest = cleanOptional(payload.interest, 500);
     const source = cleanOptional(payload.source, 80);
 
-    if (!name || !grade || !email) {
+    if (!name || !studentNumber || !grade) {
       return Response.json(
         { error: "Missing required fields." },
         { status: 400 },
       );
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return Response.json({ error: "Invalid email." }, { status: 400 });
+    if (!/^[0-9A-Za-z-]+$/.test(studentNumber)) {
+      return Response.json(
+        { error: "Invalid student number." },
+        { status: 400 },
+      );
+    }
+
+    if (personalEmail) {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(personalEmail)) {
+        return Response.json({ error: "Invalid email." }, { status: 400 });
+      }
+
+      const emailDomain = personalEmail.split("@").at(-1) ?? "";
+      if (emailDomain === "bc.ca" || emailDomain.endsWith(".bc.ca")) {
+        return Response.json(
+          { error: "Use a personal email, not a school email." },
+          { status: 400 },
+        );
+      }
     }
 
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
@@ -73,7 +92,7 @@ export default {
     const { count, error: countError } = await ctx.supabaseAdmin
       .from("join_submissions")
       .select("id", { count: "exact", head: true })
-      .eq("email", email)
+      .eq("student_number", studentNumber)
       .gte("created_at", oneHourAgo);
 
     if (countError) {
@@ -93,8 +112,9 @@ export default {
 
     const { error } = await ctx.supabaseAdmin.from("join_submissions").insert({
       name,
+      student_number: studentNumber,
       grade,
-      email,
+      personal_email: personalEmail,
       interest,
       source,
       user_agent: cleanOptional(request.headers.get("user-agent"), 300),

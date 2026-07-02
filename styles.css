@@ -6,6 +6,7 @@
   --line: rgba(255, 255, 255, 0.1);
   --panel: rgba(255, 255, 255, 0.055);
   --panel-strong: rgba(255, 255, 255, 0.09);
+  --selection-default: rgba(255, 255, 255, 0.25);
   --space: clamp(27px, 2.2vw, 32px);
   --shell: min(100% - (var(--space) * 2), 1440px);
   --modal-inset: clamp(22px, 3.2vw, 28px);
@@ -40,8 +41,8 @@ body {
 }
 
 ::selection {
-  background: var(--text);
-  color: var(--bg);
+  background-color: var(--selection-color, var(--selection-default));
+  color: var(--text);
 }
 
 a {
@@ -212,10 +213,11 @@ h1 {
 }
 
 .join-dialog {
-  position: relative;
+  position: fixed;
+  inset: 50% auto auto 50%;
   width: min(100% - 32px, 560px);
   max-height: calc(100svh - 32px);
-  margin: auto;
+  margin: 0;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: var(--modal-radius);
   padding: 0;
@@ -223,6 +225,7 @@ h1 {
   color: var(--text);
   box-shadow: 0 24px 90px rgba(0, 0, 0, 0.58);
   overflow: auto;
+  transform: translate(-50%, -50%);
 }
 
 .join-dialog::backdrop {
@@ -307,6 +310,17 @@ h1 {
   font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 12px;
   letter-spacing: 0.02em;
+}
+
+.field-message {
+  min-height: 18px;
+  color: var(--subtle);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.field-message[data-tone="error"] {
+  color: #ffb4a8;
 }
 
 .join-form label .select-shell {

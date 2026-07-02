@@ -47,6 +47,8 @@ const joinDialog = document.querySelector("#join-dialog");
 const joinForm = document.querySelector("#join-form");
 const joinSuccess = document.querySelector("#join-success");
 const joinStatus = document.querySelector("[data-join-status]");
+const personalEmailInput = joinForm.elements.personal_email;
+const personalEmailMessage = document.querySelector("#personal-email-message");
 const turnstileContainer = document.querySelector("#join-turnstile");
 let joinStartedAt = Date.now();
 let turnstileToken = "";
@@ -61,7 +63,6 @@ document.querySelectorAll("[data-open-join]").forEach((button) => {
     joinStatus.removeAttribute("data-tone");
     joinDialog.showModal();
     lenis?.stop();
-    joinForm.elements.name.focus();
     refreshTurnstile();
   });
 });
@@ -80,10 +81,19 @@ joinDialog.addEventListener("close", () => {
   lenis?.start();
 });
 
+personalEmailInput.addEventListener("input", validatePersonalEmail);
+personalEmailInput.addEventListener("blur", validatePersonalEmail);
+
 joinForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const submitButton = joinForm.querySelector("[type='submit']");
+
+  if (!validatePersonalEmail()) {
+    personalEmailInput.reportValidity();
+    return;
+  }
+
   setJoinStatus("Checking verification...", "");
   submitButton.disabled = true;
 
@@ -97,8 +107,9 @@ joinForm.addEventListener("submit", async (event) => {
   const formData = new FormData(joinForm);
   const payload = {
     name: formData.get("name"),
+    studentNumber: formData.get("student_number"),
     grade: formData.get("grade"),
-    email: formData.get("email"),
+    personalEmail: formData.get("personal_email"),
     interest: formData.get("interest"),
     website: formData.get("website"),
     source: getSource(),
@@ -140,6 +151,7 @@ function closeJoinDialog() {
 function showJoinForm() {
   joinForm.hidden = false;
   joinSuccess.hidden = true;
+  validatePersonalEmail();
 }
 
 function showJoinSuccess() {
@@ -156,6 +168,34 @@ function setJoinStatus(message, tone) {
   } else {
     joinStatus.removeAttribute("data-tone");
   }
+}
+
+function validatePersonalEmail() {
+  const email = personalEmailInput.value.trim().toLowerCase();
+  const domain = email.split("@").at(-1) || "";
+  const isSchoolEmail = domain === "bc.ca" || domain.endsWith(".bc.ca");
+
+  if (isSchoolEmail) {
+    personalEmailInput.setCustomValidity(
+      "Use a personal email, not a school email.",
+    );
+    personalEmailMessage.textContent =
+      "Use a personal email for updates, not a school email.";
+    personalEmailMessage.dataset.tone = "error";
+    return false;
+  }
+
+  personalEmailInput.setCustomValidity("");
+
+  if (!email) {
+    personalEmailMessage.textContent =
+      "Optional. We will only use this for club updates.";
+  } else {
+    personalEmailMessage.textContent = "We will only use this for club updates.";
+  }
+
+  personalEmailMessage.removeAttribute("data-tone");
+  return true;
 }
 
 function getSource() {

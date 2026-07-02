@@ -122,6 +122,16 @@
         </label>
 
         <label>
+          <span>Student number</span>
+          <input
+            name="student_number"
+            inputmode="numeric"
+            autocomplete="off"
+            maxlength="20"
+            required />
+        </label>
+
+        <label>
           <span>Grade</span>
           <span class="select-shell">
             <select name="grade" required>
@@ -137,12 +147,18 @@
         </label>
 
         <label>
-          <span>Email</span>
-          <input name="email" type="email" autocomplete="email" maxlength="254" required />
+          <span>Personal email for updates (optional)</span>
+          <input
+            name="personal_email"
+            type="email"
+            autocomplete="email"
+            maxlength="254"
+            aria-describedby="personal-email-message" />
+          <small class="field-message" id="personal-email-message" aria-live="polite"></small>
         </label>
 
         <label>
-          <span>What do you want to build?</span>
+          <span>What do you want to build? (optional)</span>
           <textarea name="interest" rows="4" maxlength="500"></textarea>
         </label>
 
