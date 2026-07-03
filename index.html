@@ -45,9 +45,17 @@
           </p>
           <div class="hero-actions" aria-label="Primary actions">
             <button class="button button-primary" type="button" data-open-join>
-              Join
+              <span>Join</span>
             </button>
-            <a class="button button-secondary" href="#learn-more">Learn more</a>
+            <a class="button button-secondary" href="#learn-more" draggable="false">
+              <span>Learn more</span>
+            </a>
+            <button class="button button-secondary" type="button">
+              <span>Dummy</span>
+            </button>
+            <button class="button button-secondary button-circle" type="button" aria-label="Dummy circle">
+              <span aria-hidden="true">+</span>
+            </button>
           </div>
         </div>
       </section>
@@ -118,7 +126,7 @@
         <div class="join-panel">
         <form class="join-form" id="join-form">
           <div class="join-form-head">
-            <h2 id="join-title">Join the club</h2>
+            <h2 id="join-title">Join our club</h2>
             <button class="join-close" type="button" data-close-join aria-label="Close dialog">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M6 6l12 12M18 6L6 18" />
@@ -128,22 +136,26 @@
 
           <label>
             <span>Name</span>
-            <input name="name" autocomplete="name" maxlength="80" required />
+            <span class="field-shell">
+              <input name="name" autocomplete="name" maxlength="80" required />
+            </span>
           </label>
 
           <label>
             <span>Student number</span>
-            <input
-              name="student_number"
-              inputmode="numeric"
-              autocomplete="off"
-              maxlength="20"
-              required />
+            <span class="field-shell">
+              <input
+                name="student_number"
+                inputmode="numeric"
+                autocomplete="off"
+                maxlength="20"
+                required />
+            </span>
           </label>
 
           <label>
             <span>Grade</span>
-            <span class="select-shell">
+            <span class="field-shell select-shell">
               <select name="grade" required>
                 <option value="">Select</option>
                 <option>8</option>
@@ -153,23 +165,29 @@
                 <option>12</option>
                 <option>Other</option>
               </select>
+              <span class="grade-value" aria-hidden="true"></span>
+              <span class="select-arrow" aria-hidden="true"></span>
             </span>
           </label>
 
           <label>
             <span>Personal email for updates (optional)</span>
-            <input
-              name="personal_email"
-              type="email"
-              autocomplete="email"
-              maxlength="254"
-              aria-describedby="personal-email-message" />
+            <span class="field-shell">
+              <input
+                name="personal_email"
+                type="email"
+                autocomplete="email"
+                maxlength="254"
+                aria-describedby="personal-email-message" />
+            </span>
             <small class="field-message" id="personal-email-message" aria-live="polite"></small>
           </label>
 
           <label>
             <span>What do you want to build? (optional)</span>
-            <textarea name="interest" rows="4" maxlength="500"></textarea>
+            <span class="field-shell field-shell-area">
+              <textarea name="interest" rows="4" maxlength="500"></textarea>
+            </span>
           </label>
 
           <label class="trap-field" aria-hidden="true">
