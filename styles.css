@@ -8,6 +8,7 @@
   --panel-strong: rgba(255, 255, 255, 0.09);
   --button-white: #dfdfe0;
   --button-white-hover: #fbfbfa;
+  --button-dark-text: #060607;
   --selection-default: rgba(255, 255, 255, 0.25);
   --space: clamp(27px, 2.2vw, 32px);
   --shell: min(100% - (var(--space) * 2), 1440px);
@@ -227,7 +228,7 @@ h1 {
 
 .button-primary {
   --button-surface-base: var(--button-white);
-  color: var(--bg);
+  color: var(--button-dark-text);
 }
 
 .button-primary:hover {

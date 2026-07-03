@@ -309,6 +309,7 @@ function initButtonPressEffects({ prefersReducedMotion, selector }) {
     }
 
     pressEffectElements.add(button);
+    ensureButtonGeometryShadow(button);
 
     const activeGlows = new Map();
     const scaleSpring = createSpringAnimator({
@@ -404,6 +405,18 @@ function initButtonPressEffects({ prefersReducedMotion, selector }) {
     window.addEventListener("pointerup", release);
     window.addEventListener("pointercancel", release);
   });
+}
+
+function ensureButtonGeometryShadow(button) {
+  if (button.querySelector(":scope > .button-geometry-shadow")) {
+    return;
+  }
+
+  const shadow = document.createElement("span");
+
+  shadow.className = "button-geometry-shadow";
+  shadow.setAttribute("aria-hidden", "true");
+  button.prepend(shadow);
 }
 
 function springFromPhysics({
@@ -595,18 +608,22 @@ function setButtonPressOrigin(button, axis, value) {
 }
 
 function spawnButtonGlow(button, event) {
+  const clip = document.createElement("span");
   const glow = document.createElement("span");
 
+  clip.className = "button-glow-clip";
+  clip.setAttribute("aria-hidden", "true");
   glow.className = "button-press-glow";
   glow.setAttribute("aria-hidden", "true");
 
   glow.addEventListener("animationend", () => {
     if (glow.dataset.released === "true") {
-      glow.remove();
+      clip.remove();
     }
   });
 
-  button.prepend(glow);
+  clip.append(glow);
+  button.prepend(clip);
   positionButtonGlow(button, glow, event);
   return glow;
 }
@@ -634,7 +651,7 @@ function releaseButtonGlow(glow) {
   glow.dataset.released = "true";
 
   window.setTimeout(() => {
-    glow.remove();
+    glow.parentElement?.remove();
   }, 700);
 }
 

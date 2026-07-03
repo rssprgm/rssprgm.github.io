@@ -9,9 +9,7 @@
 .button,
 .join-close {
   isolation: isolate;
-  contain: paint;
-  overflow: hidden;
-  clip-path: inset(0 round 999px);
+  overflow: visible;
   --glass-refraction-filter: url("#rss-glass-refraction");
   --button-backdrop-blur: 2px;
   -webkit-backdrop-filter: blur(var(--button-backdrop-blur)) saturate(1.2);
@@ -73,6 +71,28 @@
   mask-composite: exclude;
 }
 
+.button::before,
+.join-close::before {
+  z-index: 3;
+}
+
+.button-geometry-shadow {
+  position: absolute;
+  z-index: -1;
+  top: 8px;
+  right: 0;
+  bottom: -8px;
+  left: 0;
+  box-sizing: border-box;
+  border-radius: inherit;
+  border: 10px solid #000;
+  background: transparent;
+  filter: blur(7px);
+  mix-blend-mode: multiply;
+  opacity: 0.07;
+  pointer-events: none;
+}
+
 .button::after,
 .join-close::after,
 .join-dialog::after,
@@ -90,8 +110,8 @@
     rgb(255 255 255 / 0.44) 95.2%,
     rgb(255 255 255 / 1) 100%
   ) border-box;
-  mix-blend-mode: plus-lighter;
-  opacity: 0.1;
+  mix-blend-mode: screen;
+  opacity: 0.12;
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
@@ -100,11 +120,6 @@
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
   mask-composite: exclude;
-}
-
-.button::before,
-.join-close::before {
-  z-index: 3;
 }
 
 .button::after,
@@ -122,12 +137,22 @@
   z-index: 2;
 }
 
-.button > :not(.button-press-glow),
+.button > :not(.button-press-glow, .button-glow-clip, .button-geometry-shadow),
 .join-close > svg {
   position: relative;
   z-index: 4;
   transform: scale(var(--stretch-inverse-x, 1), var(--stretch-inverse-y, 1));
   transform-origin: center;
+}
+
+.button-glow-clip {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  contain: paint;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
 }
 
 @supports ((backdrop-filter: url("#rss-glass-refraction")) or (-webkit-backdrop-filter: url("#rss-glass-refraction"))) {
@@ -142,7 +167,7 @@
 
 .button-press-glow {
   position: absolute;
-  z-index: 2;
+  z-index: 0;
   width: var(--press-size);
   height: var(--press-size);
   left: var(--press-x);
@@ -161,7 +186,7 @@
     rgba(255, 255, 255, 0) 100%
   );
   filter: blur(13px);
-  mix-blend-mode: plus-lighter;
+  mix-blend-mode: screen;
   opacity: 0;
   pointer-events: none;
   transform: translate(-50%, -50%) scale(0.24);
