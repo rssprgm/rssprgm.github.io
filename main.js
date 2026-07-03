@@ -1,4 +1,6 @@
 import Lenis from "https://cdn.jsdelivr.net/npm/lenis@1.3.11/+esm";
+import { initButtonEffects } from "./button-effects.js";
+import { createStaggeredTextRenderer } from "./text-effects.js";
 
 const joinEndpoint = "https://wwpxrfnpwwdgffvfomyn.supabase.co/functions/v1/join";
 const supabasePublishableKey = "sb_publishable_mowvPO11HaerjOlL2b7nuA_uaykTin6";
@@ -50,30 +52,22 @@ const joinSuccess = document.querySelector("#join-success");
 const joinStatus = document.querySelector("[data-join-status]");
 const gradeSelect = joinForm.elements.grade;
 const gradeValue = document.querySelector(".grade-value");
+const studentNumberInput = joinForm.elements.student_number;
 const personalEmailInput = joinForm.elements.personal_email;
 const personalEmailMessage = document.querySelector("#personal-email-message");
 const turnstileContainer = document.querySelector("#join-turnstile");
-const gradeCharacterStaggerMs = 55;
-const buttonPressVisualGrowth = 15.5;
-const buttonSpringVariants = {
-  press: springFromResponse({
-    response: 0.3,
-    dampingFraction: 0.48,
-  }),
-  release: springFromPhysics({
-    mass: 1,
-    stiffness: 300,
-    damping: 12,
-  }),
-};
+const refreshButtonEffects = initButtonEffects({ prefersReducedMotion });
+const renderGradeValue = createStaggeredTextRenderer({
+  getText: () => gradeSelect.value || "Select",
+  prefersReducedMotion,
+  target: gradeValue,
+});
 let joinStartedAt = Date.now();
 let turnstileToken = "";
 let turnstileWidgetId;
 let lockedScrollY = 0;
-let gradeValueVersion = 0;
 
 renderGradeValue(false);
-initButtonPressEffects();
 
 document.querySelectorAll("[data-open-join]").forEach((button) => {
   button.addEventListener("click", () => {
@@ -87,6 +81,7 @@ document.querySelectorAll("[data-open-join]").forEach((button) => {
     joinDialog.scrollTop = 0;
     joinDialog.focus({ preventScroll: true });
     refreshTurnstile();
+    refreshButtonEffects();
   });
 });
 
@@ -108,12 +103,15 @@ document.addEventListener("keydown", (event) => {
 
 personalEmailInput.addEventListener("input", validatePersonalEmail);
 personalEmailInput.addEventListener("blur", validatePersonalEmail);
+studentNumberInput.addEventListener("input", sanitizeStudentNumber);
 gradeSelect.addEventListener("change", () => renderGradeValue(true));
 
 joinForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const submitButton = joinForm.querySelector("[type='submit']");
+
+  sanitizeStudentNumber();
 
   if (!validatePersonalEmail()) {
     personalEmailInput.reportValidity();
@@ -214,238 +212,6 @@ function showJoinSuccess() {
   turnstileToken = "";
 }
 
-function initButtonPressEffects() {
-  document.querySelectorAll(".button, .join-close").forEach((button) => {
-    const activeGlows = new Map();
-    const scaleSpring = createSpringAnimator(button, {
-      onUpdate: (growth) => setButtonPressGrowth(button, growth),
-      value: 0,
-    });
-
-    button.draggable = false;
-    button.addEventListener("dragstart", (event) => {
-      event.preventDefault();
-    });
-    button.addEventListener("selectstart", (event) => {
-      event.preventDefault();
-    });
-
-    button.addEventListener("pointerdown", (event) => {
-      if (event.button !== 0 || button.disabled) return;
-
-      const glow = spawnButtonGlow(button, event);
-      activeGlows.set(event.pointerId, glow);
-      scaleSpring.to(buttonPressVisualGrowth, buttonSpringVariants.press);
-
-      if (typeof button.setPointerCapture === "function") {
-        button.setPointerCapture(event.pointerId);
-      }
-    });
-
-    button.addEventListener("pointermove", (event) => {
-      const glow = activeGlows.get(event.pointerId);
-      if (!glow || glow.dataset.released === "true") return;
-
-      positionButtonGlow(button, glow, event);
-    });
-
-    const release = (event) => {
-      const glow = activeGlows.get(event.pointerId);
-      if (!glow) return;
-
-      activeGlows.delete(event.pointerId);
-      releaseButtonGlow(glow);
-
-      if (activeGlows.size === 0) {
-        scaleSpring.to(0, buttonSpringVariants.release);
-      }
-    };
-
-    button.addEventListener("pointerup", release);
-    button.addEventListener("pointercancel", release);
-    button.addEventListener("lostpointercapture", release);
-  });
-}
-
-function springFromPhysics({
-  mass = 1,
-  stiffness,
-  damping,
-  initialVelocity = 0,
-}) {
-  return { damping, initialVelocity, mass, stiffness };
-}
-
-function springFromResponse({
-  response = 0.5,
-  dampingFraction = 0.825,
-  initialVelocity = 0,
-  mass = 1,
-}) {
-  const safeResponse = Math.max(response, 0.001);
-  const angularFrequency = (Math.PI * 2) / safeResponse;
-  const stiffness = mass * angularFrequency * angularFrequency;
-  const damping = dampingFraction * 2 * Math.sqrt(stiffness * mass);
-
-  return springFromPhysics({ damping, initialVelocity, mass, stiffness });
-}
-
-function createSpringAnimator(element, { onUpdate, value }) {
-  const state = {
-    frame: 0,
-    spring: buttonSpringVariants.release,
-    target: value,
-    value,
-    velocity: 0,
-  };
-
-  onUpdate(value);
-
-  function to(target, spring) {
-    if (prefersReducedMotion) {
-      state.target = target;
-      state.value = target;
-      state.velocity = 0;
-      onUpdate(target);
-      return;
-    }
-
-    state.target = target;
-    state.spring = spring;
-
-    if (!state.frame) {
-      state.velocity = spring.initialVelocity * (target - state.value);
-      state.lastTime = performance.now();
-      state.frame = requestAnimationFrame(step);
-    }
-  }
-
-  function step(time) {
-    const deltaSeconds = Math.min((time - state.lastTime) / 1000, 0.034);
-    state.lastTime = time;
-
-    const { damping, mass, stiffness } = state.spring;
-    const displacement = state.value - state.target;
-    const acceleration =
-      (-stiffness * displacement - damping * state.velocity) / mass;
-
-    state.velocity += acceleration * deltaSeconds;
-    state.value += state.velocity * deltaSeconds;
-
-    onUpdate(state.value);
-
-    if (
-      Math.abs(state.velocity) < 0.001 &&
-      Math.abs(state.value - state.target) < 0.0005
-    ) {
-      state.frame = 0;
-      state.value = state.target;
-      state.velocity = 0;
-      onUpdate(state.target);
-      return;
-    }
-
-    state.frame = requestAnimationFrame(step);
-  }
-
-  return { to };
-}
-
-function setButtonPressGrowth(button, growth) {
-  const rect = button.getBoundingClientRect();
-  const visualSize = Math.max(Math.sqrt(rect.width * rect.height), 1);
-  const scale = 1 + growth / visualSize;
-
-  button.style.setProperty("--press-scale", String(scale));
-}
-
-function spawnButtonGlow(button, event) {
-  const glow = document.createElement("span");
-
-  glow.className = "button-press-glow";
-  glow.setAttribute("aria-hidden", "true");
-
-  glow.addEventListener("animationend", () => {
-    if (glow.dataset.released === "true") {
-      glow.remove();
-    }
-  });
-
-  window.setTimeout(() => {
-    if (glow.isConnected) {
-      releaseButtonGlow(glow);
-    }
-  }, 1800);
-
-  button.prepend(glow);
-  positionButtonGlow(button, glow, event);
-  return glow;
-}
-
-function positionButtonGlow(button, glow, event) {
-  const rect = button.getBoundingClientRect();
-  const x = clamp(event.clientX - rect.left, 0, rect.width);
-  const y = clamp(event.clientY - rect.top, 0, rect.height);
-  const maxDistance = Math.max(
-    Math.hypot(x, y),
-    Math.hypot(rect.width - x, y),
-    Math.hypot(x, rect.height - y),
-    Math.hypot(rect.width - x, rect.height - y),
-  );
-
-  glow.style.setProperty("--press-x", `${x}px`);
-  glow.style.setProperty("--press-y", `${y}px`);
-  glow.style.setProperty("--press-size", `${Math.ceil(maxDistance * 2.65)}px`);
-}
-
-function releaseButtonGlow(glow) {
-  if (glow.dataset.released === "true") return;
-
-  glow.dataset.released = "true";
-
-  window.setTimeout(() => {
-    glow.remove();
-  }, 700);
-}
-
-function clamp(value, min, max) {
-  return Math.min(Math.max(value, min), max);
-}
-
-function renderGradeValue(animate) {
-  const text = gradeSelect.value || "Select";
-
-  if (prefersReducedMotion || !animate) {
-    gradeValue.replaceChildren(createGradeValueRun(text, false));
-    return;
-  }
-
-  const currentRun = gradeValue.querySelector(".grade-value-run");
-  if (currentRun) {
-    currentRun.classList.add("grade-value-run-out");
-    window.setTimeout(() => currentRun.remove(), 260);
-  }
-
-  gradeValue.append(createGradeValueRun(text, true));
-}
-
-function createGradeValueRun(text, animate) {
-  const run = document.createElement("span");
-  run.className = "grade-value-run";
-  gradeValueVersion += 1;
-
-  Array.from(String(text)).forEach((character, index) => {
-    const span = document.createElement("span");
-    span.className = animate ? "grade-value-char" : "grade-value-char-static";
-    span.textContent = character;
-    span.style.animationDelay = `${index * gradeCharacterStaggerMs}ms`;
-    span.dataset.version = String(gradeValueVersion);
-    run.append(span);
-  });
-
-  return run;
-}
-
 function setJoinStatus(message, tone) {
   joinStatus.textContent = message;
 
@@ -453,6 +219,14 @@ function setJoinStatus(message, tone) {
     joinStatus.dataset.tone = tone;
   } else {
     joinStatus.removeAttribute("data-tone");
+  }
+}
+
+function sanitizeStudentNumber() {
+  const digits = studentNumberInput.value.replace(/\D/g, "");
+
+  if (studentNumberInput.value !== digits) {
+    studentNumberInput.value = digits;
   }
 }
 

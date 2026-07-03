@@ -1,0 +1,46 @@
+.grade-value-run {
+  position: absolute;
+  display: inline-flex;
+  white-space: pre;
+}
+
+.grade-value-run-out {
+  animation: grade-value-out 180ms ease both;
+}
+
+.grade-value-char,
+.grade-value-char-static {
+  display: inline-block;
+}
+
+.grade-value-char {
+  animation: grade-value-char-in 500ms cubic-bezier(0.34, 1.45, 0.64, 1) both;
+}
+
+@keyframes grade-value-out {
+  0% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    filter: blur(2px);
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes grade-value-char-in {
+  0% {
+    opacity: 0;
+    filter: blur(2px);
+    transform: translateY(8px);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}

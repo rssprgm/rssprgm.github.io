@@ -66,7 +66,7 @@ export default {
       );
     }
 
-    if (!/^[0-9A-Za-z-]+$/.test(studentNumber)) {
+    if (!/^[0-9]+$/.test(studentNumber)) {
       return Response.json(
         { error: "Invalid student number." },
         { status: 400 },

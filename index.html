@@ -14,11 +14,22 @@
       rel="stylesheet" />
     <link rel="icon" href="data:," />
     <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./text-effects.css" />
+    <link rel="stylesheet" href="./button-effects.css" />
     <script
       src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
       defer></script>
   </head>
   <body>
+    <svg
+      class="svg-filters"
+      width="0"
+      height="0"
+      aria-hidden="true"
+      focusable="false">
+      <defs></defs>
+    </svg>
+
     <div class="page-grid" aria-hidden="true"></div>
 
     <header class="site-header">
@@ -50,12 +61,6 @@
             <a class="button button-secondary" href="#learn-more" draggable="false">
               <span>Learn more</span>
             </a>
-            <button class="button button-secondary" type="button">
-              <span>Dummy</span>
-            </button>
-            <button class="button button-secondary button-circle" type="button" aria-label="Dummy circle">
-              <span aria-hidden="true">+</span>
-            </button>
           </div>
         </div>
       </section>
@@ -110,6 +115,9 @@
       <div class="footer-inner">
         <span>rssprgm.github.io</span>
         <span>Richmond Secondary School</span>
+        <a href="mailto:rssprogrammingclub@gmail.com"
+          >rssprogrammingclub@gmail.com</a
+        >
       </div>
     </footer>
 
@@ -144,12 +152,14 @@
           <label>
             <span>Student number</span>
             <span class="field-shell">
-              <input
-                name="student_number"
-                inputmode="numeric"
-                autocomplete="off"
-                maxlength="20"
-                required />
+	              <input
+	                name="student_number"
+	                inputmode="numeric"
+	                autocomplete="off"
+	                maxlength="20"
+	                pattern="[0-9]*"
+	                title="Use digits only."
+	                required />
             </span>
           </label>
 
@@ -212,15 +222,14 @@
         <div class="join-success" id="join-success" hidden>
           <div class="join-form-head">
             <h2>You're on the list</h2>
-            <button class="join-close" type="button" data-close-join aria-label="Close dialog">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M6 6l12 12M18 6L6 18" />
-              </svg>
-            </button>
           </div>
 
           <p>
             We got your signup. You will be added to our teams channel shortly.
+            If you need further assistance, please contact us at
+            <a href="mailto:rssprogrammingclub@gmail.com"
+              >rssprogrammingclub@gmail.com</a
+            >.
           </p>
 
           <div class="join-actions">
