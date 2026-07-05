@@ -14,24 +14,17 @@ type SubmissionRow = {
 };
 
 export default {
-  fetch: withSupabase({ auth: "publishable" }, async (request, ctx) => {
+  fetch: withSupabase({ auth: "secret" }, async (request, ctx) => {
     if (request.method === "OPTIONS") {
-      return new Response(null, { headers: corsHeaders });
+      return new Response(null, { headers: getCorsHeaders(request) });
     }
 
     if (request.method !== "GET") {
-      return json({ error: "Method not allowed" }, 405);
-    }
-
-    const expectedToken = Deno.env.get("VIEWER_TOKEN");
-    const suppliedToken = request.headers.get("x-viewer-token")?.trim();
-
-    if (!expectedToken || suppliedToken !== expectedToken) {
-      return json({ error: "Unauthorized" }, 401);
+      return json(request, { error: "Method not allowed" }, 405);
     }
 
     const url = new URL(request.url);
-    const query = url.searchParams.get("q")?.trim() ?? "";
+    const query = sanitizeSearchTerm(url.searchParams.get("q"));
 
     let requestQuery = ctx.supabaseAdmin
       .from("join_submissions")
@@ -53,7 +46,7 @@ export default {
       .limit(200);
 
     if (query) {
-      const escaped = query.replaceAll("%", "\\%").replaceAll("_", "\\_");
+      const escaped = escapeIlikeTerm(query);
       requestQuery = requestQuery.or(
         [
           `name.ilike.%${escaped}%`,
@@ -71,22 +64,58 @@ export default {
 
     if (error) {
       console.error(error);
-      return json({ error: "Could not load submissions." }, 500);
+      return json(request, { error: "Could not load submissions." }, 500);
     }
 
-    return json({ submissions: data ?? [] });
+    return json(request, { submissions: data ?? [] });
   }),
 };
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "apikey, content-type, x-viewer-token",
+const allowedOrigins = new Set([
+  "https://rssprgm.github.io",
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+]);
+
+const baseCorsHeaders = {
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "GET, OPTIONS",
+  "Cache-Control": "no-store",
+  "Vary": "Origin",
 };
 
-function json(body: unknown, status = 200) {
+function getCorsHeaders(request: Request) {
+  const origin = request.headers.get("origin") ?? "";
+  const allowedOrigin = allowedOrigins.has(origin)
+    ? origin
+    : "https://rssprgm.github.io";
+
+  return {
+    ...baseCorsHeaders,
+    "Access-Control-Allow-Origin": allowedOrigin,
+  };
+}
+
+function json(request: Request, body: unknown, status = 200) {
   return Response.json(body, {
     status,
-    headers: corsHeaders,
+    headers: getCorsHeaders(request),
   });
+}
+
+function sanitizeSearchTerm(value: string | null) {
+  return (value ?? "")
+    .trim()
+    .slice(0, 80)
+    .replace(/[(),]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function escapeIlikeTerm(value: string) {
+  return value
+    .replaceAll("\\", "\\\\")
+    .replaceAll("%", "\\%")
+    .replaceAll("_", "\\_");
 }

@@ -16,9 +16,6 @@
     <link rel="stylesheet" href="./styles.css" />
     <link rel="stylesheet" href="./text-effects.css" />
     <link rel="stylesheet" href="./button-effects.css" />
-    <script
-      src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
-      defer></script>
   </head>
   <body>
     <svg
@@ -38,7 +35,7 @@
           >RSSPRGM</a
         >
         <nav class="nav" aria-label="Primary navigation">
-          <a href="#work">Projects</a>
+          <a href="#projects">Projects</a>
           <a href="#meetings">Meetings</a>
           <button type="button" data-open-join>Join</button>
         </nav>
@@ -65,48 +62,218 @@
         </div>
       </section>
 
+      <section id="projects" class="section projects" aria-labelledby="projects-title">
+        <div class="projects-inner">
+          <div
+            class="projects-heading"
+            data-component-list="StaggeredFadeIn"
+            data-anim-scroll-group="Projects heading">
+            <h2 id="projects-title" data-staggered-item>Projects</h2>
+          </div>
+
+          <div
+            class="project-showcase"
+            aria-labelledby="rhs-app-title"
+            data-component-list="StaggeredFadeIn"
+            data-anim-scroll-group="RHS App projects">
+            <div class="project-showcase-head" data-staggered-item>
+              <div>
+                <h3 id="rhs-app-title">RHS App</h3>
+                <p>
+                  A school companion app for schedules, maps, news, and context-aware
+                  assistance around the Richmond Secondary day.
+                </p>
+              </div>
+
+              <div class="carousel-controls" aria-label="RHS App carousel controls">
+                <button
+                  class="carousel-button"
+                  type="button"
+                  aria-label="Previous RHS App card"
+                  data-carousel-dir="-1"
+                  data-carousel-target="rhs-app-rail">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15 6l-6 6 6 6" />
+                  </svg>
+                </button>
+                <button
+                  class="carousel-button"
+                  type="button"
+                  aria-label="Next RHS App card"
+                  data-carousel-dir="1"
+                  data-carousel-target="rhs-app-rail">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M9 6l6 6-6 6" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div
+              class="project-rail"
+              id="rhs-app-rail"
+              tabindex="0"
+              aria-label="RHS App screenshots">
+              <div class="project-track">
+                <article class="project-card rhs-card" data-staggered-item>
+                  <div class="project-media rhs-media">
+                    <img
+                      src="./assets/projects/rhs-app/schedule.webp"
+                      width="888"
+                      height="2622"
+                      loading="lazy"
+                      decoding="async"
+                      alt="RHS App schedule screen showing a day of classes" />
+                  </div>
+                  <p><strong>Schedule.</strong> See today&apos;s rotation, class blocks, rooms, teachers, and realtime updates in one glance.</p>
+                </article>
+
+                <article class="project-card rhs-card" data-staggered-item>
+                  <div class="project-media rhs-media rhs-media-map">
+                    <img
+                      src="./assets/projects/rhs-app/map.webp"
+                      width="1264"
+                      height="2622"
+                      loading="lazy"
+                      decoding="async"
+                      alt="RHS App indoor map screen with room markers and search" />
+                  </div>
+                  <p><strong>School map.</strong> Search rooms and landmarks with a visual school map built for quick navigation between blocks.</p>
+                </article>
+
+                <article class="project-card rhs-card" data-staggered-item>
+                  <div class="project-media rhs-media">
+                    <img
+                      src="./assets/projects/rhs-app/siri-schedule.webp"
+                      width="1264"
+                      height="2622"
+                      loading="lazy"
+                      decoding="async"
+                      alt="RHS App Siri response explaining which class is affected by an appointment" />
+                  </div>
+                  <p><strong>Siri AI Integration.</strong> Your schedule is automatically indexed to Siri AI on iOS 27, allowing it to surface relevant information privately.</p>
+                </article>
+
+                <article class="project-card rhs-card" data-staggered-item>
+                  <div class="project-media rhs-media">
+                    <img
+                      src="./assets/projects/rhs-app/news.webp"
+                      width="888"
+                      height="2622"
+                      loading="lazy"
+                      decoding="async"
+                      alt="RHS App news screen listing school updates" />
+                  </div>
+                  <p><strong>News and Updates.</strong> Browse, search and sort news articles without digging through scattered pages.</p>
+                </article>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="project-showcase"
+            aria-labelledby="hsr-title"
+            data-component-list="StaggeredFadeIn"
+            data-anim-scroll-group="HSR Battlegrounds projects">
+            <div class="project-showcase-head" data-staggered-item>
+              <div>
+                <h3 id="hsr-title">HSR Battlegrounds</h3>
+                <p>
+                  A multiplayer 2D battleground inspired by Brawlhalla and Super Smash Bros, featuring teacher-inspired characters with unique abilities.
+                </p>
+              </div>
+
+              <div class="carousel-controls" aria-label="HSR Battlegrounds carousel controls">
+                <button
+                  class="carousel-button"
+                  type="button"
+                  aria-label="Previous HSR Battlegrounds card"
+                  data-carousel-dir="-1"
+                  data-carousel-target="hsr-rail">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15 6l-6 6 6 6" />
+                  </svg>
+                </button>
+                <button
+                  class="carousel-button"
+                  type="button"
+                  aria-label="Next HSR Battlegrounds card"
+                  data-carousel-dir="1"
+                  data-carousel-target="hsr-rail">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M9 6l6 6-6 6" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div
+              class="project-rail hsr-rail"
+              id="hsr-rail"
+              tabindex="0"
+              aria-label="HSR Battlegrounds image cards">
+              <div class="project-track">
+                <article class="project-card hsr-card" data-staggered-item>
+                  <div class="project-media hsr-media">
+                    <img
+                      src="./assets/projects/hsr-battlegrounds/shaderUI.webp"
+                      width="1920"
+                      height="1080"
+                      loading="lazy"
+                      decoding="async"
+                      alt="HSR Battlegrounds shader-driven transition preview" />
+                  </div>
+                  <p><strong>Shader-driven UI.</strong> Utilizes GLSL to create stunning user interface animations.</p>
+                </article>
+
+                <article class="project-card hsr-card" data-staggered-item>
+                  <div class="project-media hsr-media">
+                    <img
+                      src="./assets/projects/hsr-battlegrounds/mechanics.webp"
+                      width="1920"
+                      height="1080"
+                      loading="lazy"
+                      decoding="async"
+                      alt="HSR Battlegrounds unique mechanics preview" />
+                  </div>
+                  <p><strong>Unique mechanics.</strong> Distinct abilities and playstyles for each character, granting players diverse strategic options.</p>
+                </article>
+
+                <article class="project-card hsr-card" data-staggered-item>
+                  <div class="project-media hsr-media">
+                    <img
+                      src="./assets/projects/hsr-battlegrounds/stage.webp"
+                      width="1920"
+                      height="1080"
+                      loading="lazy"
+                      decoding="async"
+                      alt="HSR Battlegrounds stage design preview" />
+                  </div>
+                  <p><strong>Feels like home.</strong> Stages and design elements are crafted to feel familiar to the school environment.</p>
+                </article>
+
+                <article class="project-card hsr-card" data-staggered-item>
+                  <div class="project-media hsr-media">
+                    <img
+                      src="./assets/projects/hsr-battlegrounds/inspired.webp"
+                      width="3840"
+                      height="2160"
+                      loading="lazy"
+                      decoding="async"
+                      alt="HSR Battlegrounds gameplay inspiration preview" />
+                  </div>
+                  <p><strong>Gameplay.</strong> Mechanics inspired by games you know.</p>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section id="learn-more" class="section intro" aria-label="Placeholder introduction">
+        <span id="meetings" class="anchor-target" aria-hidden="true"></span>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut mattis
-          turpis nec ligula gravida, in fermentum velit euismod. Aenean ligula
-          purus, egestas ut mattis maximus, molestie sed lorem. Fusce egestas ut
-          ex eget rutrum. Nam euismod convallis dui, sed aliquet enim aliquam
-          ac. Maecenas nec lobortis erat. Pellentesque quis accumsan justo.
-          Donec et nisl augue. Etiam dictum arcu vel mattis sollicitudin. Sed
-          dolor lectus, bibendum non est sed, mattis vestibulum lorem. Maecenas
-          congue, est in vulputate congue, arcu arcu suscipit lorem, at aliquam
-          ligula ipsum eget leo. Vivamus feugiat tristique venenatis. Phasellus
-          id odio non diam congue pretium. Curabitur hendrerit diam eu mi
-          faucibus venenatis ut in nunc. Donec a mi pretium nisl condimentum
-          tempus in sit amet lorem. Donec aliquet elementum malesuada. Nullam id
-          ligula tellus. Sed viverra magna nec nulla posuere viverra. Donec non
-          nunc luctus, dictum orci ac, venenatis massa. In vitae magna quis
-          lorem cursus euismod ac eget est. Sed vulputate fermentum vehicula. Ut
-          diam dui, tincidunt non aliquet vel, vulputate nec odio. Etiam
-          efficitur iaculis arcu, quis sagittis nulla. Phasellus dignissim
-          convallis dignissim. In mauris mauris, gravida ac ex nec, porta
-          tincidunt augue. Nunc gravida, risus at aliquet scelerisque, ante
-          metus gravida nibh, quis vehicula dui ligula non sem. Duis lobortis
-          neque tortor, sit amet aliquet erat lacinia id. Duis ipsum justo,
-          hendrerit ac velit ac, dictum molestie dolor. Sed venenatis metus ac
-          euismod scelerisque. Fusce mi magna, pulvinar eu tincidunt et,
-          sollicitudin id augue. Quisque ut sem quam. Integer vestibulum
-          venenatis felis, non convallis lectus lobortis eu. Morbi placerat
-          ipsum mauris, et pretium mi gravida a. Mauris ultricies sagittis
-          sapien, in suscipit est sodales eu. Nullam tempus, tortor ultrices
-          sollicitudin blandit, nunc ex faucibus justo, ac finibus urna magna
-          vitae dui. Nam auctor sem id pretium elementum. Morbi sodales
-          efficitur blandit. Suspendisse dolor magna, ultricies ut condimentum
-          vel, ultrices eget tellus. Integer varius, lectus sit amet
-          sollicitudin congue, augue dolor placerat ipsum, vel pretium turpis
-          turpis vitae odio. Praesent bibendum semper velit non porttitor.
-          Suspendisse et quam porta, euismod nulla nec, fringilla ligula.
-          Quisque ut libero a nibh accumsan tincidunt. Phasellus pharetra
-          tincidunt ipsum, efficitur semper orci tincidunt non. Donec finibus
-          dui est, non tincidunt felis lobortis vel. Donec ornare leo nisl,
-          sodales efficitur turpis ultrices eu. Etiam commodo, nulla et egestas
-          consequat, mauris nisl imperdiet velit, condimentum varius magna odio
-          sed dui. Praesent imperdiet orci in erat rutrum lacinia.
+          More to come...
         </p>
       </section>
     </main>
@@ -128,7 +295,6 @@
       aria-modal="true"
       aria-labelledby="join-title"
       tabindex="-1"
-      data-lenis-prevent
       hidden>
       <div class="join-dialog">
         <div class="join-panel">
@@ -219,9 +385,9 @@
           </div>
         </form>
 
-        <div class="join-success" id="join-success" hidden>
+        <div class="join-success" id="join-success" tabindex="-1" hidden>
           <div class="join-form-head">
-            <h2>You're on the list</h2>
+            <h2 id="join-success-title">You're on the list</h2>
           </div>
 
           <p>

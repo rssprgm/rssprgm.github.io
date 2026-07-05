@@ -94,6 +94,9 @@ enabled = true
 [functions.join]
 verify_jwt = false
 
+[functions.submissions]
+verify_jwt = false
+
 [studio]
 enabled = true
 # Port to use for Supabase Studio.

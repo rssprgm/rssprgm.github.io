@@ -33,11 +33,14 @@ export function createStaggeredTextRenderer({
       return;
     }
 
-    const currentRun = target.querySelector(".grade-value-run");
-    if (currentRun) {
+    target.querySelectorAll(".grade-value-run").forEach((currentRun) => {
       currentRun.classList.add("grade-value-run-out");
-      window.setTimeout(() => currentRun.remove(), 260);
-    }
+      window.setTimeout(() => {
+        if (currentRun.parentElement === target) {
+          currentRun.remove();
+        }
+      }, 260);
+    });
 
     target.append(createRun(text, true));
   };

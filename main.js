@@ -1,383 +1,130 @@
-import Lenis from "https://cdn.jsdelivr.net/npm/lenis@1.3.11/+esm";
 import { initButtonEffects } from "./button-effects.js";
-import { createStaggeredTextRenderer } from "./text-effects.js";
+import { setupJoinDialog } from "./join-dialog.js";
+import { setupProjectCarousels } from "./project-carousel.js";
+import { setupSmoothScrolling } from "./smooth-scroll.js";
 
-const joinEndpoint = "https://wwpxrfnpwwdgffvfomyn.supabase.co/functions/v1/join";
-const supabasePublishableKey = "sb_publishable_mowvPO11HaerjOlL2b7nuA_uaykTin6";
-const turnstileSiteKey = "0x4AAAAAADuS4A5I_uUQo3fV";
 const prefersReducedMotion = window.matchMedia(
   "(prefers-reduced-motion: reduce)",
 ).matches;
-let lenis;
 
-if (!prefersReducedMotion) {
-  lenis = new Lenis({
-    duration: 0.85,
-    smoothWheel: true,
-    smoothTouch: false,
-    wheelMultiplier: 0.9,
-    prevent: (node) => Boolean(node.closest?.("[data-lenis-prevent]")),
-  });
+document.documentElement.classList.add("js");
+document.documentElement.classList.toggle("reduced-motion", prefersReducedMotion);
+document.documentElement.classList.toggle(
+  "no-reduced-motion",
+  !prefersReducedMotion,
+);
 
-  function raf(time) {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
-  }
+setupProjectCarousels({ prefersReducedMotion });
+setupStaggeredFadeIn();
+const refreshButtonEffects = initButtonEffects({ prefersReducedMotion });
 
-  requestAnimationFrame(raf);
+setupSmoothScrolling({ prefersReducedMotion });
+setupJoinDialog({ prefersReducedMotion, refreshButtonEffects });
 
-  document.querySelectorAll('a[href^="#"]').forEach((link) => {
-    link.addEventListener("click", (event) => {
-      const href = link.getAttribute("href");
-      if (!href || href === "#") {
-        lenis.scrollTo(0);
-        return;
-      }
+function setupStaggeredFadeIn() {
+  const groups = Array.from(
+    document.querySelectorAll('[data-component-list*="StaggeredFadeIn"]'),
+  );
 
-      const target = document.querySelector(href);
-      if (!target) return;
+  if (!groups.length) return;
 
-      event.preventDefault();
-      lenis.scrollTo(target, {
-        offset: -24,
-        duration: 1.1,
+  if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+    groups.forEach((group) => {
+      group.classList.add("staggered-end");
+      getStaggeredItems(group).forEach((item) => {
+        item.style.removeProperty("--stagger-delay");
       });
     });
-  });
-}
-
-const joinDialog = document.querySelector("#join-dialog");
-const joinForm = document.querySelector("#join-form");
-const joinSuccess = document.querySelector("#join-success");
-const joinStatus = document.querySelector("[data-join-status]");
-const gradeSelect = joinForm.elements.grade;
-const gradeValue = document.querySelector(".grade-value");
-const studentNumberInput = joinForm.elements.student_number;
-const personalEmailInput = joinForm.elements.personal_email;
-const personalEmailMessage = document.querySelector("#personal-email-message");
-const turnstileContainer = document.querySelector("#join-turnstile");
-const refreshButtonEffects = initButtonEffects({ prefersReducedMotion });
-const renderGradeValue = createStaggeredTextRenderer({
-  getText: () => gradeSelect.value || "Select",
-  prefersReducedMotion,
-  target: gradeValue,
-});
-let joinStartedAt = Date.now();
-let turnstileToken = "";
-let turnstileWidgetId;
-let lockedScrollY = 0;
-
-renderGradeValue(false);
-
-document.querySelectorAll("[data-open-join]").forEach((button) => {
-  button.addEventListener("click", () => {
-    joinStartedAt = Date.now();
-    turnstileToken = "";
-    showJoinForm();
-    joinStatus.textContent = "";
-    joinStatus.removeAttribute("data-tone");
-    lockPageScroll();
-    joinDialog.hidden = false;
-    joinDialog.scrollTop = 0;
-    joinDialog.focus({ preventScroll: true });
-    refreshTurnstile();
-    refreshButtonEffects();
-  });
-});
-
-document.querySelectorAll("[data-close-join]").forEach((button) => {
-  button.addEventListener("click", closeJoinDialog);
-});
-
-joinDialog.addEventListener("click", (event) => {
-  if (event.target === joinDialog) {
-    closeJoinDialog();
-  }
-});
-
-document.addEventListener("keydown", (event) => {
-  if (!joinDialog.hidden && event.key === "Escape") {
-    closeJoinDialog();
-  }
-});
-
-personalEmailInput.addEventListener("input", validatePersonalEmail);
-personalEmailInput.addEventListener("blur", validatePersonalEmail);
-studentNumberInput.addEventListener("input", sanitizeStudentNumber);
-gradeSelect.addEventListener("change", () => renderGradeValue(true));
-
-joinForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
-
-  const submitButton = joinForm.querySelector("[type='submit']");
-
-  sanitizeStudentNumber();
-
-  if (!validatePersonalEmail()) {
-    personalEmailInput.reportValidity();
     return;
   }
 
-  setJoinStatus("Checking verification...", "");
-  submitButton.disabled = true;
+  const pendingGroups = new Set();
 
-  const token = await waitForTurnstileToken();
-  if (!token) {
-    setJoinStatus("Complete the verification above and try again.", "error");
-    submitButton.disabled = false;
-    return;
-  }
+  groups.forEach((group) => {
+    const items = getStaggeredItems(group);
+    if (!items.length) return;
 
-  const formData = new FormData(joinForm);
-  const payload = {
-    name: formData.get("name"),
-    studentNumber: formData.get("student_number"),
-    grade: formData.get("grade"),
-    personalEmail: formData.get("personal_email"),
-    interest: formData.get("interest"),
-    website: formData.get("website"),
-    source: getSource(),
-    startedAt: joinStartedAt,
-    turnstileToken: token,
+    const styles = window.getComputedStyle(group);
+    const delay = Number(styles.getPropertyValue("--staggered-delay")) || 0.15;
+
+    items.forEach((item, index) => {
+      item.style.setProperty("--stagger-delay", `${index * delay}s`);
+    });
+
+    group.classList.add("staggered-ready");
+    pendingGroups.add(group);
+  });
+
+  if (!pendingGroups.size) return;
+
+  let checkQueued = false;
+  const queueRevealCheck = () => {
+    if (checkQueued) return;
+    checkQueued = true;
+
+    requestAnimationFrame(() => {
+      checkQueued = false;
+      checkStaggeredGroups(pendingGroups, queueRevealCheck);
+    });
   };
 
-  setJoinStatus("Submitting...", "");
-
-  try {
-    const response = await fetch(joinEndpoint, {
-      method: "POST",
-      headers: {
-        apikey: supabasePublishableKey,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-    const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(result.error || "Could not submit right now.");
-    }
-
-    joinForm.reset();
-    renderGradeValue(false);
-    showJoinSuccess();
-  } catch (error) {
-    refreshTurnstile();
-    setJoinStatus(error.message, "error");
-  } finally {
-    submitButton.disabled = false;
-  }
-});
-
-function closeJoinDialog() {
-  joinDialog.hidden = true;
-  unlockPageScroll();
+  window.addEventListener("scroll", queueRevealCheck, { passive: true });
+  window.addEventListener("resize", queueRevealCheck, { passive: true });
+  requestAnimationFrame(() => {
+    checkStaggeredGroups(pendingGroups, queueRevealCheck);
+  });
 }
 
-function lockPageScroll() {
-  lockedScrollY = window.scrollY;
-  document.body.classList.add("join-page-locked");
-  document.body.style.position = "fixed";
-  document.body.style.top = `-${lockedScrollY}px`;
-  document.body.style.left = "0";
-  document.body.style.right = "0";
-  document.body.style.width = "100%";
-}
+function getStaggeredItems(group) {
+  if (group.hasAttribute("data-staggered-item")) return [group];
 
-function unlockPageScroll() {
-  if (!document.body.classList.contains("join-page-locked")) return;
-
-  document.body.classList.remove("join-page-locked");
-  document.body.style.position = "";
-  document.body.style.top = "";
-  document.body.style.left = "";
-  document.body.style.right = "";
-  document.body.style.width = "";
-  window.scrollTo(0, lockedScrollY);
-}
-
-function showJoinForm() {
-  joinDialog.dataset.mode = "form";
-  joinForm.hidden = false;
-  joinSuccess.hidden = true;
-  renderGradeValue(false);
-  validatePersonalEmail();
-}
-
-function showJoinSuccess() {
-  joinDialog.dataset.mode = "success";
-  joinDialog.scrollTop = 0;
-  joinForm.hidden = true;
-  joinSuccess.hidden = false;
-  turnstileToken = "";
-}
-
-function setJoinStatus(message, tone) {
-  joinStatus.textContent = message;
-
-  if (tone) {
-    joinStatus.dataset.tone = tone;
-  } else {
-    joinStatus.removeAttribute("data-tone");
-  }
-}
-
-function sanitizeStudentNumber() {
-  const digits = studentNumberInput.value.replace(/\D/g, "");
-
-  if (studentNumberInput.value !== digits) {
-    studentNumberInput.value = digits;
-  }
-}
-
-function validatePersonalEmail() {
-  const email = personalEmailInput.value.trim().toLowerCase();
-  const domain = email.split("@").at(-1) || "";
-  const isSchoolEmail = domain === "bc.ca" || domain.endsWith(".bc.ca");
-
-  if (isSchoolEmail) {
-    personalEmailInput.setCustomValidity(
-      "Use a personal email, not a school email.",
-    );
-    personalEmailMessage.textContent =
-      "Use a personal email for updates, not a school email.";
-    personalEmailMessage.dataset.tone = "error";
-    return false;
-  }
-
-  personalEmailInput.setCustomValidity("");
-
-  if (!email) {
-    personalEmailMessage.textContent =
-      "Optional. We will only use this for club updates.";
-  } else {
-    personalEmailMessage.textContent = "We will only use this for club updates.";
-  }
-
-  personalEmailMessage.removeAttribute("data-tone");
-  return true;
-}
-
-function getSource() {
-  const params = new URLSearchParams(window.location.search);
-  return (
-    params.get("src") ||
-    params.get("source") ||
-    params.get("utm_source") ||
-    "site"
+  return Array.from(
+    group.querySelectorAll('[data-staggered-item]:not([aria-hidden="true"])'),
   );
 }
 
-function getTurnstileToken() {
-  if (turnstileToken) {
-    return turnstileToken;
-  }
-
-  const hiddenToken = turnstileContainer
-    ?.querySelector('input[name="cf-turnstile-response"]')
-    ?.value;
-
-  if (hiddenToken) {
-    turnstileToken = hiddenToken;
-    return hiddenToken;
-  }
-
-  if (typeof window.turnstile?.getResponse !== "function") {
-    return "";
-  }
-
-  turnstileToken = window.turnstile.getResponse(turnstileWidgetId) || "";
-  return turnstileToken;
+function getStaggeredAnchor(group) {
+  return group.querySelector("[data-staggered-anchor]") || group;
 }
 
-function refreshTurnstile() {
-  turnstileToken = "";
+function checkStaggeredGroups(pendingGroups, queueRevealCheck) {
+  const triggerLine = window.innerHeight * 0.85;
 
-  whenTurnstileReady()
-    .then(() => {
-      if (!turnstileContainer || typeof window.turnstile?.render !== "function") {
-        return;
-      }
+  pendingGroups.forEach((group) => {
+    if (group.classList.contains("staggered-start")) return;
 
-      if (turnstileWidgetId === undefined) {
-        turnstileWidgetId = window.turnstile.render(turnstileContainer, {
-          sitekey: turnstileSiteKey,
-          theme: "dark",
-          size: "flexible",
-          appearance: "always",
-          callback: (token) => {
-            turnstileToken = token;
-            if (
-              joinStatus.textContent ===
-                "Complete the verification above and try again." ||
-              joinStatus.textContent === "Checking verification..."
-            ) {
-              joinStatus.textContent = "";
-              joinStatus.removeAttribute("data-tone");
-            }
-          },
-          "expired-callback": () => {
-            turnstileToken = "";
-          },
-          "error-callback": () => {
-            turnstileToken = "";
-          },
-        });
-        return;
-      }
+    const anchor = getStaggeredAnchor(group);
+    const rect = anchor.getBoundingClientRect();
+    if (rect.top > triggerLine) return;
 
-      window.turnstile.reset(turnstileWidgetId);
-    })
-    .catch(() => {
-      setJoinStatus("Verification failed to load. Refresh and try again.", "error");
-    });
-}
-
-function waitForTurnstileToken() {
-  const existingToken = getTurnstileToken();
-  if (existingToken) {
-    return Promise.resolve(existingToken);
-  }
-
-  refreshTurnstile();
-
-  return new Promise((resolve) => {
-    const startedAt = Date.now();
-    const intervalId = window.setInterval(() => {
-      const token = getTurnstileToken();
-
-      if (token) {
-        window.clearInterval(intervalId);
-        resolve(token);
-        return;
-      }
-
-      if (Date.now() - startedAt > 6000) {
-        window.clearInterval(intervalId);
-        resolve("");
-      }
-    }, 100);
+    playStaggeredGroup(group);
+    pendingGroups.delete(group);
   });
+
+  if (!pendingGroups.size) {
+    window.removeEventListener("scroll", queueRevealCheck);
+    window.removeEventListener("resize", queueRevealCheck);
+  }
 }
 
-function whenTurnstileReady() {
-  if (typeof window.turnstile?.render === "function") {
-    return Promise.resolve();
-  }
+function playStaggeredGroup(group) {
+  const items = getStaggeredItems(group);
+  const finalItem = items[items.length - 1];
+  if (!finalItem) return;
 
-  return new Promise((resolve, reject) => {
-    const startedAt = Date.now();
-    const intervalId = window.setInterval(() => {
-      if (typeof window.turnstile?.render === "function") {
-        window.clearInterval(intervalId);
-        resolve();
-        return;
-      }
+  group.classList.add("staggered-start");
 
-      if (Date.now() - startedAt > 8000) {
-        window.clearInterval(intervalId);
-        reject(new Error("Turnstile did not load."));
-      }
-    }, 100);
-  });
+  const complete = (event) => {
+    if (
+      event.target !== finalItem ||
+      event.animationName !== "staggeredFadeInOpacity"
+    ) {
+      return;
+    }
+
+    finalItem.removeEventListener("animationend", complete);
+    group.classList.add("staggered-end");
+  };
+
+  finalItem.addEventListener("animationend", complete);
 }
