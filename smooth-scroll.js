@@ -19,8 +19,12 @@ export function setupSmoothScrolling({
       if (!target) return;
 
       event.preventDefault();
+      const headerHeight =
+        document.querySelector(".site-header")?.getBoundingClientRect().height ||
+        0;
+      const scrollOffset = Math.max(offset, headerHeight);
       const targetTop =
-        target.getBoundingClientRect().top + window.scrollY - offset;
+        target.getBoundingClientRect().top + window.scrollY - scrollOffset;
       window.scrollTo({ top: Math.max(0, targetTop), behavior });
     });
   });
