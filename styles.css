@@ -85,17 +85,6 @@ button {
   -webkit-user-drag: none;
 }
 
-.page-grid {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.065) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.065) 1px, transparent 1px);
-  background-size: 128px 128px;
-  mask-image: linear-gradient(to bottom, black, transparent 82%);
-}
-
 .site-header {
   position: sticky;
   top: 0;
