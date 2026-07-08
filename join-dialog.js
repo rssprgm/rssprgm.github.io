@@ -22,7 +22,7 @@ const joinDialogHTML = `
         </div>
 
         <label>
-          <span>Name</span>
+          <span>Full name</span>
           <span class="field-shell">
             <input name="name" autocomplete="name" maxlength="80" required />
           </span>
