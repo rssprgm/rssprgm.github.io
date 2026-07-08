@@ -1007,6 +1007,85 @@ html.js .select-shell select {
   letter-spacing: -0.025em;
 }
 
+.resources {
+  display: grid;
+  gap: clamp(32px, 4vw, 52px);
+}
+
+.resources h1 {
+  font-size: clamp(50px, 8vw, 96px);
+  line-height: 0.96;
+  letter-spacing: -0.06em;
+  font-weight: 650;
+}
+
+.resources-lede {
+  max-width: 600px;
+  margin-top: -16px;
+  color: var(--muted);
+  font-size: clamp(18px, 1.8vw, 24px);
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+}
+
+.resource-category {
+  display: grid;
+  gap: 18px;
+}
+
+.resource-category-title {
+  font-size: clamp(14px, 1.1vw, 16px);
+  line-height: 1;
+  letter-spacing: 0.03em;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: var(--subtle);
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.resource-list {
+  display: grid;
+  gap: 14px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.resource-item {
+  display: flex;
+  align-items: start;
+  gap: 12px;
+}
+
+.resource-icon {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  margin-top: 2px;
+  color: var(--muted);
+}
+
+.resource-info {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.resource-name {
+  font-size: clamp(16px, 1.3vw, 18px);
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.resource-desc {
+  font-size: clamp(14px, 1.1vw, 15px);
+  line-height: 1.35;
+  color: var(--muted);
+  letter-spacing: -0.01em;
+}
+
 [data-component-list*="StaggeredFadeIn"] {
   --staggered-delay: 0.15;
   --staggered-opacity-duration: 0.9s;

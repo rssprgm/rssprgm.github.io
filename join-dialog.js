@@ -1,5 +1,137 @@
 import { createStaggeredTextRenderer } from "./text-effects.js";
 
+const joinDialogHTML = `
+  <div
+    class="join-overlay"
+    id="join-dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="join-title"
+    tabindex="-1"
+    hidden>
+    <div class="join-dialog">
+      <div class="join-panel">
+      <form class="join-form" id="join-form">
+        <div class="join-form-head">
+          <h2 id="join-title">Join our club</h2>
+          <button class="join-close" type="button" data-close-join aria-label="Close dialog">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </div>
+
+        <label>
+          <span>Name</span>
+          <span class="field-shell">
+            <input name="name" autocomplete="name" maxlength="80" required />
+          </span>
+        </label>
+
+        <label>
+          <span>Student number</span>
+          <span class="field-shell">
+            <input
+              name="student_number"
+              inputmode="numeric"
+              autocomplete="off"
+              maxlength="20"
+              pattern="[0-9]*"
+              title="Use digits only."
+              required />
+          </span>
+        </label>
+
+        <label>
+          <span>Grade</span>
+          <span class="field-shell select-shell">
+            <select name="grade" required>
+              <option value="">Select</option>
+              <option>8</option>
+              <option>9</option>
+              <option>10</option>
+              <option>11</option>
+              <option>12</option>
+              <option>Other</option>
+            </select>
+            <span class="grade-value" aria-hidden="true"></span>
+            <span class="select-arrow" aria-hidden="true"></span>
+          </span>
+        </label>
+
+        <label>
+          <span>Personal email for updates (optional)</span>
+          <span class="field-shell">
+            <input
+              name="personal_email"
+              type="email"
+              autocomplete="email"
+              maxlength="254"
+              aria-describedby="personal-email-message" />
+          </span>
+          <small class="field-message" id="personal-email-message" aria-live="polite"></small>
+        </label>
+
+        <label>
+          <span>What do you want to build? (optional)</span>
+          <span class="field-shell field-shell-area">
+            <textarea name="interest" rows="4" maxlength="500"></textarea>
+          </span>
+        </label>
+
+        <label class="trap-field" aria-hidden="true">
+          <span>Website</span>
+          <input name="website" tabindex="-1" autocomplete="off" />
+        </label>
+
+        <div
+          class="turnstile-box"
+          id="join-turnstile"
+          aria-label="Human verification"></div>
+
+        <p class="join-status" data-join-status role="status" aria-live="polite"></p>
+
+        <div class="join-actions">
+          <button class="button button-primary join-submit" type="submit">
+            <span>Submit</span>
+          </button>
+        </div>
+      </form>
+
+      <div class="join-success" id="join-success" tabindex="-1" hidden>
+        <div class="join-form-head">
+          <h2 id="join-success-title">You're on the list</h2>
+        </div>
+
+        <p>
+          We got your signup. Once the club is ready, you will be added to our teams channel.
+          If you need further assistance, please contact us at
+          <a href="mailto:rssprogrammingclub@gmail.com"
+            >rssprogrammingclub@gmail.com</a
+          >.
+        </p>
+
+        <div class="join-actions">
+          <button class="button button-primary" type="button" data-close-join>
+            <span>Done</span>
+          </button>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+`;
+
+const range = document.createRange();
+const fragment = range.createContextualFragment(joinDialogHTML);
+if (document.body) {
+  document.body.append(fragment);
+} else {
+  document.addEventListener("DOMContentLoaded", () => {
+    document.body.append(fragment.cloneNode(true));
+  });
+}
+
 const joinEndpoint = "https://wwpxrfnpwwdgffvfomyn.supabase.co/functions/v1/join";
 const supabasePublishableKey = "sb_publishable_mowvPO11HaerjOlL2b7nuA_uaykTin6";
 const turnstileSiteKey = "0x4AAAAAADuS4A5I_uUQo3fV";
