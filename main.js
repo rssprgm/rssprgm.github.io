@@ -20,6 +20,7 @@ const refreshButtonEffects = initButtonEffects({ prefersReducedMotion });
 
 setupSmoothScrolling({ prefersReducedMotion });
 setupJoinDialog({ prefersReducedMotion, refreshButtonEffects });
+setupMobileMenu();
 
 function setupStaggeredFadeIn() {
   const groups = Array.from(
@@ -127,4 +128,75 @@ function playStaggeredGroup(group) {
   };
 
   finalItem.addEventListener("animationend", complete);
+}
+
+function setupMobileMenu() {
+  const toggle = document.querySelector("[data-menu-toggle]");
+  const menu = document.querySelector("[data-mobile-menu]");
+  const menuItems = Array.from(menu?.querySelectorAll("[data-mobile-menu-link]") || []);
+
+  if (!toggle || !menu) {
+    return;
+  }
+
+  toggle.dataset.menuReady = "true";
+
+  const setMenuOpen = (isOpen) => {
+    if (isOpen) {
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      document.documentElement.style.setProperty(
+        "--menu-scrollbar-compensation",
+        `${Math.max(0, scrollbarWidth)}px`,
+      );
+    } else {
+      document.documentElement.style.removeProperty(
+        "--menu-scrollbar-compensation",
+      );
+    }
+
+    toggle.setAttribute("aria-expanded", String(isOpen));
+    toggle.setAttribute("aria-label", isOpen ? "Close menu" : "Open menu");
+    document.body.classList.toggle("mobile-menu-open", isOpen);
+
+    if (isOpen) {
+      menu.hidden = false;
+      menu.dataset.state = "opening";
+
+      requestAnimationFrame(() => {
+        menu.dataset.state = "open";
+      });
+      return;
+    }
+
+    menu.dataset.state = "closing";
+
+    window.setTimeout(() => {
+      if (toggle.getAttribute("aria-expanded") === "true") return;
+      menu.hidden = true;
+      menu.dataset.state = "closed";
+    }, prefersReducedMotion ? 0 : 540);
+  };
+
+  toggle.addEventListener("click", () => {
+    setMenuOpen(toggle.getAttribute("aria-expanded") !== "true");
+  });
+
+  menuItems.forEach((item) => {
+    item.addEventListener("click", () => {
+      setMenuOpen(false);
+    });
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") {
+      setMenuOpen(false);
+      toggle.focus({ preventScroll: true });
+    }
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.matchMedia("(min-width: 761px)").matches) {
+      setMenuOpen(false);
+    }
+  });
 }

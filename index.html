@@ -52,11 +52,32 @@
         >
         <nav class="nav" aria-label="Primary navigation">
           <a href="#projects">Projects</a>
+          <a href="#what-we-do">What We Do</a>
           <a href="#meetings">Meetings</a>
           <button type="button" data-open-join>Join</button>
         </nav>
+        <button
+          class="menu-toggle"
+          type="button"
+          aria-label="Open menu"
+          aria-controls="mobile-menu"
+          aria-expanded="false"
+          data-menu-toggle>
+          <span></span>
+          <span></span>
+        </button>
       </div>
+
     </header>
+
+    <div class="mobile-menu" id="mobile-menu" data-mobile-menu hidden>
+      <nav class="mobile-menu-nav" aria-label="Mobile navigation">
+        <a href="#projects" data-mobile-menu-link>Projects</a>
+        <a href="#what-we-do" data-mobile-menu-link>What We Do</a>
+        <a href="#meetings" data-mobile-menu-link>Meetings</a>
+        <button type="button" data-open-join data-mobile-menu-link>Join</button>
+      </nav>
+    </div>
 
     <main>
       <section class="hero" aria-labelledby="hero-title">
