@@ -57,15 +57,18 @@ body.join-page-locked {
 
 a {
   color: var(--muted);
-  text-decoration: underline;
-  text-decoration-color: currentColor;
-  text-underline-offset: 0.16em;
+  text-decoration: none;
   transition: color 180ms ease;
 }
 
 :focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.86);
   outline-offset: 4px;
+}
+
+a:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
 }
 
 button,
@@ -269,7 +272,8 @@ h1 {
     color 180ms ease;
 }
 
-.button {
+.button,
+.button:hover {
   text-decoration: none;
 }
 
@@ -753,6 +757,8 @@ html.js .select-shell select {
 @media (hover: hover) and (pointer: fine) {
   a:hover {
     color: var(--text);
+    text-decoration: underline;
+    text-underline-offset: 0.16em;
   }
 
   .nav a:hover,
