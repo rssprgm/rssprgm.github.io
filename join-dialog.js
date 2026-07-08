@@ -53,11 +53,13 @@ export function setupJoinDialog({
   let turnstileToken = "";
   let turnstileWidgetId;
   let lockedScrollY = 0;
+  let closeTimeoutId = null;
 
   renderGradeValue(false);
 
   document.querySelectorAll("[data-open-join]").forEach((button) => {
     button.addEventListener("click", () => {
+      clearTimeout(closeTimeoutId);
       activeJoinTrigger = button instanceof HTMLElement ? button : null;
       joinSessionId += 1;
       cancelJoinRequest();
@@ -200,9 +202,12 @@ export function setupJoinDialog({
     cancelJoinRequest();
     disposeTurnstile();
     joinDialog.hidden = true;
-    unlockPageScroll();
-    activeJoinTrigger?.focus({ preventScroll: true });
-    activeJoinTrigger = null;
+    clearTimeout(closeTimeoutId);
+    closeTimeoutId = setTimeout(() => {
+      unlockPageScroll();
+      activeJoinTrigger?.focus({ preventScroll: true });
+      activeJoinTrigger = null;
+    }, prefersReducedMotion ? 0 : 300);
   }
 
   function cancelJoinRequest() {
