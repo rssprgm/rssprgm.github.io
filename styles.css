@@ -913,6 +913,76 @@ html.js .select-shell select {
   font-weight: 650;
 }
 
+.what-we-do {
+  display: grid;
+  gap: clamp(24px, 3.8vw, 48px);
+}
+
+.what-we-do h2 {
+  font-size: clamp(50px, 8vw, 96px);
+  line-height: 0.96;
+  letter-spacing: -0.06em;
+  font-weight: 650;
+}
+
+.what-we-do-lede {
+  max-width: 940px;
+  color: var(--muted);
+  font-size: clamp(24px, 2.9vw, 42px);
+  line-height: 1.12;
+  letter-spacing: -0.04em;
+}
+
+.what-we-do-media {
+  width: min(100%, 1440px);
+  display: grid;
+  place-items: center;
+  margin: clamp(24px, 4vw, 48px) auto 0;
+  overflow: visible;
+}
+
+.what-we-do-media picture {
+  display: block;
+  width: 100%;
+}
+
+.what-we-do-media img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.what-we-do-features {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(28px, 3vw, 44px);
+  margin-top: clamp(18px, 2.8vw, 34px);
+}
+
+.what-we-do-feature h3 {
+  font-size: clamp(18px, 1.55vw, 24px);
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  font-weight: 650;
+}
+
+.what-we-do-feature h3::after {
+  content: "";
+  display: block;
+  height: 1px;
+  margin-top: 24px;
+  background: var(--line);
+}
+
+.what-we-do-feature p {
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: clamp(16px, 1.25vw, 19px);
+  line-height: 1.34;
+  letter-spacing: -0.025em;
+}
+
 [data-component-list*="StaggeredFadeIn"] {
   --staggered-delay: 0.15;
   --staggered-opacity-duration: 0.9s;
@@ -1162,6 +1232,27 @@ html.reduced-motion [data-component-list*="StaggeredFadeIn"] [data-staggered-ite
 
   .hsr-rail {
     --carousel-card-width: min(82vw, 420px);
+  }
+
+  .what-we-do-features {
+    grid-template-columns: 1fr;
+    gap: 38px;
+    margin-top: 22px;
+  }
+
+  .what-we-do-feature h3 {
+    font-size: clamp(22px, 6.4vw, 30px);
+  }
+
+  .what-we-do-feature h3::after {
+    margin-top: 18px;
+  }
+
+  .what-we-do-feature p {
+    margin-top: 18px;
+    font-size: clamp(17px, 4.6vw, 22px);
+    line-height: 1.32;
+    letter-spacing: -0.03em;
   }
 
   .button {
