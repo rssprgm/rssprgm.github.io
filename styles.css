@@ -63,10 +63,6 @@ a {
   transition: color 180ms ease;
 }
 
-a:hover {
-  color: var(--text);
-}
-
 :focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.86);
   outline-offset: 4px;
@@ -89,7 +85,7 @@ button {
   position: sticky;
   top: 0;
   z-index: 10;
-  padding: 20px var(--space);
+  padding: 20px 0;
   background: linear-gradient(
     to bottom,
     rgba(5, 5, 5, 0.94) 0%,
@@ -117,6 +113,7 @@ main,
   display: flex;
   align-items: center;
   justify-content: space-between;
+  min-height: 32px;
   color: #fff;
   mix-blend-mode: difference;
 }
@@ -231,8 +228,7 @@ h1 {
     color 180ms ease;
 }
 
-.button,
-.button:hover {
+.button {
   text-decoration: none;
 }
 
@@ -241,19 +237,10 @@ h1 {
   color: var(--button-dark-text);
 }
 
-.button-primary:hover {
-  --button-surface-base: var(--button-white-hover);
-}
-
 .button-secondary {
   --button-surface-base: rgba(255, 255, 255, 0.04);
   border-color: transparent;
   color: var(--text);
-}
-
-.button-secondary:hover {
-  --button-surface-base: rgba(255, 255, 255, 0.055);
-  border-color: transparent;
 }
 
 .button-circle {
@@ -361,12 +348,6 @@ h1 {
     background 180ms ease,
     border-color 180ms ease,
     color 180ms ease;
-}
-
-.join-close:hover {
-  --button-surface-base: rgba(255, 255, 255, 0.14);
-  border-color: transparent;
-  color: var(--text);
 }
 
 .join-close svg {
@@ -706,13 +687,48 @@ html.js .select-shell select {
     transform 180ms ease;
 }
 
-.carousel-button:hover {
-  background: #dcdce1;
-  color: #1d1d1f;
-}
-
 .carousel-button:active {
   transform: scale(0.96);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  a:hover {
+    color: var(--text);
+  }
+
+  .nav a:hover,
+  .nav button:hover {
+    opacity: 1;
+  }
+
+  .menu-toggle:hover {
+    opacity: 1;
+  }
+
+  .button-primary:hover {
+    --button-surface-base: var(--button-white-hover);
+  }
+
+  .button-secondary:hover {
+    --button-surface-base: rgba(255, 255, 255, 0.055);
+    border-color: transparent;
+  }
+
+  .join-close:hover {
+    --button-surface-base: rgba(255, 255, 255, 0.14);
+    border-color: transparent;
+    color: var(--text);
+  }
+
+  .carousel-button:hover {
+    background: #dcdce1;
+    color: #1d1d1f;
+  }
+
+  .mobile-menu-nav a:hover,
+  .mobile-menu-nav button:hover {
+    color: var(--text);
+  }
 }
 
 .carousel-button svg {
