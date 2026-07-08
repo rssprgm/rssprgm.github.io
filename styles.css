@@ -1194,25 +1194,9 @@ html.reduced-motion [data-component-list*="StaggeredFadeIn"] [data-staggered-ite
     color: var(--text);
   }
 
-  .mobile-menu-nav > :nth-child(1) {
-    --mobile-menu-item-delay: 110ms;
-  }
-
-  .mobile-menu-nav > :nth-child(2) {
-    --mobile-menu-item-delay: 175ms;
-  }
-
-  .mobile-menu-nav > :nth-child(3) {
-    --mobile-menu-item-delay: 240ms;
-  }
-
-  .mobile-menu-nav > :nth-child(4) {
-    --mobile-menu-item-delay: 305ms;
-  }
-
   .mobile-menu[data-state="open"] .mobile-menu-nav > * {
     animation: mobileMenuItemIn 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
-    animation-delay: var(--mobile-menu-item-delay, 110ms);
+    animation-delay: calc(110ms + var(--mobile-menu-index) * 65ms);
   }
 
   .hero {

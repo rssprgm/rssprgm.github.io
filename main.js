@@ -134,6 +134,11 @@ function setupMobileMenu() {
   const toggle = document.querySelector("[data-menu-toggle]");
   const menu = document.querySelector("[data-mobile-menu]");
   const menuItems = Array.from(menu?.querySelectorAll("[data-mobile-menu-link]") || []);
+  const menuNav = menu.querySelector(".mobile-menu-nav");
+
+  menuNav?.children && Array.from(menuNav.children).forEach(
+    (child, i) => child.style.setProperty("--mobile-menu-index", i),
+  );
 
   if (!toggle || !menu) {
     return;
