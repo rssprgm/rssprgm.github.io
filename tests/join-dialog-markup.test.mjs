@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 
 const joinDialog = readFileSync("join-dialog.js", "utf8");
 const joinDialogMarkup = readFileSync("_includes/join-dialog.html", "utf8");
-const pages = ["index.html", "resources.html"].map((path) => ({
+const pages = ["index.html", "resources.html", "meetings.html"].map((path) => ({
   path,
   source: readFileSync(path, "utf8"),
 }));
@@ -56,4 +56,14 @@ test("the join controller uses native dialog lifecycle instead of runtime markup
   assert.match(joinDialog, /joinDialog\.showModal\(\)/);
   assert.match(joinDialog, /joinDialog\.close\(\)/);
   assert.match(joinDialog, /joinDialog\.addEventListener\("cancel"/);
+});
+
+test("shared navigation points to the meetings page", () => {
+  const header = readFileSync("_includes/site-header.html", "utf8");
+  const mobileMenu = readFileSync("_includes/mobile-menu.html", "utf8");
+
+  [header, mobileMenu].forEach((source) => {
+    assert.match(source, /assign meetings_url = '\/meetings\.html' \| relative_url/);
+    assert.match(source, /href="{{ meetings_url }}"/);
+  });
 });

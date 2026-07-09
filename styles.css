@@ -1192,6 +1192,10 @@ html.reduced-motion [data-component-list*="StaggeredFadeIn"] [data-staggered-ite
   max-width: 860px;
 }
 
+.meetings-page {
+  border-top: 0;
+}
+
 .intro p {
   color: var(--muted);
   font-size: clamp(20px, 2vw, 30px);

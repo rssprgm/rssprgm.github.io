@@ -1,4 +1,5 @@
 {% assign home_url = '/' | relative_url %}
+{% assign meetings_url = '/meetings.html' | relative_url %}
 {% assign resources_url = '/resources.html' | relative_url %}
 <header class="site-header">
   <div class="site-header-inner">
@@ -7,12 +8,11 @@
       {% if page.is_home %}
         <a href="#projects">Projects</a>
         <a href="#what-we-do">What We Do</a>
-        <a href="#meetings">Meetings</a>
       {% else %}
         <a href="{{ home_url }}#projects">Projects</a>
         <a href="{{ home_url }}#what-we-do">What We Do</a>
-        <a href="{{ home_url }}#meetings">Meetings</a>
       {% endif %}
+      <a href="{{ meetings_url }}">Meetings</a>
       <a href="{{ resources_url }}">Resources</a>
       <button type="button" data-open-join>Join</button>
     </nav>
