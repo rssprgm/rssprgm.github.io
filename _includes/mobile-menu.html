@@ -1,7 +1,7 @@
 {% assign home_url = '/' | relative_url %}
 {% assign meetings_url = '/meetings.html' | relative_url %}
 {% assign resources_url = '/resources.html' | relative_url %}
-<div class="mobile-menu" id="mobile-menu" data-mobile-menu hidden>
+<div class="mobile-menu" id="mobile-menu" data-mobile-menu data-lenis-prevent hidden>
   <nav class="mobile-menu-nav" aria-label="Mobile navigation">
     {% if page.is_home %}
       <a href="#projects" data-mobile-menu-link>Projects</a>

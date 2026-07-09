@@ -1,5 +1,6 @@
 import { initButtonEffects } from "./button-effects.js";
 import { setupJoinDialog } from "./join-dialog.js";
+import { setupLenisScroll } from "./lenis-scroll.js";
 import { setupProjectCarousels } from "./project-carousel.js";
 import { setupSmoothScrolling } from "./smooth-scroll.js";
 
@@ -14,11 +15,13 @@ document.documentElement.classList.toggle(
   !prefersReducedMotion,
 );
 
+const lenis = setupLenisScroll({ prefersReducedMotion });
+
 setupProjectCarousels({ prefersReducedMotion });
 setupStaggeredFadeIn();
 const refreshButtonEffects = initButtonEffects({ prefersReducedMotion });
 
-setupSmoothScrolling({ prefersReducedMotion });
+setupSmoothScrolling({ lenis, prefersReducedMotion });
 setupJoinDialog({
   root: document.querySelector("[data-join-dialog]"),
   triggers: document.querySelectorAll("[data-open-join]"),

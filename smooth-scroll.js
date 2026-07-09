@@ -1,6 +1,7 @@
 const pendingScrollTargetKey = "rssprgm:pending-scroll-target";
 
 export function setupSmoothScrolling({
+  lenis = null,
   prefersReducedMotion = false,
 } = {}) {
   const behavior = prefersReducedMotion ? "auto" : "smooth";
@@ -52,6 +53,11 @@ export function setupSmoothScrolling({
   }
 
   function scrollToTarget(target) {
+    if (lenis) {
+      lenis.scrollTo(target, { duration: 1.1, offset: 0 });
+      return;
+    }
+
     const targetTop = target.getBoundingClientRect().top + window.scrollY;
     window.scrollTo({ top: Math.max(0, targetTop), behavior });
   }
