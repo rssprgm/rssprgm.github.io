@@ -1,0 +1,17 @@
+{% assign home_url = '/' | relative_url %}
+{% assign resources_url = '/resources.html' | relative_url %}
+<div class="mobile-menu" id="mobile-menu" data-mobile-menu hidden>
+  <nav class="mobile-menu-nav" aria-label="Mobile navigation">
+    {% if page.is_home %}
+      <a href="#projects" data-mobile-menu-link>Projects</a>
+      <a href="#what-we-do" data-mobile-menu-link>What We Do</a>
+      <a href="#meetings" data-mobile-menu-link>Meetings</a>
+    {% else %}
+      <a href="{{ home_url }}#projects" data-mobile-menu-link>Projects</a>
+      <a href="{{ home_url }}#what-we-do" data-mobile-menu-link>What We Do</a>
+      <a href="{{ home_url }}#meetings" data-mobile-menu-link>Meetings</a>
+    {% endif %}
+    <a href="{{ resources_url }}" data-mobile-menu-link>Resources</a>
+    <button type="button" data-open-join data-mobile-menu-link>Join</button>
+  </nav>
+</div>

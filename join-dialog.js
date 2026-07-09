@@ -1,155 +1,27 @@
 import { createStaggeredTextRenderer } from "./text-effects.js";
 
-const joinDialogHTML = `
-  <div
-    class="join-overlay"
-    id="join-dialog"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="join-title"
-    tabindex="-1"
-    hidden>
-    <div class="join-dialog">
-      <div class="join-panel">
-      <form class="join-form" id="join-form">
-        <div class="join-form-head">
-          <h2 id="join-title">Join our club</h2>
-          <button class="join-close" type="button" data-close-join aria-label="Close dialog">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M6 6l12 12M18 6L6 18" />
-            </svg>
-          </button>
-        </div>
-
-        <label>
-          <span>Full name</span>
-          <span class="field-shell">
-            <input name="name" autocomplete="name" maxlength="80" required />
-          </span>
-        </label>
-
-        <label>
-          <span>Student number</span>
-          <span class="field-shell">
-            <input
-              name="student_number"
-              inputmode="numeric"
-              autocomplete="off"
-              maxlength="20"
-              pattern="[0-9]*"
-              title="Use digits only."
-              required />
-          </span>
-        </label>
-
-        <label>
-          <span>Grade</span>
-          <span class="field-shell select-shell">
-            <select name="grade" required>
-              <option value="">Select</option>
-              <option>8</option>
-              <option>9</option>
-              <option>10</option>
-              <option>11</option>
-              <option>12</option>
-              <option>Other</option>
-            </select>
-            <span class="grade-value" aria-hidden="true"></span>
-            <span class="select-arrow" aria-hidden="true"></span>
-          </span>
-        </label>
-
-        <label>
-          <span>Personal email for updates (optional)</span>
-          <span class="field-shell">
-            <input
-              name="personal_email"
-              type="email"
-              autocomplete="email"
-              maxlength="254"
-              aria-describedby="personal-email-message" />
-          </span>
-          <small class="field-message" id="personal-email-message" aria-live="polite"></small>
-        </label>
-
-        <label>
-          <span>What do you want to build? (optional)</span>
-          <span class="field-shell field-shell-area">
-            <textarea name="interest" rows="4" maxlength="500"></textarea>
-          </span>
-        </label>
-
-        <label class="trap-field" aria-hidden="true">
-          <span>Website</span>
-          <input name="website" tabindex="-1" autocomplete="off" />
-        </label>
-
-        <div
-          class="turnstile-box"
-          id="join-turnstile"
-          aria-label="Human verification"></div>
-
-        <p class="join-status" data-join-status role="status" aria-live="polite"></p>
-
-        <div class="join-actions">
-          <button class="button button-primary join-submit" type="submit">
-            <span>Submit</span>
-          </button>
-        </div>
-      </form>
-
-      <div class="join-success" id="join-success" tabindex="-1" hidden>
-        <div class="join-form-head">
-          <h2 id="join-success-title">You're on the list</h2>
-        </div>
-
-        <p>
-          We got your signup. Once the club is ready, you will be added to our teams channel.
-          If you need further assistance, please contact us at
-          <a href="mailto:rssprogrammingclub@gmail.com"
-            >rssprogrammingclub@gmail.com</a
-          >.
-        </p>
-
-        <div class="join-actions">
-          <button class="button button-primary" type="button" data-close-join>
-            <span>Done</span>
-          </button>
-        </div>
-      </div>
-      </div>
-    </div>
-  </div>
-`;
-
-const range = document.createRange();
-const fragment = range.createContextualFragment(joinDialogHTML);
-if (document.body) {
-  document.body.append(fragment);
-} else {
-  document.addEventListener("DOMContentLoaded", () => {
-    document.body.append(fragment.cloneNode(true));
-  });
-}
-
 const joinEndpoint = "https://wwpxrfnpwwdgffvfomyn.supabase.co/functions/v1/join";
 const supabasePublishableKey = "sb_publishable_mowvPO11HaerjOlL2b7nuA_uaykTin6";
 const turnstileSiteKey = "0x4AAAAAADuS4A5I_uUQo3fV";
 
 export function setupJoinDialog({
+  root = null,
+  triggers = [],
   prefersReducedMotion = false,
   refreshButtonEffects = () => undefined,
 } = {}) {
-  const joinDialog = document.querySelector("#join-dialog");
-  const joinForm = document.querySelector("#join-form");
-  const joinSuccess = document.querySelector("#join-success");
-  const joinStatus = document.querySelector("[data-join-status]");
-  const gradeValue = document.querySelector(".grade-value");
-  const personalEmailMessage = document.querySelector("#personal-email-message");
-  const turnstileContainer = document.querySelector("#join-turnstile");
+  const joinDialog = root;
+  const joinForm = joinDialog?.querySelector("[data-join-form]");
+  const joinSuccess = joinDialog?.querySelector("[data-join-success]");
+  const joinStatus = joinDialog?.querySelector("[data-join-status]");
+  const gradeValue = joinDialog?.querySelector("[data-join-grade-value]");
+  const personalEmailMessage = joinDialog?.querySelector(
+    "[data-join-personal-email-message]",
+  );
+  const turnstileContainer = joinDialog?.querySelector("[data-join-turnstile]");
 
   if (
-    !(joinDialog instanceof HTMLElement) ||
+    !(joinDialog instanceof HTMLDialogElement) ||
     !(joinForm instanceof HTMLFormElement) ||
     !(joinSuccess instanceof HTMLElement) ||
     !(joinStatus instanceof HTMLElement) ||
@@ -186,29 +58,19 @@ export function setupJoinDialog({
   let turnstileWidgetId;
   let lockedScrollY = 0;
   let closeTimeoutId = null;
+  const joinTriggers = Array.from(triggers).filter(
+    (trigger) => trigger instanceof HTMLElement,
+  );
 
   renderGradeValue(false);
 
-  document.querySelectorAll("[data-open-join]").forEach((button) => {
+  joinTriggers.forEach((button) => {
     button.addEventListener("click", () => {
-      clearTimeout(closeTimeoutId);
-      activeJoinTrigger = button instanceof HTMLElement ? button : null;
-      joinSessionId += 1;
-      cancelJoinRequest();
-      joinStartedAt = Date.now();
-      turnstileToken = "";
-      showJoinForm();
-      setJoinStatus("", "");
-      lockPageScroll();
-      joinDialog.hidden = false;
-      joinDialog.scrollTop = 0;
-      joinDialog.focus({ preventScroll: true });
-      refreshTurnstile(joinSessionId);
-      refreshButtonEffects();
+      openJoinDialog(button);
     });
   });
 
-  document.querySelectorAll("[data-close-join]").forEach((button) => {
+  joinDialog.querySelectorAll("[data-close-join]").forEach((button) => {
     button.addEventListener("click", closeJoinDialog);
   });
 
@@ -218,17 +80,9 @@ export function setupJoinDialog({
     }
   });
 
-  document.addEventListener("keydown", (event) => {
-    if (joinDialog.hidden) return;
-
-    if (event.key === "Escape") {
-      closeJoinDialog();
-      return;
-    }
-
-    if (event.key === "Tab") {
-      trapJoinFocus(event);
-    }
+  joinDialog.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closeJoinDialog();
   });
 
   personalEmailInput.addEventListener("input", validatePersonalEmail);
@@ -329,17 +183,65 @@ export function setupJoinDialog({
     }
   });
 
+  function openJoinDialog(button) {
+    clearCloseTimeout();
+    activeJoinTrigger = button;
+    joinSessionId += 1;
+    cancelJoinRequest();
+    joinStartedAt = Date.now();
+    turnstileToken = "";
+    showJoinForm();
+    setJoinStatus("", "");
+
+    if (!joinDialog.open) {
+      lockPageScroll();
+      joinDialog.showModal();
+    }
+
+    joinDialog.scrollTop = 0;
+    joinDialog.dataset.state = "opening";
+    requestAnimationFrame(() => {
+      if (joinDialog.open && joinDialog.dataset.state === "opening") {
+        joinDialog.dataset.state = "open";
+      }
+    });
+    refreshTurnstile(joinSessionId);
+    refreshButtonEffects();
+  }
+
   function closeJoinDialog() {
+    if (!joinDialog.open || joinDialog.dataset.state === "closing") return;
+
     joinSessionId += 1;
     cancelJoinRequest();
     disposeTurnstile();
-    joinDialog.hidden = true;
-    clearTimeout(closeTimeoutId);
-    closeTimeoutId = setTimeout(() => {
+    joinDialog.dataset.state = "closing";
+    clearCloseTimeout();
+
+    const completeClose = () => {
+      closeTimeoutId = null;
+      if (!joinDialog.open || joinDialog.dataset.state !== "closing") return;
+
+      joinDialog.close();
+      joinDialog.dataset.state = "closed";
       unlockPageScroll();
       activeJoinTrigger?.focus({ preventScroll: true });
       activeJoinTrigger = null;
-    }, prefersReducedMotion ? 0 : 300);
+    };
+
+    if (prefersReducedMotion) {
+      completeClose();
+      return;
+    }
+
+    closeTimeoutId = window.setTimeout(completeClose, 300);
+  }
+
+  function clearCloseTimeout() {
+    if (closeTimeoutId === null) return;
+
+    window.clearTimeout(closeTimeoutId);
+    closeTimeoutId = null;
   }
 
   function cancelJoinRequest() {
@@ -447,7 +349,8 @@ export function setupJoinDialog({
   function isCurrentJoinSession(sessionId) {
     return (
       sessionId === joinSessionId &&
-      !joinDialog.hidden &&
+      joinDialog.open &&
+      joinDialog.dataset.state !== "closing" &&
       joinDialog.dataset.mode === "form"
     );
   }
@@ -644,58 +547,6 @@ export function setupJoinDialog({
     return turnstileReadyPromise;
   }
 
-  function trapJoinFocus(event) {
-    const focusable = getFocusableJoinElements();
-    if (!focusable.length) {
-      event.preventDefault();
-      joinDialog.focus({ preventScroll: true });
-      return;
-    }
-
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-    const activeElement = document.activeElement;
-
-    if (activeElement === joinDialog || !joinDialog.contains(activeElement)) {
-      event.preventDefault();
-      (event.shiftKey ? last : first).focus({ preventScroll: true });
-      return;
-    }
-
-    if (event.shiftKey && activeElement === first) {
-      event.preventDefault();
-      last.focus({ preventScroll: true });
-      return;
-    }
-
-    if (!event.shiftKey && activeElement === last) {
-      event.preventDefault();
-      first.focus({ preventScroll: true });
-    }
-  }
-
-  function getFocusableJoinElements() {
-    return Array.from(
-      joinDialog.querySelectorAll(
-        [
-          "a[href]",
-          "button:not([disabled])",
-          "input:not([disabled])",
-          "select:not([disabled])",
-          "textarea:not([disabled])",
-          "iframe",
-          '[tabindex]:not([tabindex="-1"])',
-        ].join(","),
-      ),
-    ).filter((element) => {
-      if (!(element instanceof HTMLElement) || element.hidden) return false;
-      if (element.closest("[hidden], [inert], [aria-hidden='true']")) return false;
-      if (!element.getClientRects().length) return false;
-
-      const style = window.getComputedStyle(element);
-      return style.display !== "none" && style.visibility !== "hidden";
-    });
-  }
 }
 
 function getSource() {

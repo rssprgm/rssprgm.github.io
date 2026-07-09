@@ -1,0 +1,30 @@
+{% assign home_url = '/' | relative_url %}
+{% assign resources_url = '/resources.html' | relative_url %}
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="brand" href="{{ home_url }}" aria-label="RSS Programming Club home">RSSPRGM</a>
+    <nav class="nav" aria-label="Primary navigation">
+      {% if page.is_home %}
+        <a href="#projects">Projects</a>
+        <a href="#what-we-do">What We Do</a>
+        <a href="#meetings">Meetings</a>
+      {% else %}
+        <a href="{{ home_url }}#projects">Projects</a>
+        <a href="{{ home_url }}#what-we-do">What We Do</a>
+        <a href="{{ home_url }}#meetings">Meetings</a>
+      {% endif %}
+      <a href="{{ resources_url }}">Resources</a>
+      <button type="button" data-open-join>Join</button>
+    </nav>
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-label="Open menu"
+      aria-controls="mobile-menu"
+      aria-expanded="false"
+      data-menu-toggle>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</header>

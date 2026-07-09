@@ -52,7 +52,7 @@ test("join RPC keeps network throttling and drops the old overloaded signature",
 test("join network throttle is safe for shared school Wi-Fi", () => {
   assert.match(
     joinFunction,
-    /const defaultRecentIpLimit = 120;/,
+    /const defaultRecentIpLimit = 200;/,
     "default network throttle must allow normal school Wi-Fi signup volume",
   );
   assert.match(

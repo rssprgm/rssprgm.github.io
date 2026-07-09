@@ -1,3 +1,6 @@
+---
+is_home: true
+---
 <!doctype html>
 <html lang="en">
   <head>
@@ -45,41 +48,8 @@
       <defs></defs>
     </svg>
 
-    <header class="site-header">
-      <div class="site-header-inner">
-        <a class="brand" href="#" aria-label="RSS Programming Club home"
-          >RSSPRGM</a
-        >
-        <nav class="nav" aria-label="Primary navigation">
-          <a href="#projects">Projects</a>
-          <a href="#what-we-do">What We Do</a>
-          <a href="#meetings">Meetings</a>
-          <a href="./resources.html">Resources</a>
-          <button type="button" data-open-join>Join</button>
-        </nav>
-        <button
-          class="menu-toggle"
-          type="button"
-          aria-label="Open menu"
-          aria-controls="mobile-menu"
-          aria-expanded="false"
-          data-menu-toggle>
-          <span></span>
-          <span></span>
-        </button>
-      </div>
-
-    </header>
-
-    <div class="mobile-menu" id="mobile-menu" data-mobile-menu hidden>
-      <nav class="mobile-menu-nav" aria-label="Mobile navigation">
-        <a href="#projects" data-mobile-menu-link>Projects</a>
-        <a href="#what-we-do" data-mobile-menu-link>What We Do</a>
-        <a href="#meetings" data-mobile-menu-link>Meetings</a>
-        <a href="./resources.html" data-mobile-menu-link>Resources</a>
-        <button type="button" data-open-join data-mobile-menu-link>Join</button>
-      </nav>
-    </div>
+    {% include site-header.html %}
+    {% include mobile-menu.html %}
 
     <main>
       <section class="hero" aria-labelledby="hero-title">
@@ -375,15 +345,8 @@
       </section>
     </main>
 
-    <footer class="footer">
-      <div class="footer-inner">
-        <span>rssprgm.github.io</span>
-        <span>Richmond Secondary School</span>
-        <a href="mailto:rssprogrammingclub@gmail.com"
-          >rssprogrammingclub@gmail.com</a
-        >
-      </div>
-    </footer>
+    {% include site-footer.html %}
+    {% include join-dialog.html %}
 
     <script type="module" src="./main.js"></script>
   </body>

@@ -1,3 +1,6 @@
+---
+is_home: false
+---
 <!doctype html>
 <html lang="en">
   <head>
@@ -28,40 +31,8 @@
     <link rel="stylesheet" href="./button-effects.css" />
   </head>
   <body>
-    <header class="site-header">
-      <div class="site-header-inner">
-        <a class="brand" href="./index.html" aria-label="RSS Programming Club home"
-          >RSSPRGM</a
-        >
-        <nav class="nav" aria-label="Primary navigation">
-          <a href="./index.html#projects">Projects</a>
-          <a href="./index.html#what-we-do">What We Do</a>
-          <a href="./index.html#meetings">Meetings</a>
-          <a href="./resources.html">Resources</a>
-          <button type="button" data-open-join>Join</button>
-        </nav>
-        <button
-          class="menu-toggle"
-          type="button"
-          aria-label="Open menu"
-          aria-controls="mobile-menu"
-          aria-expanded="false"
-          data-menu-toggle>
-          <span></span>
-          <span></span>
-        </button>
-      </div>
-    </header>
-
-    <div class="mobile-menu" id="mobile-menu" data-mobile-menu hidden>
-      <nav class="mobile-menu-nav" aria-label="Mobile navigation">
-        <a href="./index.html#projects" data-mobile-menu-link>Projects</a>
-        <a href="./index.html#what-we-do" data-mobile-menu-link>What We Do</a>
-        <a href="./index.html#meetings" data-mobile-menu-link>Meetings</a>
-        <a href="./resources.html" data-mobile-menu-link>Resources</a>
-        <button type="button" data-open-join data-mobile-menu-link>Join</button>
-      </nav>
-    </div>
+    {% include site-header.html %}
+    {% include mobile-menu.html %}
 
     <main>
       <section class="resources" aria-labelledby="resources-title">
@@ -225,6 +196,7 @@
       </section>
     </main>
 
+    {% include join-dialog.html %}
     <script type="module" src="./main.js"></script>
   </body>
 </html>

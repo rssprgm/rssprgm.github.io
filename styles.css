@@ -295,18 +295,19 @@ h1 {
   aspect-ratio: 1;
 }
 
-.join-overlay {
+dialog.join-overlay {
   position: fixed;
   inset: 0;
   z-index: 100;
-  display: grid;
-  align-items: center;
-  justify-items: center;
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
   padding: max(16px, env(safe-area-inset-top)) 16px
     max(16px, env(safe-area-inset-bottom));
   margin: 0;
-  background: rgba(0, 0, 0, 0.68);
-  backdrop-filter: blur(10px);
+  border: 0;
+  background: transparent;
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -317,20 +318,42 @@ h1 {
   transition: opacity 300ms ease, visibility 300ms ease;
 }
 
+dialog.join-overlay:not([open]) {
+  display: none;
+}
+
+dialog.join-overlay[open] {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  visibility: visible;
+}
+
 @supports (align-items: safe center) {
-  .join-overlay {
+  dialog.join-overlay[open] {
     align-items: safe center;
   }
 }
 
-.join-overlay:not([hidden]) {
-  opacity: 1;
-  visibility: visible;
+dialog.join-overlay[data-state="opening"] {
   pointer-events: auto;
 }
 
-.join-overlay[hidden] {
-  display: grid;
+dialog.join-overlay[data-state="open"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+dialog.join-overlay::backdrop {
+  background: rgba(0, 0, 0, 0.68);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+dialog.join-overlay[data-state="open"]::backdrop {
+  opacity: 1;
 }
 
 .join-dialog {
@@ -349,7 +372,7 @@ h1 {
   transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1), opacity 300ms ease;
 }
 
-.join-overlay:not([hidden]) .join-dialog {
+dialog.join-overlay[data-state="open"] .join-dialog {
   transform: scale(1) translateY(0);
   opacity: 1;
 }
@@ -1353,13 +1376,13 @@ html.reduced-motion [data-component-list*="StaggeredFadeIn"] [data-staggered-ite
     padding: 0;
   }
 
-  .join-overlay[data-mode="form"] {
+  dialog.join-overlay[open][data-mode="form"] {
     align-items: start;
     padding: max(14px, env(safe-area-inset-top)) 16px
       max(92px, calc(env(safe-area-inset-bottom) + 28px));
   }
 
-  .join-overlay[data-mode="success"] {
+  dialog.join-overlay[open][data-mode="success"] {
     padding-bottom: max(14px, env(safe-area-inset-bottom));
   }
 

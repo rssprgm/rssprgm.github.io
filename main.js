@@ -19,7 +19,12 @@ setupStaggeredFadeIn();
 const refreshButtonEffects = initButtonEffects({ prefersReducedMotion });
 
 setupSmoothScrolling({ prefersReducedMotion });
-setupJoinDialog({ prefersReducedMotion, refreshButtonEffects });
+setupJoinDialog({
+  root: document.querySelector("[data-join-dialog]"),
+  triggers: document.querySelectorAll("[data-open-join]"),
+  prefersReducedMotion,
+  refreshButtonEffects,
+});
 setupMobileMenu();
 
 function setupStaggeredFadeIn() {
