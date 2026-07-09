@@ -11,3 +11,18 @@ test("same-page hash links land at the section start", () => {
   );
   assert.doesNotMatch(smoothScroll, /headerHeight|scrollOffset/);
 });
+
+test("cross-page hash links resume with smooth scrolling after navigation", () => {
+  assert.match(smoothScroll, /pendingScrollTargetKey/);
+  assert.match(smoothScroll, /window\.sessionStorage\.setItem/);
+  assert.match(smoothScroll, /url\.hash = ""/);
+  assert.match(smoothScroll, /window\.location\.assign\(url\.href\)/);
+  assert.match(smoothScroll, /window\.history\.replaceState/);
+});
+
+test("modified and new-tab link clicks keep their native behavior", () => {
+  assert.match(smoothScroll, /event\.metaKey/);
+  assert.match(smoothScroll, /event\.ctrlKey/);
+  assert.match(smoothScroll, /link\.hasAttribute\("download"\)/);
+  assert.match(smoothScroll, /link\.target && link\.target !== "_self"/);
+});
