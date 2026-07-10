@@ -68,13 +68,17 @@ export function getCarouselButtonState(rail) {
     };
   }
 
-  const railBounds = rail.getBoundingClientRect();
+  const carouselBounds = (
+    rail.closest(".project-showcase") || rail
+  ).getBoundingClientRect();
   const firstCardBounds = cards[0].getBoundingClientRect();
   const lastCardBounds = cards[cards.length - 1].getBoundingClientRect();
   const tolerance = 1;
 
-  const canScrollPrevious = firstCardBounds.left < railBounds.left - tolerance;
-  const canScrollNext = lastCardBounds.right > railBounds.right + tolerance;
+  const canScrollPrevious = firstCardBounds.left
+    < carouselBounds.left - tolerance;
+  const canScrollNext = lastCardBounds.right
+    > carouselBounds.right + tolerance;
 
   return {
     hasOverflow: canScrollPrevious || canScrollNext,

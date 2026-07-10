@@ -8,8 +8,8 @@ const styles = readFileSync(new URL("../styles.css", import.meta.url), "utf8");
 const indexMarkup = readFileSync(new URL("../index.html", import.meta.url), "utf8");
 
 function createRail({
-  railLeft = 0,
-  railRight = 950,
+  containerLeft = 0,
+  containerRight = 950,
   firstCardLeft = 48,
   lastCardRight = 900,
 }) {
@@ -19,7 +19,12 @@ function createRail({
   ];
 
   return {
-    getBoundingClientRect: () => ({ left: railLeft, right: railRight }),
+    closest: () => ({
+      getBoundingClientRect: () => ({
+        left: containerLeft,
+        right: containerRight,
+      }),
+    }),
     querySelectorAll: () => cards,
   };
 }
@@ -54,6 +59,20 @@ test("only Previous is available at the end of a carousel", () => {
       createRail({ firstCardLeft: -100, lastCardRight: 900 }),
     ),
     { hasOverflow: true, canScrollPrevious: true, canScrollNext: false },
+  );
+});
+
+test("cards outside the width-limited container count as overflow", () => {
+  assert.deepEqual(
+    getCarouselButtonState(
+      createRail({
+        containerLeft: 296,
+        containerRight: 1736,
+        firstCardLeft: 296,
+        lastCardRight: 1940,
+      }),
+    ),
+    { hasOverflow: true, canScrollPrevious: false, canScrollNext: true },
   );
 });
 
