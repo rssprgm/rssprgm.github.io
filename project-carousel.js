@@ -9,7 +9,10 @@ export function setupProjectCarousels({ prefersReducedMotion = false } = {}) {
   const rails = Array.from(document.querySelectorAll(".project-rail"));
   let resizeQueued = false;
 
-  rails.forEach(prepareProjectRail);
+  rails.forEach((rail) => {
+    prepareProjectRail(rail);
+    syncCarouselControls(rail);
+  });
 
   document.querySelectorAll("[data-carousel-target]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -31,9 +34,53 @@ export function setupProjectCarousels({ prefersReducedMotion = false } = {}) {
         if (activeCard) {
           alignCard(activeCard, rail, "auto");
         }
+
+        syncCarouselControls(rail);
       });
     });
   });
+}
+
+function syncCarouselControls(rail) {
+  const state = getCarouselButtonState(rail);
+  const buttons = Array.from(
+    document.querySelectorAll(`[data-carousel-target="${rail.id}"]`),
+  );
+  const controls = buttons[0]?.closest(".carousel-controls");
+
+  if (controls) controls.hidden = !state.hasOverflow;
+
+  buttons.forEach((button) => {
+    const direction = Number(button.dataset.carouselDir || 1);
+    button.disabled = direction < 0
+      ? !state.canScrollPrevious
+      : !state.canScrollNext;
+  });
+}
+
+export function getCarouselButtonState(rail) {
+  const cards = Array.from(rail.querySelectorAll(".project-card"));
+  if (!cards.length) {
+    return {
+      hasOverflow: false,
+      canScrollPrevious: false,
+      canScrollNext: false,
+    };
+  }
+
+  const railBounds = rail.getBoundingClientRect();
+  const firstCardBounds = cards[0].getBoundingClientRect();
+  const lastCardBounds = cards[cards.length - 1].getBoundingClientRect();
+  const tolerance = 1;
+
+  const canScrollPrevious = firstCardBounds.left < railBounds.left - tolerance;
+  const canScrollNext = lastCardBounds.right > railBounds.right + tolerance;
+
+  return {
+    hasOverflow: canScrollPrevious || canScrollNext,
+    canScrollPrevious,
+    canScrollNext,
+  };
 }
 
 function prepareProjectRail(rail) {
@@ -57,6 +104,7 @@ function prepareProjectRail(rail) {
       ticking = true;
       requestAnimationFrame(() => {
         markActiveCard(rail);
+        syncCarouselControls(rail);
         ticking = false;
       });
     },
