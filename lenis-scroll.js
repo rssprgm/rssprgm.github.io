@@ -1,4 +1,4 @@
-import Lenis from "https://cdn.jsdelivr.net/npm/lenis@1.3.11/+esm";
+import Lenis from "./vendor/lenis/lenis.mjs";
 
 export function setupLenisScroll({ prefersReducedMotion = false } = {}) {
   if (prefersReducedMotion) return null;
