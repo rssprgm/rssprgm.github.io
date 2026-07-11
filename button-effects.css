@@ -167,6 +167,21 @@
   }
 }
 
+[data-join-dialog] .button,
+[data-join-dialog] .join-close {
+  -webkit-backdrop-filter: blur(var(--button-backdrop-blur)) saturate(1.2);
+  backdrop-filter: blur(var(--button-backdrop-blur)) saturate(1.2);
+}
+
+/* Gecko still repaints transformed backdrop-filter surfaces inside modals. */
+@supports (-moz-appearance: none) {
+  [data-join-dialog] .button,
+  [data-join-dialog] .join-close {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
 .button-press-glow {
   position: absolute;
   z-index: 0;

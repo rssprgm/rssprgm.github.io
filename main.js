@@ -23,14 +23,13 @@ const lenis = setupLenisScroll({ prefersReducedMotion });
 setupProjectCarousels({ prefersReducedMotion });
 setupStaggeredFadeIn();
 setupFaqAccordion();
-const refreshButtonEffects = initButtonEffects({ prefersReducedMotion });
+initButtonEffects({ prefersReducedMotion });
 
 setupSmoothScrolling({ lenis, prefersReducedMotion });
 setupJoinDialog({
   root: document.querySelector("[data-join-dialog]"),
   triggers: document.querySelectorAll("[data-open-join]"),
   prefersReducedMotion,
-  refreshButtonEffects,
 });
 setupMobileMenu();
 

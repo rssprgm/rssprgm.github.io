@@ -8,7 +8,6 @@ export function setupJoinDialog({
   root = null,
   triggers = [],
   prefersReducedMotion = false,
-  refreshButtonEffects = () => undefined,
 } = {}) {
   const joinDialog = root;
   const joinForm = joinDialog?.querySelector("[data-join-form]");
@@ -206,7 +205,6 @@ export function setupJoinDialog({
       }
     });
     refreshTurnstile(joinSessionId);
-    refreshButtonEffects();
   }
 
   function closeJoinDialog() {

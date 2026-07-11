@@ -63,7 +63,9 @@ function initRefractionFilters({ defs, selector }) {
 }
 
 function getRefractionElements(selector) {
-  return Array.from(document.querySelectorAll(selector));
+  return Array.from(document.querySelectorAll(selector)).filter(
+    (element) => !element.closest("[data-join-dialog]"),
+  );
 }
 
 function updateElementRefraction(
@@ -74,15 +76,24 @@ function updateElementRefraction(
   ior,
   defs,
 ) {
-  const rect = element.getBoundingClientRect();
-  const width = Math.round(rect.width);
-  const height = Math.round(rect.height);
+  const width = element.offsetWidth;
+  const height = element.offsetHeight;
+  const pixelRatio = window.devicePixelRatio || 1;
 
   if (!width || !height) {
     return;
   }
 
   const instance = getElementRefractionFilter(element, filterInstances, defs);
+
+  if (
+    instance.width === width &&
+    instance.height === height &&
+    instance.pixelRatio === pixelRatio
+  ) {
+    return;
+  }
+
   const displacementMap = createGlassDisplacementMap(
     width,
     height,
@@ -111,6 +122,9 @@ function updateElementRefraction(
     `url("#${instance.id}") blur(var(--button-backdrop-blur)) saturate(1.2)`;
   element.style.backdropFilter =
     `url("#${instance.id}") blur(var(--button-backdrop-blur)) saturate(1.2)`;
+  instance.width = width;
+  instance.height = height;
+  instance.pixelRatio = pixelRatio;
 }
 
 function getElementRefractionFilter(element, filterInstances, defs) {
@@ -147,7 +161,15 @@ function getElementRefractionFilter(element, filterInstances, defs) {
   filter.append(blur, image, displacement);
   defs.append(filter);
 
-  const instance = { displacement, filter, id, image };
+  const instance = {
+    displacement,
+    filter,
+    height: 0,
+    id,
+    image,
+    pixelRatio: 0,
+    width: 0,
+  };
 
   filterInstances.set(element, instance);
   return instance;
