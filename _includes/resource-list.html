@@ -1,0 +1,24 @@
+{% assign resource_categories = include.categories | default: site.data.resources %}
+{% for category in resource_categories %}
+  <div class="resource-category">
+    <h2 class="resource-category-title">{{ category.title }}</h2>
+    <ul class="resource-list">
+      {% for resource in category.items %}
+        {% assign icon_path = '/assets/icons/resources/' | append: resource.icon | append: '.svg' | relative_url %}
+        <li class="resource-item">
+          <span
+            class="resource-icon"
+            style="--resource-icon: url('{{ icon_path }}')"
+            aria-hidden="true"></span>
+          <div class="resource-info">
+            <a
+              class="resource-name"
+              href="{{ resource.url }}"
+              target="_blank"
+              rel="noopener">{{ resource.name }}</a>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endfor %}

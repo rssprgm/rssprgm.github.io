@@ -1367,11 +1367,14 @@ html.js .faq-item[data-open="true"] .faq-answer {
 }
 
 .resource-icon {
+  display: block;
   flex-shrink: 0;
   width: 22px;
   height: 22px;
   margin-top: 2px;
-  color: var(--muted);
+  background: var(--muted);
+  -webkit-mask: var(--resource-icon) center / contain no-repeat;
+  mask: var(--resource-icon) center / contain no-repeat;
 }
 
 .resource-info {
