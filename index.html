@@ -1,417 +1,157 @@
 ---
+layout: default
+title: Richmond Secondary Programming Club
+description: Projects, workshops, and programming challenges for students at Richmond Secondary School. No experience required.
+canonical_path: /
 is_home: true
 ---
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Richmond Secondary Programming Club</title>
-    <meta
-      name="description"
-      content="Projects, workshops, and programming challenges for students at Richmond Secondary School. No experience required." />
-    <link rel="canonical" href="https://rssprgm.github.io/" />
-    <meta property="og:title" content="Richmond Secondary Programming Club" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://rssprgm.github.io/" />
-    <meta
-      property="og:description"
-      content="Projects, workshops, and programming challenges for students at Richmond Secondary School. No experience required." />
-    <meta
-      property="og:image"
-      content="https://rssprgm.github.io/assets/social/opengraph.png" />
-    <meta property="og:image:type" content="image/png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta
-      property="og:image:alt"
-      content="Richmond Secondary Programming Club" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="theme-color" content="#f4f4f2" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap"
-      rel="stylesheet" />
-    <link rel="icon" href="data:," />
-    <link rel="stylesheet" href="./styles.css" />
-    <link rel="stylesheet" href="./text-effects.css" />
-    <link rel="stylesheet" href="./button-effects.css" />
-  </head>
-  <body>
-    <svg
-      class="svg-filters"
-      width="0"
-      height="0"
-      aria-hidden="true"
-      focusable="false">
-      <defs></defs>
-    </svg>
+<main>
+  <section class="hero" aria-labelledby="hero-title">
+    <canvas
+      class="hero-fluid"
+      data-hero-fluid
+      aria-hidden="true"></canvas>
+    <div class="hero-copy">
+      <h1 id="hero-title">Richmond Secondary Programming Club</h1>
+      <p>
+        Take programming further, wherever you&apos;re starting. Develop your
+        skills, explore beyond class, or tackle an ambitious project with
+        other students. <b>No experience required.</b>
+      </p>
+      <div class="hero-actions" aria-label="Primary actions">
+        <button class="button button-primary" type="button" data-open-join>
+          <span>Join</span>
+        </button>
+        <a class="button button-secondary" href="#projects" draggable="false">
+          <span>See projects</span>
+        </a>
+      </div>
+    </div>
+  </section>
 
-    {% include site-header.html %}
-    {% include mobile-menu.html %}
-
-    <main>
-      <section class="hero" aria-labelledby="hero-title">
-        <canvas
-          class="hero-fluid"
-          data-hero-fluid
-          aria-hidden="true"></canvas>
-        <div class="hero-copy">
-          <h1 id="hero-title">Richmond Secondary Programming Club</h1>
-          <p>
-            Take programming further, wherever you&apos;re starting. Develop your
-            skills, explore beyond class, or tackle an ambitious project with
-            other students. <b>No experience required.</b>
-          </p>
-          <div class="hero-actions" aria-label="Primary actions">
-            <button class="button button-primary" type="button" data-open-join>
-              <span>Join</span>
-            </button>
-            <a class="button button-secondary" href="#projects" draggable="false">
-              <span>See projects</span>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <section id="projects" class="section projects" aria-labelledby="projects-title">
-        <div class="projects-inner">
-          <div
-            class="projects-heading"
-            data-component-list="StaggeredFadeIn"
-            data-anim-scroll-group="Projects heading">
-            <h2 id="projects-title" data-staggered-item>Projects</h2>
-          </div>
-
-          <div
-            class="project-showcase"
-            aria-labelledby="rhs-app-title"
-            data-component-list="StaggeredFadeIn"
-            data-anim-scroll-group="RHS App projects">
-            <div class="project-showcase-head" data-staggered-item>
-              <div class="project-summary">
-                <h3 id="rhs-app-title">RHS App</h3>
-                <p class="project-description">
-                  Used by 15+ students through a private TestFlight beta, RHS App
-                  helps them plan their day, navigate school, and stay connected to
-                  RHS. Android is in development; the gallery shows only a small part
-                  of the app.
-                </p>
-                <a
-                  class="project-link"
-                  href="https://www.instagram.com/rhs_app2026"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="RHS App on Instagram (opens in a new tab)">
-                  Follow RHS App on Instagram <span aria-hidden="true">↗</span>
-                </a>
-              </div>
-
-              <div class="carousel-controls" hidden aria-label="RHS App carousel controls">
-                <button
-                  class="carousel-button"
-                  type="button"
-                  disabled
-                  aria-label="Previous RHS App card"
-                  data-carousel-dir="-1"
-                  data-carousel-target="rhs-app-rail">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M15 6l-6 6 6 6" />
-                  </svg>
-                </button>
-                <button
-                  class="carousel-button"
-                  type="button"
-                  disabled
-                  aria-label="Next RHS App card"
-                  data-carousel-dir="1"
-                  data-carousel-target="rhs-app-rail">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M9 6l6 6-6 6" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <div
-              class="project-rail"
-              id="rhs-app-rail"
-              tabindex="0"
-              aria-label="RHS App screenshots">
-              <div class="project-track">
-                <article class="project-card rhs-card" data-staggered-item>
-                  <div class="project-media rhs-media">
-                    <img
-                      src="./assets/projects/rhs-app/schedule.webp"
-                      width="888"
-                      height="2622"
-                      loading="lazy"
-                      decoding="async"
-                      alt="RHS App schedule screen showing a day of classes" />
-                  </div>
-                  <p><strong>Schedule.</strong> See today&apos;s rotation, class blocks, rooms, teachers, and realtime updates in one glance.</p>
-                </article>
-
-                <article class="project-card rhs-card" data-staggered-item>
-                  <div class="project-media rhs-media rhs-media-map">
-                    <img
-                      src="./assets/projects/rhs-app/map.webp"
-                      width="1264"
-                      height="2622"
-                      loading="lazy"
-                      decoding="async"
-                      alt="RHS App indoor map screen with room markers and search" />
-                  </div>
-                  <p><strong>School map.</strong> Search rooms and landmarks with a visual school map built for quick navigation between blocks.</p>
-                </article>
-
-                <article class="project-card rhs-card" data-staggered-item>
-                  <div class="project-media rhs-media">
-                    <img
-                      src="./assets/projects/rhs-app/siri-schedule.webp"
-                      width="1264"
-                      height="2622"
-                      loading="lazy"
-                      decoding="async"
-                      alt="RHS App Siri response explaining which class is affected by an appointment" />
-                  </div>
-                  <p><strong>Siri AI Integration.</strong> Your schedule is automatically indexed to Siri AI on iOS 27, allowing it to surface relevant information privately.</p>
-                </article>
-
-                <article class="project-card rhs-card" data-staggered-item>
-                  <div class="project-media rhs-media">
-                    <img
-                      src="./assets/projects/rhs-app/news.webp"
-                      width="888"
-                      height="2622"
-                      loading="lazy"
-                      decoding="async"
-                      alt="RHS App news screen listing school updates" />
-                  </div>
-                  <p><strong>News and Updates.</strong> Browse, search and sort news articles without digging through scattered pages.</p>
-                </article>
-              </div>
-            </div>
-          </div>
-
-          <div
-            class="project-showcase"
-            aria-labelledby="hsr-title"
-            data-component-list="StaggeredFadeIn"
-            data-anim-scroll-group="HSR Battlegrounds projects">
-            <div class="project-showcase-head" data-staggered-item>
-              <div class="project-summary">
-                <h3 id="hsr-title">HSR Battlegrounds</h3>
-                <p class="project-description">
-                  Presented at CASEX 2026 in February, this multiplayer 2D
-                  battleground features teacher-inspired characters, unique
-                  abilities, custom stages, and shader-driven interface effects.
-                </p>
-              </div>
-
-              <div class="carousel-controls" hidden aria-label="HSR Battlegrounds carousel controls">
-                <button
-                  class="carousel-button"
-                  type="button"
-                  disabled
-                  aria-label="Previous HSR Battlegrounds card"
-                  data-carousel-dir="-1"
-                  data-carousel-target="hsr-rail">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M15 6l-6 6 6 6" />
-                  </svg>
-                </button>
-                <button
-                  class="carousel-button"
-                  type="button"
-                  disabled
-                  aria-label="Next HSR Battlegrounds card"
-                  data-carousel-dir="1"
-                  data-carousel-target="hsr-rail">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M9 6l6 6-6 6" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <div
-              class="project-rail hsr-rail"
-              id="hsr-rail"
-              tabindex="0"
-              aria-label="HSR Battlegrounds image cards">
-              <div class="project-track">
-                <article class="project-card hsr-card" data-staggered-item>
-                  <div class="project-media hsr-media">
-                    <img
-                      src="./assets/projects/hsr-battlegrounds/shaderUI.webp"
-                      width="1920"
-                      height="1080"
-                      loading="lazy"
-                      decoding="async"
-                      alt="HSR Battlegrounds shader-driven transition preview" />
-                  </div>
-                  <p><strong>Shader-driven UI.</strong> Utilizes GLSL to create stunning user interface animations.</p>
-                </article>
-
-                <article class="project-card hsr-card" data-staggered-item>
-                  <div class="project-media hsr-media">
-                    <img
-                      src="./assets/projects/hsr-battlegrounds/mechanics.webp"
-                      width="1920"
-                      height="1080"
-                      loading="lazy"
-                      decoding="async"
-                      alt="HSR Battlegrounds unique mechanics preview" />
-                  </div>
-                  <p><strong>Unique mechanics.</strong> Distinct abilities and playstyles for each character, granting players diverse strategic options.</p>
-                </article>
-
-                <article class="project-card hsr-card" data-staggered-item>
-                  <div class="project-media hsr-media">
-                    <img
-                      src="./assets/projects/hsr-battlegrounds/stage.webp"
-                      width="1920"
-                      height="1080"
-                      loading="lazy"
-                      decoding="async"
-                      alt="HSR Battlegrounds stage design preview" />
-                  </div>
-                  <p><strong>Feels like home.</strong> Stages and design elements are crafted to feel familiar to the school environment.</p>
-                </article>
-
-                <article class="project-card hsr-card" data-staggered-item>
-                  <div class="project-media hsr-media">
-                    <img
-                      src="./assets/projects/hsr-battlegrounds/inspired.webp"
-                      width="3840"
-                      height="2160"
-                      loading="lazy"
-                      decoding="async"
-                      alt="HSR Battlegrounds gameplay inspiration preview" />
-                  </div>
-                  <p><strong>Gameplay.</strong> Mechanics inspired by games you know.</p>
-                </article>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section
-        id="what-we-do"
-        class="section what-we-do"
-        aria-labelledby="what-we-do-title"
+  <section id="projects" class="section projects" aria-labelledby="projects-title">
+    <div class="projects-inner">
+      <div
+        class="projects-heading"
         data-component-list="StaggeredFadeIn"
-        data-anim-scroll-group="What we do">
-        <h2 id="what-we-do-title" data-staggered-item>What We Do</h2>
-        <p class="what-we-do-lede" data-staggered-item>
-          We help students turn programming interest into real work: learning
-          the fundamentals, building useful school projects, and testing skills
-          through contests, game jams, and collaborative challenges.
+        data-anim-scroll-group="Projects heading">
+        <h2 id="projects-title" data-staggered-item>Projects</h2>
+      </div>
+
+      {% for project in site.data.projects %}
+        {% include project-showcase.html project=project %}
+      {% endfor %}
+    </div>
+  </section>
+
+  <section
+    id="what-we-do"
+    class="section what-we-do"
+    aria-labelledby="what-we-do-title"
+    data-component-list="StaggeredFadeIn"
+    data-anim-scroll-group="What we do">
+    <h2 id="what-we-do-title" data-staggered-item>What We Do</h2>
+    <p class="what-we-do-lede" data-staggered-item>
+      We help students turn programming interest into real work: learning
+      the fundamentals, building useful school projects, and testing skills
+      through contests, game jams, and collaborative challenges.
+    </p>
+
+    <div class="what-we-do-media" data-staggered-item>
+      <picture>
+        <source
+          media="(min-width: 761px)"
+          width="4066"
+          height="1618"
+          srcset="./assets/projects/rhs-app/xcode-desktop.webp" />
+        <img
+          src="./assets/projects/rhs-app/xcode.webp"
+          width="2030"
+          height="1217"
+          loading="lazy"
+          decoding="async"
+          alt="RHS App project open in Xcode" />
+      </picture>
+    </div>
+
+    <div class="what-we-do-features">
+      <article class="what-we-do-feature" data-staggered-item>
+        <h3>Learn</h3>
+        <p>
+          Structured workshops, peer feedback, and lessons in
+          Python, C++, Swift, responsible AI use, and the habits behind steady
+          technical progress.
         </p>
+      </article>
 
-        <div class="what-we-do-media" data-staggered-item>
-          <picture>
-            <source
-              media="(min-width: 761px)"
-              width="4066"
-              height="1618"
-              srcset="./assets/projects/rhs-app/xcode-desktop.webp" />
-            <img
-              src="./assets/projects/rhs-app/xcode.webp"
-              width="2030"
-              height="1217"
-              loading="lazy"
-              decoding="async"
-              alt="RHS App project open in Xcode" />
-          </picture>
+      <article class="what-we-do-feature" data-staggered-item>
+        <h3>Build</h3>
+        <p>
+          Contribute code, interface design, testing, and planning on
+          projects like the RHS Companion App, HSR Battlegrounds, and tools
+          for other clubs. You will also be learning to use industry standard software and workflows like Git+Github, Xcode, Visual Studio Code, Figma, Blender and more.
+        </p>
+      </article>
+
+      <article class="what-we-do-feature" data-staggered-item>
+        <h3>Compete</h3>
+        <p>
+          Practice for CCC-style programming contests, game jams,
+          hackathons, and esports collaborations that sharpen
+          problem-solving under real constraints.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section
+    id="next-up"
+    class="section next-up"
+    aria-labelledby="next-up-title"
+    data-component-list="StaggeredFadeIn"
+    data-anim-scroll-group="Next up">
+    <div class="next-up-inner">
+      <div class="next-up-layout">
+        <div class="section-copy">
+          <p class="section-label" data-staggered-item>Next Up</p>
+          <h2 id="next-up-title" data-staggered-item>Fall 2026</h2>
         </div>
-
-        <div class="what-we-do-features">
-          <article class="what-we-do-feature" data-staggered-item>
-            <h3>Learn</h3>
-            <p>
-              Structured workshops, peer feedback, and lessons in
-              Python, C++, Swift, responsible AI use, and the habits behind steady
-              technical progress.
-            </p>
-          </article>
-
-          <article class="what-we-do-feature" data-staggered-item>
-            <h3>Build</h3>
-            <p>
-              Contribute code, interface design, testing, and planning on
-              projects like the RHS Companion App, HSR Battlegrounds, and tools
-              for other clubs. You will also be learning to use industry standard software and workflows like Git+Github, Xcode, Visual Studio Code, Figma, Blender and more.
-            </p>
-          </article>
-
-          <article class="what-we-do-feature" data-staggered-item>
-            <h3>Compete</h3>
-            <p>
-              Practice for CCC-style programming contests, game jams,
-              hackathons, and esports collaborations that sharpen
-              problem-solving under real constraints.
-            </p>
-          </article>
+        <div class="next-up-copy" data-staggered-item>
+          <p>
+            Meeting time and room will be announced after club registration.
+          </p>
         </div>
-      </section>
+      </div>
 
-      <section
-        id="next-up"
-        class="section next-up"
-        aria-labelledby="next-up-title"
-        data-component-list="StaggeredFadeIn"
-        data-anim-scroll-group="Next up">
-        <div class="next-up-inner">
-          <div class="next-up-layout">
-            <div class="section-copy">
-              <p class="section-label" data-staggered-item>Next Up</p>
-              <h2 id="next-up-title" data-staggered-item>Fall 2026</h2>
-            </div>
-            <div class="next-up-copy" data-staggered-item>
-              <p>
-                Meeting time and room will be announced after club registration.
-              </p>
-            </div>
-          </div>
+      <div
+        id="help-shape"
+        class="help-shape-subsection"
+        aria-labelledby="help-shape-title">
+        <h3 id="help-shape-title" data-staggered-item>Help Shape the Club</h3>
+        <p data-staggered-item>
+          Year one means the club is still flexible. We have projects in
+          motion and a direction we care about, but workshops, challenges,
+          and future builds should follow what members actually want to
+          learn, try, and ship.
+        </p>
+      </div>
+    </div>
+  </section>
 
-          <div
-            id="help-shape"
-            class="help-shape-subsection"
-            aria-labelledby="help-shape-title">
-            <h3 id="help-shape-title" data-staggered-item>Help Shape the Club</h3>
-            <p data-staggered-item>
-              Year one means the club is still flexible. We have projects in
-              motion and a direction we care about, but workshops, challenges,
-              and future builds should follow what members actually want to
-              learn, try, and ship.
-            </p>
-          </div>
-        </div>
-      </section>
+  <section
+    id="faq"
+    class="section faq-section"
+    aria-labelledby="faq-title"
+    data-component-list="StaggeredFadeIn"
+    data-anim-scroll-group="FAQ">
+    <div class="faq-layout">
+      <div class="section-copy">
+        <h2 id="faq-title" data-staggered-item>FAQ</h2>
+      </div>
 
-      <section
-        id="faq"
-        class="section faq-section"
-        aria-labelledby="faq-title"
-        data-component-list="StaggeredFadeIn"
-        data-anim-scroll-group="FAQ">
-        <div class="faq-layout">
-          <div class="section-copy">
-            <h2 id="faq-title" data-staggered-item>FAQ</h2>
-          </div>
+      {% include faq-list.html items=site.data.faqs %}
+    </div>
+  </section>
+</main>
 
-          {% include faq-list.html items=site.data.faqs %}
-        </div>
-      </section>
-    </main>
-
-    {% include site-footer.html %}
-    {% include join-dialog.html %}
-
-    <script type="module" src="./main.js"></script>
-  </body>
-</html>
+{% include site-footer.html %}

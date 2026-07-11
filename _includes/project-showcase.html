@@ -1,0 +1,71 @@
+{% assign project = include.project %}
+<div
+  class="project-showcase"
+  aria-labelledby="{{ project.id }}-title"
+  data-component-list="StaggeredFadeIn"
+  data-anim-scroll-group="{{ project.group_label }}">
+  <div class="project-showcase-head" data-staggered-item>
+    <div class="project-summary">
+      <h3 id="{{ project.id }}-title">{{ project.title }}</h3>
+      <p class="project-description">{{ project.description }}</p>
+      {% if project.link %}
+        <a
+          class="project-link"
+          href="{{ project.link.url }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="{{ project.link.aria_label }}">
+          {{ project.link.label }} <span aria-hidden="true">↗</span>
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="carousel-controls" hidden aria-label="{{ project.title }} carousel controls">
+      <button
+        class="carousel-button"
+        type="button"
+        disabled
+        aria-label="Previous {{ project.title }} card"
+        data-carousel-dir="-1"
+        data-carousel-target="{{ project.rail_id }}">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M15 6l-6 6 6 6" />
+        </svg>
+      </button>
+      <button
+        class="carousel-button"
+        type="button"
+        disabled
+        aria-label="Next {{ project.title }} card"
+        data-carousel-dir="1"
+        data-carousel-target="{{ project.rail_id }}">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M9 6l6 6-6 6" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div
+    class="project-rail{% if project.rail_class %} {{ project.rail_class }}{% endif %}"
+    id="{{ project.rail_id }}"
+    tabindex="0"
+    aria-label="{{ project.rail_label }}">
+    <div class="project-track">
+      {% for card in project.cards %}
+        <article class="project-card {{ project.card_class }}" data-staggered-item>
+          <div class="project-media {{ project.media_class }}{% if card.media_class %} {{ card.media_class }}{% endif %}">
+            <img
+              src="{{ card.image | relative_url }}"
+              width="{{ card.width }}"
+              height="{{ card.height }}"
+              loading="lazy"
+              decoding="async"
+              alt="{{ card.alt }}" />
+          </div>
+          <p><strong>{{ card.heading }}</strong> {{ card.body }}</p>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</div>

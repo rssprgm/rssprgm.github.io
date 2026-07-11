@@ -1,0 +1,79 @@
+- id: rhs-app
+  title: RHS App
+  description: >-
+    Used by 15+ students through a private TestFlight beta, RHS App helps them
+    plan their day, navigate school, and stay connected to RHS. Android is in
+    development; the gallery shows only a small part of the app.
+  group_label: RHS App projects
+  rail_id: rhs-app-rail
+  rail_label: RHS App screenshots
+  card_class: rhs-card
+  media_class: rhs-media
+  link:
+    url: https://www.instagram.com/rhs_app2026
+    label: Follow RHS App on Instagram
+    aria_label: RHS App on Instagram (opens in a new tab)
+  cards:
+    - image: /assets/projects/rhs-app/schedule.webp
+      width: 888
+      height: 2622
+      alt: RHS App schedule screen showing a day of classes
+      heading: Schedule.
+      body: See today's rotation, class blocks, rooms, teachers, and realtime updates in one glance.
+    - image: /assets/projects/rhs-app/map.webp
+      width: 1264
+      height: 2622
+      alt: RHS App indoor map screen with room markers and search
+      media_class: rhs-media-map
+      heading: School map.
+      body: Search rooms and landmarks with a visual school map built for quick navigation between blocks.
+    - image: /assets/projects/rhs-app/siri-schedule.webp
+      width: 1264
+      height: 2622
+      alt: RHS App Siri response explaining which class is affected by an appointment
+      heading: Siri AI Integration.
+      body: Your schedule is automatically indexed to Siri AI on iOS 27, allowing it to surface relevant information privately.
+    - image: /assets/projects/rhs-app/news.webp
+      width: 888
+      height: 2622
+      alt: RHS App news screen listing school updates
+      heading: News and Updates.
+      body: Browse, search and sort news articles without digging through scattered pages.
+
+- id: hsr
+  title: HSR Battlegrounds
+  description: >-
+    Presented at CASEX 2026 in February, this multiplayer 2D battleground
+    features teacher-inspired characters, unique abilities, custom stages, and
+    shader-driven interface effects.
+  group_label: HSR Battlegrounds projects
+  rail_id: hsr-rail
+  rail_label: HSR Battlegrounds image cards
+  rail_class: hsr-rail
+  card_class: hsr-card
+  media_class: hsr-media
+  cards:
+    - image: /assets/projects/hsr-battlegrounds/shaderUI.webp
+      width: 1920
+      height: 1080
+      alt: HSR Battlegrounds shader-driven transition preview
+      heading: Shader-driven UI.
+      body: Utilizes GLSL to create stunning user interface animations.
+    - image: /assets/projects/hsr-battlegrounds/mechanics.webp
+      width: 1920
+      height: 1080
+      alt: HSR Battlegrounds unique mechanics preview
+      heading: Unique mechanics.
+      body: Distinct abilities and playstyles for each character, granting players diverse strategic options.
+    - image: /assets/projects/hsr-battlegrounds/stage.webp
+      width: 1920
+      height: 1080
+      alt: HSR Battlegrounds stage design preview
+      heading: Feels like home.
+      body: Stages and design elements are crafted to feel familiar to the school environment.
+    - image: /assets/projects/hsr-battlegrounds/inspired.webp
+      width: 3840
+      height: 2160
+      alt: HSR Battlegrounds gameplay inspiration preview
+      heading: Gameplay.
+      body: Mechanics inspired by games you know.

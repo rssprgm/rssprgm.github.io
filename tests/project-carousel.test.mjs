@@ -6,6 +6,14 @@ import { getCarouselButtonState } from "../project-carousel.js";
 
 const styles = readFileSync(new URL("../styles.css", import.meta.url), "utf8");
 const indexMarkup = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+const projectShowcaseMarkup = readFileSync(
+  new URL("../_includes/project-showcase.html", import.meta.url),
+  "utf8",
+);
+const projectsData = readFileSync(
+  new URL("../_data/projects.yml", import.meta.url),
+  "utf8",
+);
 
 function createRail({
   containerLeft = 0,
@@ -78,14 +86,18 @@ test("cards outside the width-limited container count as overflow", () => {
 
 test("carousel buttons fail closed before JavaScript initializes", () => {
   assert.equal(
-    indexMarkup.match(/class="carousel-controls" hidden/g)?.length,
+    projectsData.match(/^- id:/gm)?.length,
     2,
   );
+  assert.match(indexMarkup, /{% for project in site\.data\.projects %}/);
+  assert.match(
+    indexMarkup,
+    /{% include project-showcase\.html project=project %}/,
+  );
+  assert.match(projectShowcaseMarkup, /class="carousel-controls" hidden/);
   assert.equal(
-    indexMarkup.match(
-      /type="button"\s+disabled\s+aria-label="(?:Previous|Next) (?:RHS App|HSR Battlegrounds) card"/g,
-    )?.length,
-    4,
+    projectShowcaseMarkup.match(/type="button"\s+disabled/g)?.length,
+    2,
   );
   assert.match(
     styles,

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ page.title | escape }}</title>
+    <meta name="description" content="{{ page.description | escape }}" />
+    <link rel="canonical" href="{{ page.canonical_path | absolute_url }}" />
+    <meta property="og:title" content="{{ page.title | escape }}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ page.canonical_path | absolute_url }}" />
+    <meta property="og:description" content="{{ page.description | escape }}" />
+    <meta property="og:image" content="{{ '/assets/social/opengraph.png' | absolute_url }}" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Richmond Secondary Programming Club" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#f4f4f2" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet" />
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="{{ '/styles.css' | relative_url }}" />
+    <link rel="stylesheet" href="{{ '/text-effects.css' | relative_url }}" />
+    <link rel="stylesheet" href="{{ '/button-effects.css' | relative_url }}" />
+  </head>
+  <body>
+    <svg
+      class="svg-filters"
+      width="0"
+      height="0"
+      aria-hidden="true"
+      focusable="false">
+      <defs></defs>
+    </svg>
+
+    {% include site-header.html %}
+    {% include mobile-menu.html %}
+
+    {{ content }}
+
+    {% include join-dialog.html %}
+    <script type="module" src="{{ '/main.js' | relative_url }}"></script>
+  </body>
+</html>

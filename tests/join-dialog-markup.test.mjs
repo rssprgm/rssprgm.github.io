@@ -4,18 +4,23 @@ import assert from "node:assert/strict";
 
 const joinDialog = readFileSync("join-dialog.js", "utf8");
 const joinDialogMarkup = readFileSync("_includes/join-dialog.html", "utf8");
+const defaultLayout = readFileSync("_layouts/default.html", "utf8");
 const pages = ["index.html", "resources.html", "meetings.html"].map((path) => ({
   path,
   source: readFileSync(path, "utf8"),
 }));
 
-test("each Jekyll page uses the shared navigation and join dialog includes", () => {
+test("each Jekyll page uses the shared layout contract", () => {
   pages.forEach(({ path, source }) => {
-    assert.match(source, /^---\nis_home: (true|false)\n---/);
-    assert.match(source, /{% include site-header\.html %}/, path);
-    assert.match(source, /{% include mobile-menu\.html %}/, path);
-    assert.match(source, /{% include join-dialog\.html %}/, path);
+    assert.match(source, /^---\n[\s\S]*layout: default[\s\S]*is_home: (true|false)\n---/);
+    assert.match(source, /^title: .+$/m, path);
+    assert.match(source, /^description: .+$/m, path);
+    assert.match(source, /^canonical_path: .+$/m, path);
   });
+
+  assert.match(defaultLayout, /{% include site-header\.html %}/);
+  assert.match(defaultLayout, /{% include mobile-menu\.html %}/);
+  assert.match(defaultLayout, /{% include join-dialog\.html %}/);
 });
 
 test("the shared join include exposes one native dialog contract", () => {

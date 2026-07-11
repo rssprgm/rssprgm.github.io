@@ -321,13 +321,6 @@ h1 {
   color: var(--text);
 }
 
-.button-circle {
-  width: 58px;
-  min-width: 58px;
-  padding: 0;
-  aspect-ratio: 1;
-}
-
 dialog.join-overlay {
   position: fixed;
   inset: 0;
@@ -729,13 +722,6 @@ html.js .select-shell select {
 
 .projects :focus-visible {
   outline-color: #1d1d1f;
-}
-
-.anchor-target {
-  position: relative;
-  top: -24px;
-  display: block;
-  height: 0;
 }
 
 .projects-inner {
@@ -1390,22 +1376,11 @@ html.js .faq-item[data-open="true"] .faq-answer {
   letter-spacing: -0.02em;
 }
 
-.resource-desc {
-  font-size: clamp(14px, 1.1vw, 15px);
-  line-height: 1.35;
-  color: var(--muted);
-  letter-spacing: -0.01em;
-}
-
 [data-component-list*="StaggeredFadeIn"] {
   --staggered-delay: 0.15;
   --staggered-opacity-duration: 0.9s;
   --staggered-translate-y: 30px;
   --staggered-translate-y-duration: 0.7s;
-}
-
-[data-component-list*="StaggeredFadeIn"][data-staggered-item-no-translate] {
-  --staggered-translate-y: 0;
 }
 
 html.js [data-component-list*="StaggeredFadeIn"].staggered-ready[data-staggered-item],
@@ -1706,12 +1681,6 @@ html.reduced-motion [data-component-list*="StaggeredFadeIn"] [data-staggered-ite
   .button {
     min-height: 54px;
     padding-inline: 24px;
-  }
-
-  .button-circle {
-    width: 54px;
-    min-width: 54px;
-    padding: 0;
   }
 
   dialog.join-overlay[open][data-mode="form"] {

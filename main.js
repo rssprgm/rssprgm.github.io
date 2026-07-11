@@ -95,18 +95,13 @@ function getStaggeredItems(group) {
   );
 }
 
-function getStaggeredAnchor(group) {
-  return group.querySelector("[data-staggered-anchor]") || group;
-}
-
 function checkStaggeredGroups(pendingGroups, queueRevealCheck) {
   const triggerLine = window.innerHeight * 0.85;
 
   pendingGroups.forEach((group) => {
     if (group.classList.contains("staggered-start")) return;
 
-    const anchor = getStaggeredAnchor(group);
-    const rect = anchor.getBoundingClientRect();
+    const rect = group.getBoundingClientRect();
     if (rect.top > triggerLine) return;
 
     playStaggeredGroup(group);
