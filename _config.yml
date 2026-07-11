@@ -1,0 +1,16 @@
+title: Richmond Secondary Programming Club
+description: >-
+  Projects, workshops, and programming challenges for students at Richmond
+  Secondary School. No experience required.
+url: https://rssprgm.github.io
+baseurl: ""
+
+exclude:
+  - .reference
+  - "*.env"
+  - ascii-fluid
+  - design-qa.md
+  - README.md
+  - serve.sh
+  - supabase
+  - tests
