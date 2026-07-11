@@ -1,4 +1,5 @@
 import { initButtonEffects } from "./button-effects.js";
+import { setupHeroFluid } from "./hero-fluid.js";
 import { setupJoinDialog } from "./join-dialog.js";
 import { setupLenisScroll } from "./lenis-scroll.js";
 import { setupProjectCarousels } from "./project-carousel.js";
@@ -15,10 +16,13 @@ document.documentElement.classList.toggle(
   !prefersReducedMotion,
 );
 
+setupHeroFluid({ prefersReducedMotion });
+
 const lenis = setupLenisScroll({ prefersReducedMotion });
 
 setupProjectCarousels({ prefersReducedMotion });
 setupStaggeredFadeIn();
+setupFaqAccordion();
 const refreshButtonEffects = initButtonEffects({ prefersReducedMotion });
 
 setupSmoothScrolling({ lenis, prefersReducedMotion });
@@ -136,6 +140,26 @@ function playStaggeredGroup(group) {
   };
 
   finalItem.addEventListener("animationend", complete);
+}
+
+function setupFaqAccordion() {
+  const items = Array.from(document.querySelectorAll("[data-faq-item]"));
+
+  items.forEach((item) => {
+    const trigger = item.querySelector("[data-faq-trigger]");
+    const panel = item.querySelector("[data-faq-panel]");
+
+    if (!trigger || !panel) return;
+
+    panel.setAttribute("aria-hidden", "true");
+
+    trigger.addEventListener("click", () => {
+      const isOpen = trigger.getAttribute("aria-expanded") === "true";
+      trigger.setAttribute("aria-expanded", String(!isOpen));
+      panel.setAttribute("aria-hidden", String(isOpen));
+      item.dataset.open = String(!isOpen);
+    });
+  });
 }
 
 function setupMobileMenu() {

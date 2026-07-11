@@ -12,12 +12,12 @@ test("same-page hash links land at the section start", () => {
   assert.doesNotMatch(smoothScroll, /headerHeight|scrollOffset/);
 });
 
-test("cross-page hash links resume with smooth scrolling after navigation", () => {
-  assert.match(smoothScroll, /pendingScrollTargetKey/);
-  assert.match(smoothScroll, /window\.sessionStorage\.setItem/);
-  assert.match(smoothScroll, /url\.hash = ""/);
-  assert.match(smoothScroll, /window\.location\.assign\(url\.href\)/);
-  assert.match(smoothScroll, /window\.history\.replaceState/);
+test("cross-page hash links keep native browser navigation", () => {
+  assert.match(
+    smoothScroll,
+    /if \(url\.pathname !== window\.location\.pathname \|\| url\.search !== window\.location\.search\) return;/,
+  );
+  assert.doesNotMatch(smoothScroll, /sessionStorage|location\.assign|url\.hash = ""/);
 });
 
 test("modified and new-tab link clicks keep their native behavior", () => {

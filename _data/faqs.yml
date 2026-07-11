@@ -1,0 +1,42 @@
+- id: experience
+  question: Do I need experience?
+  answer: >-
+    No. You can start from zero, bring a project you already care about, or join
+    just to see how people build things.
+
+- id: meetings
+  question: When are meetings?
+  answer: >-
+    Fall 2026 is the target. The exact room and time will be shared after
+    registration once the school schedule is settled.
+
+- id: rhs-app
+  question: How can I download the RHS App?
+  answer: >-
+    The app is currently in a private beta, and awaiting approval from the
+    administrators and school district. If you are a member of the club, you may
+    request to be added to the beta in person.
+
+- id: rhs-android
+  question: Is there an Android version of the RHS App?
+  answer: >-
+    A port is actively being worked on, but it is not yet available. Currently, the app is only available for iOS 26 and above.
+
+- id: projects
+  question: What kind of things can we build?
+  answer: >-
+    Apps, games, club tools, websites, contest practice, automation, design
+    prototypes, or whatever becomes useful enough for a small team to push
+    forward.
+
+- id: suggestions
+  question: Can members suggest topics?
+  answer: >-
+    Absolutely. The point is to make the club useful, so member requests can shape
+    workshops, challenges, project teams, and what we prioritize next.
+
+- id: register
+  question: How do I register?
+  answer: >-
+    Use the Join button and submit your name, student number, grade, and optional
+    personal email for updates.

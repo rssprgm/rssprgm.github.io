@@ -1,0 +1,31 @@
+{% assign faq_items = include.items | default: site.data.faqs %}
+<div class="faq-list" role="list" data-faq-list data-staggered-item>
+  {% for item in faq_items %}
+    {% assign button_id = 'faq-' | append: item.id | append: '-button' %}
+    {% assign panel_id = 'faq-' | append: item.id | append: '-panel' %}
+    <article class="faq-item" role="listitem" data-faq-item>
+      <h3>
+        <button
+          id="{{ button_id }}"
+          class="faq-question"
+          type="button"
+          aria-expanded="false"
+          aria-controls="{{ panel_id }}"
+          data-faq-trigger>
+          <span>{{ item.question }}</span>
+          <span class="faq-icon" aria-hidden="true"></span>
+        </button>
+      </h3>
+      <div
+        id="{{ panel_id }}"
+        class="faq-answer"
+        role="region"
+        aria-labelledby="{{ button_id }}"
+        data-faq-panel>
+        <div class="faq-answer-inner">
+          <p>{{ item.answer }}</p>
+        </div>
+      </div>
+    </article>
+  {% endfor %}
+</div>

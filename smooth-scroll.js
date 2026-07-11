@@ -1,12 +1,8 @@
-const pendingScrollTargetKey = "rssprgm:pending-scroll-target";
-
 export function setupSmoothScrolling({
   lenis = null,
   prefersReducedMotion = false,
 } = {}) {
   const behavior = prefersReducedMotion ? "auto" : "smooth";
-
-  scrollToPendingTarget();
 
   document.querySelectorAll("a[href]").forEach((link) => {
     link.addEventListener("click", (event) => {
@@ -18,39 +14,15 @@ export function setupSmoothScrolling({
       const targetId = getTargetId(url.hash);
       if (!targetId) return;
 
-      if (url.pathname === window.location.pathname && url.search === window.location.search) {
-        const target = document.getElementById(targetId);
-        if (!target) return;
+      if (url.pathname !== window.location.pathname || url.search !== window.location.search) return;
 
-        event.preventDefault();
-        scrollToTarget(target);
-        return;
-      }
+      const target = document.getElementById(targetId);
+      if (!target) return;
 
       event.preventDefault();
-
-      if (!storePendingTarget(targetId)) {
-        window.location.assign(url.href);
-        return;
-      }
-
-      url.hash = "";
-      window.location.assign(url.href);
+      scrollToTarget(target);
     });
   });
-
-  function scrollToPendingTarget() {
-    const targetId = takePendingTarget();
-    if (!targetId) return;
-
-    const target = document.getElementById(targetId);
-    if (!target) return;
-
-    requestAnimationFrame(() => {
-      scrollToTarget(target);
-      window.history.replaceState(null, "", `#${encodeURIComponent(targetId)}`);
-    });
-  }
 
   function scrollToTarget(target) {
     if (lenis) {
@@ -90,25 +62,6 @@ function getTargetId(hash) {
 
   try {
     return decodeURIComponent(hash.slice(1));
-  } catch {
-    return null;
-  }
-}
-
-function storePendingTarget(targetId) {
-  try {
-    window.sessionStorage.setItem(pendingScrollTargetKey, targetId);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function takePendingTarget() {
-  try {
-    const targetId = window.sessionStorage.getItem(pendingScrollTargetKey);
-    window.sessionStorage.removeItem(pendingScrollTargetKey);
-    return targetId;
   } catch {
     return null;
   }
