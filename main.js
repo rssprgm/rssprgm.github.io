@@ -69,21 +69,46 @@ function setupStaggeredFadeIn() {
 
   if (!pendingGroups.size) return;
 
-  let checkQueued = false;
-  const queueRevealCheck = () => {
-    if (checkQueued) return;
-    checkQueued = true;
+  const passedContentMargin = document.documentElement.scrollHeight;
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const crossedTrigger =
+          entry.boundingClientRect.top <= window.innerHeight * 0.85;
 
-    requestAnimationFrame(() => {
-      checkQueued = false;
-      checkStaggeredGroups(pendingGroups, queueRevealCheck);
-    });
-  };
+        if (!crossedTrigger || !pendingGroups.has(entry.target)) return;
 
-  window.addEventListener("scroll", queueRevealCheck, { passive: true });
-  window.addEventListener("resize", queueRevealCheck, { passive: true });
+        playStaggeredGroup(entry.target);
+        pendingGroups.delete(entry.target);
+        observer.unobserve(entry.target);
+      });
+
+      if (!pendingGroups.size) {
+        observer.disconnect();
+      }
+    },
+    {
+      rootMargin: `${passedContentMargin}px 0px -15% 0px`,
+      threshold: 0,
+    },
+  );
+
   requestAnimationFrame(() => {
-    checkStaggeredGroups(pendingGroups, queueRevealCheck);
+    const triggerLine = window.innerHeight * 0.85;
+
+    pendingGroups.forEach((group) => {
+      if (group.getBoundingClientRect().top <= triggerLine) {
+        playStaggeredGroup(group);
+        pendingGroups.delete(group);
+        return;
+      }
+
+      observer.observe(group);
+    });
+
+    if (!pendingGroups.size) {
+      observer.disconnect();
+    }
   });
 }
 
@@ -93,25 +118,6 @@ function getStaggeredItems(group) {
   return Array.from(
     group.querySelectorAll('[data-staggered-item]:not([aria-hidden="true"])'),
   );
-}
-
-function checkStaggeredGroups(pendingGroups, queueRevealCheck) {
-  const triggerLine = window.innerHeight * 0.85;
-
-  pendingGroups.forEach((group) => {
-    if (group.classList.contains("staggered-start")) return;
-
-    const rect = group.getBoundingClientRect();
-    if (rect.top > triggerLine) return;
-
-    playStaggeredGroup(group);
-    pendingGroups.delete(group);
-  });
-
-  if (!pendingGroups.size) {
-    window.removeEventListener("scroll", queueRevealCheck);
-    window.removeEventListener("resize", queueRevealCheck);
-  }
 }
 
 function playStaggeredGroup(group) {

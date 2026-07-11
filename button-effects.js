@@ -42,9 +42,14 @@ function initRefractionFilters({ defs, selector }) {
   }
 
   const filterInstances = new WeakMap();
+  const elements = getRefractionElements(selector);
+  const pendingElements = new Set();
+  let updateFrame = 0;
 
-  const updateRefraction = () => {
-    getRefractionElements(selector).forEach((element) => {
+  const flushRefractionUpdates = () => {
+    updateFrame = 0;
+
+    pendingElements.forEach((element) => {
       updateElementRefraction(
         element,
         filterInstances,
@@ -54,12 +59,40 @@ function initRefractionFilters({ defs, selector }) {
         defs,
       );
     });
+    pendingElements.clear();
   };
 
-  updateRefraction();
-  window.addEventListener("resize", updateRefraction);
+  const queueRefractionUpdate = (element) => {
+    pendingElements.add(element);
 
-  return updateRefraction;
+    if (!updateFrame) {
+      updateFrame = requestAnimationFrame(flushRefractionUpdates);
+    }
+  };
+
+  const resizeObserver =
+    "ResizeObserver" in window
+      ? new ResizeObserver((entries) => {
+          entries.forEach((entry) => {
+            queueRefractionUpdate(entry.target);
+          });
+        })
+      : null;
+
+  elements.forEach((element) => {
+    queueRefractionUpdate(element);
+    resizeObserver?.observe(element);
+  });
+
+  return () => {
+    resizeObserver?.disconnect();
+
+    if (updateFrame) {
+      cancelAnimationFrame(updateFrame);
+    }
+
+    pendingElements.clear();
+  };
 }
 
 function getRefractionElements(selector) {

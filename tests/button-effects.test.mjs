@@ -32,6 +32,22 @@ test("refraction maps use stable layout dimensions and skip unchanged sizes", ()
   );
 });
 
+test("refraction updates observe eligible elements and batch changed sizes", () => {
+  assert.match(buttonEffects, /new ResizeObserver\(\(entries\) =>/);
+  assert.match(buttonEffects, /resizeObserver\?\.observe\(element\)/);
+  assert.match(
+    buttonEffects,
+    /updateFrame = requestAnimationFrame\(flushRefractionUpdates\)/,
+  );
+  assert.match(buttonEffects, /pendingElements\.add\(element\)/);
+  assert.match(buttonEffects, /resizeObserver\?\.disconnect\(\)/);
+  assert.match(buttonEffects, /cancelAnimationFrame\(updateFrame\)/);
+  assert.doesNotMatch(
+    buttonEffects,
+    /window\.addEventListener\("resize", updateRefraction\)/,
+  );
+});
+
 test("opening the join dialog does not trigger a global refraction refresh", () => {
   assert.doesNotMatch(joinDialog, /refreshButtonEffects/);
   assert.match(main, /initButtonEffects\(\{ prefersReducedMotion \}\);/);
