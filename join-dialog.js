@@ -182,6 +182,19 @@ export function setupJoinDialog({
     }
   });
 
+  function syncJoinHash(event) {
+    if (window.location.hash === "#join") {
+      if (!joinDialog.open || joinDialog.dataset.state === "closing") {
+        openJoinDialog(joinTriggers[0] ?? null);
+      }
+    } else if (event && new URL(event.oldURL).hash === "#join") {
+      closeJoinDialog();
+    }
+  }
+
+  window.addEventListener("hashchange", syncJoinHash);
+  syncJoinHash();
+
   function openJoinDialog(button) {
     clearCloseTimeout();
     activeJoinTrigger = button;
@@ -209,6 +222,12 @@ export function setupJoinDialog({
 
   function closeJoinDialog() {
     if (!joinDialog.open || joinDialog.dataset.state === "closing") return;
+
+    if (window.location.hash === "#join") {
+      const url = new URL(window.location.href);
+      url.hash = "";
+      window.history.replaceState(window.history.state, "", url);
+    }
 
     joinSessionId += 1;
     cancelJoinRequest();
