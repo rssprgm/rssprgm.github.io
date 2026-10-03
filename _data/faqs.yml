@@ -7,8 +7,7 @@
 - id: meetings
   question: When are meetings?
   answer: >-
-    Fall 2026 is the target. The exact room and time will be shared after
-    registration once the school schedule is settled.
+    Meetings are every other Friday at lunch in Room 207 during Fall 2026.
 
 - id: rhs-app
   question: How can I download the RHS App?
@@ -40,3 +39,11 @@
   answer: >-
     Use the Join button and submit your name, student number, grade, and optional
     personal email for updates.
+
+- id: privacy
+  question: How is my information used?
+  answer: >-
+    The club will only use your information to contact you about the club. Your
+    name and student number are required for registration, but your email is
+    optional. We will not share your information with anyone outside of the
+    club.
