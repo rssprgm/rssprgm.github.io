@@ -78,9 +78,9 @@ a {
   transition: color 180ms ease;
 }
 
+:focus,
 :focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.86);
-  outline-offset: 4px;
+  outline: none !important;
 }
 
 a:focus-visible {
@@ -96,6 +96,7 @@ textarea {
 }
 
 button {
+  -webkit-tap-highlight-color: transparent;
   user-select: none;
   -webkit-user-select: none;
   -webkit-user-drag: none;
@@ -539,9 +540,6 @@ dialog.join-overlay[data-state="open"] .join-dialog {
 
 .field-shell:focus-within {
   --field-fill: rgba(255, 255, 255, 0.075);
-  box-shadow:
-    0 0 0 2px rgba(255, 255, 255, 0.34),
-    0 0 0 6px rgba(255, 255, 255, 0.1);
 }
 
 .join-form label .select-shell {
@@ -741,10 +739,6 @@ html.js .select-shell select {
   --selection-color: rgba(151, 151, 151, 0.24);
   --selection-text-color: #1d1d1f;
   overflow: hidden;
-}
-
-.projects :focus-visible {
-  outline-color: #1d1d1f;
 }
 
 .projects-inner {
@@ -1828,7 +1822,6 @@ html.reduced-motion [data-component-list*="StaggeredFadeIn"] [data-staggered-ite
 @media (hover: hover) and (pointer: fine) {
   .meeting-card > a:hover .meeting-card-image img { transform: scale(1.035); }
 }
-.meeting-card > a:focus-visible .meeting-card-image img { transform: scale(1.035); }
 @media (prefers-reduced-motion: reduce) {
   .meeting-card-image img { transition: none; }
 }
@@ -1921,8 +1914,4 @@ html.reduced-motion [data-component-list*="StaggeredFadeIn"] [data-staggered-ite
 .meeting-detail #about h1 { max-width: none; margin: 0 0 12px; font-size: clamp(26px, 3vw, 34px); font-weight: 700; line-height: 1.15; letter-spacing: -.025em; }
 .meeting-date { display: block; color: var(--muted); font-size: 13px; margin-bottom: 24px; }
 
-.gallery-progress-item:focus:not(:focus-visible),
-.gallery-progress-window:focus:not(:focus-visible),
-.gallery-toggle:focus:not(:focus-visible) { outline: none; }
-.gallery-progress-item:focus-visible { outline: none; }
-.gallery-progress-item:focus-visible .gallery-indicator { box-shadow: 0 0 0 2px var(--gallery-surface), 0 0 0 4px var(--gallery-ink); }
+.gallery-progress-item:focus-visible .gallery-indicator { background: var(--gallery-ink); opacity: 1; }
