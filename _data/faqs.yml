@@ -5,46 +5,41 @@
     just to see how people build things.
 
 - id: meetings
-  question: When are meetings?
+  question: When and where are meetings?
   answer: >-
-    Meetings are every other Friday at lunch in Room 207.
-
-- id: meeting-notes
-  question: Where can I find meeting slides and notes?
-  answer: >-
-    The <a href="/meetings.html">Meetings page</a> lists past sessions by date.
-    Open a meeting to view its presentation, summary, session notes, and resources.
+    We meet every other Friday at lunch in Room 207. Visit the
+    <a href="/meetings.html">Meetings page</a> for past sessions, slides,
+    notes, and resources.
 
 - id: rhs-app
   question: How can I download the RHS App?
   answer: >-
-    The app is currently in a private beta, and awaiting approval from the
-    administrators and school district. If you are a member of the club, you may
-    request to be added to the beta in person.
+    RHS App remains available through a private TestFlight beta. The district
+    declined approval without providing a clear explanation. Club members can
+    ask to join the beta at a meeting.
 
 - id: rhs-android
   question: Is there an Android version of the RHS App?
   answer: >-
-    A port is actively being worked on, but it is not yet available. Currently, the app is only available for iOS 26 and above.
+    There is no Android version. The iOS beta requires iOS 26 or later.
 
 - id: projects
   question: What kind of things can we build?
   answer: >-
-    Apps, games, club tools, websites, contest practice, automation, design
-    prototypes, or whatever becomes useful enough for a small team to push
-    forward.
+    Apps, games, websites, automation tools, and design prototypes. You can also
+    practice programming contest problems.
 
 - id: suggestions
   question: Can members suggest topics?
   answer: >-
-    Absolutely. The point is to make the club useful, so member requests can shape
-    workshops, challenges, project teams, and what we prioritize next.
+    Yes. Suggest a topic or project at a meeting. Member requests help us choose
+    workshops, challenges, and projects.
 
 - id: register
   question: How do I register?
   answer: >-
-    Use the Join button and submit your name, student number, grade, and optional
-    personal email for updates.
+    Use the Join button to submit your name, student number, and grade.
+    You can also add an email for updates and tell us what you want to build.
 
 - id: privacy
   question: How is my information used?
