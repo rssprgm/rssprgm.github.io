@@ -13,7 +13,7 @@ is_home: false
     {% assign workshop = site.data[session.workshop] %}
     <article class="meeting-card">
       <a href="{{ session.url | relative_url }}" aria-label="{{ workshop.title | escape }}">
-        <div class="meeting-card-image"><img src="{{ session.poster | relative_url }}" alt="" width="1920" height="1080" /></div>
+        <div class="meeting-card-image" data-mesh-placeholder style="background-image: url('{{ site.data.slide_placeholders[session.poster] }}')"><img src="{{ session.poster | relative_url }}" alt="" width="1920" height="1080" /></div>
         <div class="meeting-card-copy">
           <p class="meeting-card-date"><time datetime="{{ session.meeting_date }}">{{ session.meeting_date | date: "%B %-d, %Y" }}</time></p>
         </div>

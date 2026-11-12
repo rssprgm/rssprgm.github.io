@@ -21,14 +21,15 @@ def average_grid(image):
 
 def main():
     placeholders = {}
-    for path in sorted((ROOT / 'assets/meetings').glob('*/slides/*.jpg')):
+    assets = ROOT / 'assets/meetings'
+    for path in sorted([*assets.glob('*/slides/*.jpg'), *assets.glob('*/poster.*')]):
         with Image.open(path) as image:
             grid = average_grid(image)
         output = BytesIO()
         grid.save(output, format='BMP')
         placeholders['/' + path.relative_to(ROOT).as_posix()] = 'data:image/bmp;base64,' + b64encode(output.getvalue()).decode()
     (ROOT / '_data/slide_placeholders.json').write_text(json.dumps(placeholders, separators=(',', ':')) + '\n')
-    print(f'Generated {len(placeholders)} slide placeholders')
+    print(f'Generated {len(placeholders)} slide and cover placeholders')
 
 
 if __name__ == '__main__':

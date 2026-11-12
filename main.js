@@ -19,6 +19,7 @@ document.documentElement.classList.toggle(
   !prefersReducedMotion,
 );
 
+setupMeshPlaceholders();
 setupHeroFluid({ prefersReducedMotion });
 
 const lenis = setupLenisScroll({ prefersReducedMotion });
@@ -36,6 +37,52 @@ setupJoinDialog({
   prefersReducedMotion,
 });
 setupMobileMenu();
+
+function setupMeshPlaceholders() {
+  const meshes = new Map();
+  const smooth = (host) => {
+    if ([...host.querySelectorAll("img")].every((image) => image.complete && image.naturalWidth > 0)) return;
+    const source = host.style.backgroundImage.match(/url\(["']?(data:image\/bmp;base64,[\w+/=]+)["']?\)/)?.[1];
+    if (!source) return;
+    if (!meshes.has(source)) {
+      meshes.set(source, (async () => {
+        const image = new Image();
+        image.src = source;
+        await image.decode();
+        const canvas = document.createElement("canvas");
+        canvas.width = canvas.height = 64;
+        const context = canvas.getContext("2d");
+        if (!context) return null;
+        context.imageSmoothingEnabled = true;
+        context.imageSmoothingQuality = "high";
+        context.drawImage(image, 0, 0, 64, 64);
+        const result = canvas.toDataURL("image/webp", 1);
+        return result.startsWith("data:image/webp;") ? result : null;
+      })().catch(() => null));
+    }
+    meshes.get(source).then((result) => {
+      if (result) host.style.backgroundImage = `url("${result}")`;
+    });
+  };
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        observer.unobserve(entry.target);
+        smooth(entry.target);
+      }
+    });
+  }, { rootMargin: "200px" });
+  document.querySelectorAll("[data-mesh-placeholder]").forEach((host) => {
+    host.querySelectorAll("img").forEach((image) => {
+      const reveal = () => {
+        if (image.complete && image.naturalWidth > 0) image.classList.add("mesh-image-loaded");
+      };
+      image.addEventListener("load", reveal, { once: true });
+      reveal();
+    });
+    observer.observe(host);
+  });
+}
 
 function setupStaggeredFadeIn() {
   const groups = Array.from(

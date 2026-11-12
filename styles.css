@@ -1817,7 +1817,7 @@ html.reduced-motion [data-component-list*="StaggeredFadeIn"] [data-staggered-ite
 .meeting-card { min-width: 0; }
 .meeting-card > a { display: block; height: 100%; color: var(--text); }
 .meeting-card > a:hover { text-decoration: none; }
-.meeting-card-image { position: relative; aspect-ratio: 16/9; border-radius: 12px; background: #fff; overflow: hidden; }
+.meeting-card-image { position: relative; aspect-ratio: 16/9; border-radius: 12px; background: #fff; background-size: 100% 100%; overflow: hidden; }
 .meeting-card-image img { width: 100%; height: 100%; display: block; object-fit: cover; transition: transform 400ms ease; }
 @media (hover: hover) and (pointer: fine) {
   .meeting-card > a:hover .meeting-card-image img { transform: scale(1.035); }
@@ -1915,3 +1915,5 @@ html.reduced-motion [data-component-list*="StaggeredFadeIn"] [data-staggered-ite
 .meeting-date { display: block; color: var(--muted); font-size: 13px; margin-bottom: 24px; }
 
 .gallery-progress-item:focus-visible .gallery-indicator { background: var(--gallery-ink); opacity: 1; }
+
+html.js [data-mesh-placeholder] > img:not(.mesh-image-loaded) { opacity: 0; }

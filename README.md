@@ -115,5 +115,9 @@ Rebuild the vendored runtime with `scripts/build-glass.sh` (Bun and the sibling
 `glass` checkout required). JavaScript identifiers are mangled, shaders are
 compacted, and source maps are omitted.
 
-Slide placeholders are embedded 8×8 RGB averages. After changing slide JPEGs,
-run `python3 scripts/build-slide-placeholders.py` (Pillow required).
+Slide and meeting-cover placeholders are embedded 8×8 RGB averages in BMPs.
+The existing page script locally resamples visible, unloaded placeholders once
+with Canvas 2D high-quality smoothing (Mitchell cubic in Chrome). The larger
+bitmap is never downloaded. Covers keep the mesh visible if their image fails.
+After changing slides or meeting posters, run
+`python3 scripts/build-slide-placeholders.py` (Pillow required).

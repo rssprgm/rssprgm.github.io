@@ -13,7 +13,7 @@
           {% assign source_slide = workshop.slide_numbers[forloop.index0] | default: forloop.index %}
           {% assign slide_number = source_slide | prepend: '0' | slice: -2, 2 %}
           {% assign slide_path = asset_base | append: 'slides/' | append: slide_number | append: '.jpg' %}
-          <div class="gallery-card gallery-media meeting-slide" style="background-image: url('{{ site.data.slide_placeholders[slide_path] }}')" data-slide="{{ forloop.index }}" role="group" aria-label="Slide {{ forloop.index }} of {{ workshop.slide_titles.size }}: {{ title }}">
+          <div class="gallery-card gallery-media meeting-slide" data-mesh-placeholder style="background-image: url('{{ site.data.slide_placeholders[slide_path] }}')" data-slide="{{ forloop.index }}" role="group" aria-label="Slide {{ forloop.index }} of {{ workshop.slide_titles.size }}: {{ title }}">
             {% if forloop.first or forloop.last %}
             <video class="meeting-video" playsinline muted {% if forloop.first %}autoplay{% endif %} preload="metadata" poster="{{ asset_base | append: 'slides/' | append: slide_number | append: '.jpg' | relative_url }}" aria-label="{{ title }}">
               {% if forloop.first %}<source src="{{ asset_base | append: 'intro.mp4' | relative_url }}" type="video/mp4" />{% else %}<source src="{{ asset_base | append: 'outro.mp4' | relative_url }}" type="video/mp4" />{% endif %}
