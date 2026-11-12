@@ -21,28 +21,10 @@
     </div>
 
     <div class="carousel-controls" hidden aria-label="{{ project.title }} carousel controls">
-      <button
-        class="carousel-button"
-        type="button"
-        disabled
-        aria-label="Previous {{ project.title }} card"
-        data-carousel-dir="-1"
-        data-carousel-target="{{ project.rail_id }}">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M15 6l-6 6 6 6" />
-        </svg>
-      </button>
-      <button
-        class="carousel-button"
-        type="button"
-        disabled
-        aria-label="Next {{ project.title }} card"
-        data-carousel-dir="1"
-        data-carousel-target="{{ project.rail_id }}">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M9 6l6 6-6 6" />
-        </svg>
-      </button>
+      {% assign previous_label = 'Previous ' | append: project.title | append: ' card' %}
+      {% assign next_label = 'Next ' | append: project.title | append: ' card' %}
+      {% include gallery-chevron.html direction='previous' label=previous_label target=project.rail_id %}
+      {% include gallery-chevron.html direction='next' label=next_label target=project.rail_id %}
     </div>
   </div>
 

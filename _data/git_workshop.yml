@@ -1,0 +1,97 @@
+title: Introduction to Version Control and Git
+description: See how a team keeps track of a changing project. Using a Minecraft server plan, we compare edits, record a version, revisit an earlier decision, and review a contribution together.
+chapters:
+  - id: version-control
+    title: Why version control?
+    slides: "4–6"
+    start: 4
+    end: 6
+    summary: Version control records changes to files over time. Compare earlier versions, recover content, and understand how a shared project developed.
+    notes: Minecraft looks very different across releases. Behind an update, code, assets, configuration, and bug fixes all change. A team needs to know what changed and why. Git records a project's history so those decisions can be inspected later. The Minecraft screenshots illustrate how software evolves; they do not describe Mojang's internal tools.
+  - id: reading-changes
+    title: Read the change
+    slides: "7–8"
+    start: 7
+    end: 8
+    summary: A small server plan makes a change easy to inspect. A diff separates removed lines, added lines, and unchanged context.
+    notes: The example is server-plan.md, a planning document rather than a Minecraft configuration file. The proposed edit changes difficulty from easy to hard. PvP remains off and the build area stays at spawn village. In a diff, minus marks removed content and plus marks added content. Unchanged context helps us see what the edit affects.
+    command: "git diff -- server-plan.md"
+  - id: recording
+    title: Record a version
+    slides: "9–11"
+    start: 9
+    end: 11
+    summary: Inspect the working files, select the intended change, then record it with a meaningful commit message.
+    notes: git status shows the working tree's state. git diff shows unstaged edits. git add stages the current contents of a file; later edits need to be staged again. git commit records the staged snapshot locally. Saving a file alone does not create a commit, and a commit does not automatically upload anything.
+    command: |-
+      git status --short
+      git diff -- server-plan.md
+      git add server-plan.md
+      git commit -m "Try hard difficulty"
+  - id: history
+    title: Revisit an earlier decision
+    slides: "12–13"
+    start: 12
+    end: 13
+    summary: Read the history and inspect an earlier file without replacing the version you are working on.
+    notes: git log --oneline lists commits with short identifiers and messages. In this linear example, HEAD is the current commit and HEAD~1 is its first parent. git show prints the plan from the earlier commit. If a later change enabled PvP, we can restore just that decision to off while keeping hard difficulty, review the diff, and record another commit.
+    command: |-
+      git log --oneline
+      git show HEAD~1:server-plan.md
+  - id: collaboration
+    title: Combine contributions
+    slides: "14–17"
+    start: 14
+    end: 17
+    summary: Compatible edits can often merge automatically. Conflicting decisions need a person to resolve them. GitHub gives a team a shared place for its repository.
+    notes: Two people can work from a common starting plan. Separate edits may combine, but the result still needs review. When two contributions change the same difficulty line differently, Git cannot decide the club's intended policy. Git is the version-control tool; GitHub hosts repositories and supports contribution review. With a remote and tracking branch configured, push sends commits and pull --ff-only fetches and advances only when the histories allow a fast-forward.
+    command: |-
+      git push
+      git pull --ff-only
+  - id: review
+    title: Review before accepting
+    slides: "18–19"
+    start: 18
+    end: 19
+    summary: The request is harder survival with no player combat. Keep hard difficulty, keep PvP off, and describe the decision clearly.
+    notes: The proposed diff both increases difficulty and enables PvP. Only the difficulty change matches the request. A useful commit message is "Increase difficulty, keep PvP disabled". The takeaway is to inspect the changes, record a clear commit, and share when ready. A saved file, a commit, and a shared commit are separate actions.
+
+slide_titles:
+  - Introduction
+  - Last time at programming club
+  - What you want to build
+  - Introduction to Version Control and Git
+  - Minecraft keeps changing
+  - What changes behind the game?
+  - A Minecraft server plan
+  - Reading a change
+  - Recording a version
+  - Inspect before recording
+  - Choose the change. Record it.
+  - Read earlier versions
+  - Recovering an earlier decision
+  - Combining contributions
+  - Resolving a disagreement
+  - Git and GitHub
+  - Share recorded work
+  - Reviewing a proposed change
+  - Takeaway
+  - Closing
+
+recap_summary: A recap of the previous meeting and the club’s project interests.
+resources:
+  - title: Download Visual Studio Code
+    url: https://code.visualstudio.com/download
+    device_download: vscode
+  - title: Sign up for GitHub
+    url: https://github.com/signup
+  - title: Git reference
+    url: https://git-scm.com/docs
+    description: Command documentation
+  - title: About GitHub
+    url: https://docs.github.com/en/get-started/start-your-journey/what-is-github
+    description: Repositories and collaboration
+  - title: Club website
+    url: https://rssprgm.github.io
+  - title: Club interest form
+    url: https://forms.gle/eE3bf7vFQkPCMCSa7

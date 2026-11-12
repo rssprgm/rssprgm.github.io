@@ -1,0 +1,4 @@
+<button class="gallery-button {{ include.class }}" type="button" aria-label="{{ include.label | escape }}"
+  {% if include.target %}disabled data-carousel-dir="{% if include.direction == 'previous' %}-1{% else %}1{% endif %}" data-carousel-target="{{ include.target }}"{% else %}data-gallery-{{ include.direction }} hidden{% endif %}>
+  {% include gallery-icon.html name=include.direction %}
+</button>

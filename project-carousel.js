@@ -222,8 +222,8 @@ function getFirstCardOffset(rail) {
   return rail.querySelector(".project-card")?.offsetLeft || 0;
 }
 
-function getAlignedScrollLeft(rail, card) {
-  return clampCarouselScrollLeft(rail, card.offsetLeft - getFirstCardOffset(rail));
+export function getAlignedScrollLeft(rail, card, firstCard = rail.querySelector(".project-card")) {
+  return clampCarouselScrollLeft(rail, card.offsetLeft - (firstCard?.offsetLeft || 0));
 }
 
 function clampCarouselScrollLeft(rail, targetLeft) {

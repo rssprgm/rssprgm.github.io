@@ -32,6 +32,8 @@ local reference material. `_config.yml` owns the publication boundary.
 
 ## Content
 
+- Edit the Git workshop summary and session notes in `_data/git_workshop.yml`.
+- The Meetings page uses `meeting-detail.js` for accessible tabs, chapter links, and notes search. The six-second intro is a preview, not a meeting recording.
 - Edit FAQ entries in `_data/faqs.yml`.
 - Edit recommended tools in `_data/resources.yml` and place their icons in
   `assets/icons/resources`.
@@ -69,3 +71,15 @@ Local `.env` files are ignored by Git and must remain untracked.
 GitHub Pages remains the deployment authority. Pushing the default branch
 triggers the repository's built-in Jekyll Pages workflow. Check the Actions tab
 for build and deployment status.
+
+## Meeting-page design reference
+
+The Git workshop detail page adapts the player, About/Summary/Transcript tab structure,
+chapter summaries, and searchable reading layout from Apple's
+[Meet the Foundation Models framework session](https://developer.apple.com/videos/play/wwdc2025/286/).
+RSSPRGM uses slide-based Session Notes in place of a transcript. Source captures and
+local screenshots are private reference material under `.reference/video-page/`.
+
+The Meetings catalogue is `/meetings.html`. Workshop detail pages live under
+`meetings/` and opt into the catalogue with `meeting: true` and a `workshop` data key.
+The Git session is `/meetings/git/`; the detail page links back to the catalogue.

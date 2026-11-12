@@ -1,0 +1,44 @@
+title: Meet the Richmond Secondary Programming Club
+description: Meet the club, explore a game project, and share ideas for future meetings.
+chapters:
+  - id: meet-the-club
+    title: Meeting agenda
+    slides: "2"
+    start: 2
+    end: 2
+    summary: Meet the club, explore projects, bring ideas, and discuss what comes next.
+    notes: The agenda introduces four parts of the first meeting—meeting the club, exploring projects, bringing ideas, and discussing what comes next.
+  - id: what-we-do
+    title: What we do
+    slides: "3"
+    start: 3
+    end: 3
+    summary: Workshops for different experience levels, projects for the school, programming competitions, and help developing your own ideas.
+    notes: The club introduces four areas of activity—workshops for every experience level, projects for the school, programming competitions, and help with members’ own ideas.
+  - id: project-showcase
+    title: Project showcase
+    slides: "4"
+    start: 4
+    end: 4
+    summary: A game project demonstrates character abilities, combat effects, and a school-inspired stage.
+    notes: The slide shows a collage of gameplay and development screenshots, including player abilities, attack effects, debugging overlays, and a sudden-death match in a classroom-inspired arena.
+  - id: your-ideas
+    title: Your ideas
+    slides: "5"
+    start: 5
+    end: 5
+    summary: What would you build for the school? Share your interests through the club’s form.
+    notes: Members are invited to help shape the club around their interests. The slide asks what they would build for the school and includes a QR code leading to the club interest form, linked in Resources.
+slide_numbers: [1, 3, 5, 6, 7, 9]
+slide_titles:
+  - Introduction
+  - Meeting agenda
+  - What we do
+  - Project showcase
+  - Your ideas
+  - Closing
+resources:
+  - title: Club website
+    url: https://rssprgm.github.io
+  - title: Club interest form
+    url: https://forms.gle/eE3bf7vFQkPCMCSa7

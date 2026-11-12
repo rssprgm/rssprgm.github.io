@@ -1,0 +1,12 @@
+<div class="gallery-playback" data-gallery-playback hidden>
+  <div class="gallery-progress-pill">
+    <div class="gallery-progress-window" data-gallery-window data-lenis-prevent aria-label="Choose slide">
+      {% for title in include.titles %}<button class="gallery-progress-item" type="button" data-gallery-item="{{ forloop.index0 }}" aria-label="Slide {{ forloop.index }}: {{ title | escape }}"><span class="gallery-indicator" aria-hidden="true"><span></span></span></button>{% endfor %}
+    </div>
+  </div>
+  <button class="gallery-button gallery-toggle" type="button" data-gallery-toggle data-state="pause" aria-label="Pause presentation">
+    <span data-icon="pause">{% include gallery-icon.html name='pause' %}</span>
+    <span data-icon="play">{% include gallery-icon.html name='play' %}</span>
+    <span data-icon="replay">{% include gallery-icon.html name='replay' %}</span>
+  </button>
+</div>

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { getCarouselButtonState } from "../project-carousel.js";
+import { getCarouselButtonState, getAlignedScrollLeft } from "../project-carousel.js";
 
 const styles = readFileSync(new URL("../styles.css", import.meta.url), "utf8");
 const indexMarkup = readFileSync(new URL("../index.html", import.meta.url), "utf8");
@@ -95,16 +95,23 @@ test("carousel buttons fail closed before JavaScript initializes", () => {
     /{% include project-showcase\.html project=project %}/,
   );
   assert.match(projectShowcaseMarkup, /class="carousel-controls" hidden/);
-  assert.equal(
-    projectShowcaseMarkup.match(/type="button"\s+disabled/g)?.length,
-    2,
-  );
+  assert.equal(projectShowcaseMarkup.match(/include gallery-chevron\.html/g)?.length, 2);
+  const chevronMarkup = readFileSync('_includes/gallery-chevron.html', 'utf8');
+  assert.match(chevronMarkup, /if include.target %}disabled data-carousel-dir/);
   assert.match(
     styles,
     /\.carousel-controls\[hidden\]\s*\{\s*display:\s*none;/,
   );
   assert.match(
     styles,
-    /\.carousel-button:disabled\s*\{[^}]*opacity:\s*0\.42;[^}]*pointer-events:\s*none;/s,
+    /\.gallery-button:disabled\s*\{[^}]*opacity:\s*0\.42;[^}]*pointer-events:\s*none;/s,
   );
+});
+
+test("shared alignment keeps wide presentation cards centered with gutters and gaps", () => {
+  const rail = { clientWidth: 2000, scrollWidth: 6400 };
+  const first = { offsetLeft: 300 };
+  assert.equal(getAlignedScrollLeft(rail, first, first), 0);
+  assert.equal(getAlignedScrollLeft(rail, { offsetLeft: 1730 }, first), 1430);
+  assert.equal(getAlignedScrollLeft(rail, { offsetLeft: 7000 }, first), 4400);
 });

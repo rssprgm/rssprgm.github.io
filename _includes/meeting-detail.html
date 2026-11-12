@@ -1,0 +1,96 @@
+{% assign workshop = site.data[page.workshop] %}
+{% assign asset_base = page.assets | append: '/' %}
+<main class="meeting-detail" data-meeting-detail>
+  <header class="meeting-heading page-heading">
+    <div class="meeting-back"><a href="{{ '/meetings.html' | relative_url }}">{% include gallery-icon.html name='previous' %}Back to meetings</a></div>
+    <h1 id="meeting-title">{{ workshop.title }}</h1>
+    <time datetime="{{ page.meeting_date }}">{{ page.meeting_date | date: "%B %-d, %Y" }}</time>
+  </header>
+  <section class="meeting-watch" aria-label="Workshop presentation">
+    <div class="meeting-player" data-slide-player tabindex="0" aria-label="Slide presentation. Use left and right arrows to change slides.">
+      <div class="meeting-stage">
+        <div class="gallery-rail meeting-slide-track" data-slide-track data-lenis-prevent tabindex="0" aria-label="Slides. Swipe or scroll horizontally to browse.">
+          <div class="gallery-track">
+          {% for title in workshop.slide_titles %}
+          {% assign source_slide = workshop.slide_numbers[forloop.index0] | default: forloop.index %}
+          {% assign slide_number = source_slide | prepend: '0' | slice: -2, 2 %}
+          <div class="gallery-card gallery-media meeting-slide" data-slide="{{ forloop.index }}" role="group" aria-label="Slide {{ forloop.index }} of {{ workshop.slide_titles.size }}: {{ title }}">
+            {% if forloop.first or forloop.last %}
+            <video class="meeting-video" controls playsinline muted {% if forloop.first %}autoplay{% endif %} preload="metadata" poster="{{ asset_base | append: 'slides/' | append: slide_number | append: '.jpg' | relative_url }}" aria-label="{{ title }}">
+              {% if forloop.first %}<source src="{{ asset_base | append: 'intro.mp4' | relative_url }}" type="video/mp4" />{% else %}<source src="{{ asset_base | append: 'outro.mp4' | relative_url }}" type="video/mp4" />{% endif %}
+            </video>
+            {% else %}
+            <img class="meeting-slide-image" src="{{ asset_base | append: 'slides/' | append: slide_number | append: '.jpg' | relative_url }}" alt="Slide {{ forloop.index }}: {{ title }}" width="1440" height="810" loading="lazy" decoding="async" />
+            {% endif %}
+          </div>
+          {% endfor %}
+          </div>
+        </div>
+        <div class="meeting-slide-edge meeting-slide-edge-prev">{% include gallery-chevron.html direction='previous' label='Previous slide' %}</div>
+        <div class="meeting-slide-edge meeting-slide-edge-next">{% include gallery-chevron.html direction='next' label='Next slide' %}</div>
+      </div>
+      {% include gallery-playback.html titles=workshop.slide_titles %}
+      <p class="meeting-player-error" role="status" data-player-error hidden></p>
+    </div>
+  </section>
+  <section class="meeting-information" aria-label="Session information">
+    <div class="meeting-content">
+      <nav class="meeting-tabs" aria-label="Session sections" data-meeting-tabs>
+        <a href="#about" data-tab="about">About</a>
+        <a href="#summary" data-tab="summary">Summary</a>
+        <a href="#notes" data-tab="notes">Session Notes</a>
+      </nav>
+      <section id="about" data-panel="about" aria-labelledby="meeting-title">
+        <div class="meeting-about-grid">
+          <div>
+            <p class="meeting-description">{{ workshop.description }}</p>
+            <h2>Chapters</h2>
+            <ol class="meeting-chapters">
+              {% for chapter in workshop.chapters %}
+              <li><span>{{ forloop.index | prepend: '0' }}</span><a href="#notes-{{ chapter.id }}" data-note-link="{{ chapter.id }}">{{ chapter.title }}</a></li>
+              {% endfor %}
+            </ol>
+          </div>
+          <aside class="meeting-resources" aria-label="Workshop resources">
+            <h2>Resources</h2>
+            {% for resource in workshop.resources %}
+            <a href="{{ resource.url }}"{% if resource.device_download %} data-device-download="{{ resource.device_download }}"{% endif %}>{{ resource.title }}{% if resource.description %}<span>{{ resource.description }}</span>{% endif %}</a>
+            {% endfor %}
+          </aside>
+        </div>
+      </section>
+      <section id="summary" data-panel="summary" aria-label="Workshop summary">
+        <div class="meeting-summary-scroll" data-summary-scroll data-lenis-prevent tabindex="0" role="region" aria-label="Slide summary">
+        <article class="meeting-summary-item" data-summary-start="1" data-summary-end="1"><h2>Introduction</h2><p>{{ workshop.title }}</p></article>
+        {% if workshop.recap_summary %}<article class="meeting-summary-item" data-summary-start="2" data-summary-end="3"><h2>Previously at programming club</h2><p>{{ workshop.recap_summary }}</p></article>{% endif %}
+        {% for chapter in workshop.chapters %}
+        <article class="meeting-summary-item" data-summary-start="{{ chapter.start }}" data-summary-end="{{ chapter.end }}">
+          <p class="meeting-slide-ref">Slides {{ chapter.slides }}</p>
+          <h2><a href="#notes-{{ chapter.id }}" data-note-link="{{ chapter.id }}">{{ chapter.title }}</a></h2>
+          <p>{{ chapter.summary }}</p>
+        </article>
+        {% endfor %}
+        <article class="meeting-summary-item" data-summary-start="{{ workshop.slide_titles.size }}" data-summary-end="{{ workshop.slide_titles.size }}"><h2>Closing</h2><p>End of the presentation.</p></article>
+        </div>
+      </section>
+      <section id="notes" data-panel="notes" aria-label="Session notes">
+        <div class="meeting-search-row">
+          <label class="meeting-search"><span class="sr-only">Search session notes</span><input type="search" placeholder="Search session notes…" data-notes-search /></label>
+          <a class="meeting-text-download" href="{{ asset_base | append: 'notes.txt' | relative_url }}" download>Download notes</a>
+        </div>
+        <p class="meeting-search-status" role="status" aria-live="polite" data-search-status></p>
+        <div class="meeting-notes-scroll" data-notes-scroll data-lenis-prevent tabindex="0" role="region" aria-label="Session notes">
+        {% for chapter in workshop.chapters %}
+        <article id="notes-{{ chapter.id }}" class="meeting-note" data-note tabindex="-1">
+          <p class="meeting-slide-ref">Slides {{ chapter.slides }}</p>
+          <div><h2>{{ chapter.title }}</h2><p>{{ chapter.notes }}</p>
+          {% if chapter.command %}<pre><code>{{ chapter.command | escape }}</code></pre>{% endif %}</div>
+        </article>
+        {% endfor %}
+        <p data-search-empty hidden>No matching notes. Try another search.</p>
+        </div>
+      </section>
+    </div>
+  </section>
+</main>
+<script type="module" src="{{ '/meeting-detail.js' | relative_url }}"></script>

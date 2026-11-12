@@ -1,0 +1,9 @@
+<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+  {% case include.name %}
+  {% when 'previous' %}<path d="M15 6l-6 6 6 6" />
+  {% when 'next' %}<path d="M9 6l6 6-6 6" />
+  {% when 'pause' %}<rect x="6" y="5" width="4" height="14" rx="1.2" fill="currentColor" /><rect x="14" y="5" width="4" height="14" rx="1.2" fill="currentColor" />
+  {% when 'play' %}<path class="gallery-icon-solid" d="M8 5.5v13l11-6.5z" />
+  {% when 'replay' %}<path d="M19 12a7 7 0 1 1-7-7h5m-3-3 3 3-3 3" />
+  {% endcase %}
+</svg>

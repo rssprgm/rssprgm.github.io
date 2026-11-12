@@ -1,0 +1,10 @@
+---
+layout: null
+---
+{% assign workshop = site.data.club_introduction %}
+{{ workshop.title }}
+{% for chapter in workshop.chapters %}
+{{ chapter.title }} — Slides {{ chapter.slides }}
+{{ chapter.notes }}
+{% if chapter.command %}{{ chapter.command }}{% endif %}
+{% endfor %}
