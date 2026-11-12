@@ -470,6 +470,7 @@ export function setupHeroFluid({ prefersReducedMotion = false } = {}) {
 
     renderGlyphs();
     output.globalAlpha = 1;
+    canvas.dispatchEvent(new Event("hero-fluid-frame"));
   }
 
   function renderGlyphs() {

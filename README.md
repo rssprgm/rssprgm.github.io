@@ -83,3 +83,34 @@ local screenshots are private reference material under `.reference/video-page/`.
 The Meetings catalogue is `/meetings.html`. Workshop detail pages live under
 `meetings/` and opt into the catalogue with `meeting: true` and a `workshop` data key.
 The Git session is `/meetings/git/`; the detail page links back to the catalogue.
+
+## Glass controls
+
+`glass-controls.js` progressively enhances native buttons and links with the local
+Glass runtime in `vendor/glass/`. The previous SVG refraction, glow, and spring
+implementation has been removed. Flat controls are the default, including when
+JavaScript, WebGPU, shader-f16, or GPU initialization is unavailable.
+
+Reduced motion/transparency, Save-Data, reported memory of 2 GB or less, and
+a single reported CPU core skip the GPU bundle. These are conservative
+hints, not a universal low-end-device flag. Software adapters, device loss and
+runtime errors also fall back. The upstream renderer samples background images and registered surfaces.
+`glass-canvas.js` registers the live hero canvas with the same GPU scene;
+`hero-fluid-frame` updates its texture after painting, without per-frame readback.
+
+Related hero actions share one GlassEffectContainer and one canvas. Other DOM
+and video content is not captured.
+
+Primary buttons (Join and Submit) use the package’s `setProminentWhite` GPU tint.
+The shared base material uses the native `control-clear` parameters. No CSS
+colour overlays are applied to glass. Submit’s platter fills its action row.
+
+Bottom playback controls use the package’s `setupFlatFlexControls`: native flex
+springs and continuous SDF union geometry rendered with a flat colour fill.
+No glass, refraction, or blur is used for playback controls. The same relaxed
+low-end gate skips GPU effects on 2 GB devices or a single reported CPU core;
+4 GB and dual-core devices are eligible.
+
+Rebuild the vendored runtime with `scripts/build-glass.sh` (Bun and the sibling
+`glass` checkout required). JavaScript identifiers are mangled, shaders are
+compacted, and source maps are omitted.

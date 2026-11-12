@@ -1878,3 +1878,9 @@ html.reduced-motion [data-component-list*="StaggeredFadeIn"] [data-staggered-ite
   .page-heading { padding-bottom: 28px; margin-bottom: 28px; }
   .meeting-heading { margin-top: 32px; margin-bottom: 0; }
 }
+
+.gallery-playback { position: relative; isolation: isolate; }
+.flat-sdf-canvas { position: absolute; z-index: -1; pointer-events: none; }
+.flat-sdf-ready > .gallery-progress-pill,
+.flat-sdf-ready > .gallery-toggle,
+.flat-sdf-ready > .gallery-toggle:hover { background: transparent; }

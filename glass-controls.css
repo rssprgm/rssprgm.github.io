@@ -1,0 +1,53 @@
+.button-secondary, .join-close {
+  background: #28282a;
+}
+.button-secondary:hover, .join-close:hover {
+  background: #363638;
+}
+.glass-host {
+  position: relative;
+  display: inline-grid;
+  vertical-align: middle;
+  isolation: isolate;
+}
+.glass-platter {
+  border-radius: 999px;
+  position: relative;
+  display: grid;
+  min-width: 0;
+}
+.glass-ready > .glass-platter > :is(.button, .join-close) {
+  background: transparent;
+  border-color: transparent;
+  transform: none;
+}
+.glass-ready > .glass-platter > .button-primary {
+  color: var(--button-dark-text);
+}
+.hero-actions.glass-host, .join-actions.glass-host {
+  display: flex;
+}
+.glass-backdrop-source {
+  position: fixed;
+  inset: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.glass-host:has(.join-submit) {
+  width: 100%;
+}
+
+.glass-host:has(> .glass-platter > .join-close) {
+  position: absolute;
+  top: calc(var(--modal-inset) + var(--sheet-content-inset-y));
+  right: calc(var(--modal-inset) + var(--sheet-content-inset-x));
+}
+.glass-platter > .join-close {
+  position: relative;
+  top: auto;
+  right: auto;
+}
+.join-actions.glass-host > .glass-platter {
+  flex: 1;
+  width: 100%;
+}

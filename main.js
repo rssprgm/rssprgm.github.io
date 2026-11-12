@@ -1,6 +1,7 @@
 import { setupDeviceDownloads } from './device-downloads.js';
 setupDeviceDownloads();
-import { initButtonEffects } from "./button-effects.js";
+import { setupPlaybackEffects } from "./playback-effects.js";
+import { setupGlassControls } from "./glass-controls.js";
 import { setupHeroFluid } from "./hero-fluid.js";
 import { setupJoinDialog } from "./join-dialog.js";
 import { setupLenisScroll } from "./lenis-scroll.js";
@@ -25,7 +26,8 @@ const lenis = setupLenisScroll({ prefersReducedMotion });
 setupProjectCarousels({ prefersReducedMotion });
 setupStaggeredFadeIn();
 setupFaqAccordion();
-initButtonEffects({ prefersReducedMotion });
+setupGlassControls();
+setupPlaybackEffects();
 
 setupSmoothScrolling({ lenis, prefersReducedMotion });
 setupJoinDialog({
