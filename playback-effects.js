@@ -1,3 +1,4 @@
+import { revealPlayback } from './playback-intro.js';
 import { preferFlatControls } from './glass-controls.js';
 
 export async function setupPlaybackEffects() {
@@ -13,7 +14,9 @@ export async function setupPlaybackEffects() {
     if (!adapter || adapter.info?.isFallbackAdapter || !adapter.features.has('shader-f16')) return;
     const { setupFlatFlexControls } = await import('./vendor/glass/flat-controls.js');
     for (const root of roots) {
+      if (motion.matches) return;
       cleanups.push(await setupFlatFlexControls(root, [...root.querySelectorAll('.gallery-progress-pill, .gallery-toggle')]));
+      await revealPlayback(root, motion);
     }
     motion.addEventListener('change', dispose, { once: true });
     window.addEventListener('pagehide', dispose, { once: true });

@@ -8,7 +8,7 @@ whitespace are removed. Public exports and shader bindings remain intact.
 Source maps are omitted. Identifier mangling is not source-code protection.
 
 The main runtime is 821,805 bytes; the standalone flat-control runtime is
-37,654 bytes before transport compression. No demo assets or private icons are
+37,871 bytes before transport compression. No demo assets or private icons are
 included. The source repository is authoritative; do not edit these bundles.
 
 The library samples CSS background images and registered glass surfaces, not arbitrary DOM or video pixels.

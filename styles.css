@@ -1836,12 +1836,12 @@ html.reduced-motion [data-component-list*="StaggeredFadeIn"] [data-staggered-ite
 }
 .gallery-playback { --gallery-surface: #262628; --gallery-ink: #f5f5f7; display: flex; justify-content: center; align-items: center; gap: 12px; padding: 16px 0; }
 .gallery-playback[hidden] { display: none; }
-.gallery-progress-pill { border-radius: 999px; background: var(--gallery-surface); padding: 0 16px; }
+.gallery-progress-pill { border-radius: 999px; background: var(--gallery-surface); padding: 0 10px; }
 .gallery-progress-window { display: flex; width: 160px; height: 44px; overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; mask-image: linear-gradient(to right, transparent, #000 var(--dot-fade-start, 0px), #000 calc(100% - var(--dot-fade-end, 0px)), transparent); }
 .gallery-progress-window::-webkit-scrollbar { display: none; }
-.gallery-progress-item { appearance: none; border: 0; background: transparent; cursor: pointer; flex: 0 0 calc(24px + 40px * var(--dot-emphasis, 0)); height: 44px; padding: 0 8px; display: grid; place-items: center; }
+.gallery-progress-item { appearance: none; border: 0; background: transparent; cursor: pointer; flex: 0 0 calc(24px + 40px * var(--dot-emphasis, 0) * var(--progress-intro, 1)); height: 44px; padding: 0 8px; display: grid; place-items: center; }
 .gallery-indicator { display: block; width: 100%; height: 8px; border-radius: 999px; background: #77777b; overflow: hidden; opacity: calc(.7 + .3 * var(--dot-emphasis, 0)); }
-.gallery-indicator > span { display: block; width: 100%; height: 100%; background: var(--gallery-ink); border-radius: inherit; transform-origin: left; transform: scaleX(var(--item-progress, 0)); opacity: var(--dot-emphasis, 0); }
+.gallery-indicator > span { display: block; width: calc(115% * var(--item-progress, 0)); min-width: 15%; margin-left: -15%; height: 100%; background: var(--gallery-ink); border-radius: inherit; opacity: var(--dot-emphasis, 0); }
 .gallery-toggle, .gallery-toggle:hover { background: var(--gallery-surface); color: var(--gallery-ink); }
 .gallery-toggle [data-icon] { display: none; }
 .gallery-toggle[data-state="pause"] [data-icon="pause"], .gallery-toggle[data-state="play"] [data-icon="play"], .gallery-toggle[data-state="replay"] [data-icon="replay"] { display: grid; }
@@ -1888,3 +1888,8 @@ html.reduced-motion [data-component-list*="StaggeredFadeIn"] [data-staggered-ite
 .flat-sdf-ready > .gallery-toggle:hover { background: transparent; }
 
 .meeting-slide-track.is-navigating { scroll-snap-type: none; }
+
+.playback-intro > .gallery-progress-pill { overflow: hidden; flex-shrink: 0; }
+.playback-intro > .gallery-toggle { flex-shrink: 0; transition: none; }
+
+.playback-intro { box-sizing: border-box; height: 76px; }
