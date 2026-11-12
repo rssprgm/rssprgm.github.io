@@ -1826,7 +1826,7 @@ html.reduced-motion [data-component-list*="StaggeredFadeIn"] [data-staggered-ite
 .meeting-watch { max-width: none; padding: 30px 0 34px; container-type: inline-size; }
 .meeting-stage { position: relative; }
 .meeting-slide-track { --carousel-card-width: min(78cqw, 1440px); --project-gallery-gutter: calc((100cqw - var(--carousel-card-width)) / 2); width: 100%; margin: 0; padding: 10px 0 18px; }
-.meeting-slide { aspect-ratio: 16 / 9; height: auto; scroll-snap-align: center; scroll-snap-stop: always; background: #000; filter: brightness(calc(.4 + .6 * var(--slide-focus, 0))); }
+.meeting-slide { aspect-ratio: 16 / 9; height: auto; scroll-snap-align: center; scroll-snap-stop: always; background: #000 center / 100% 100% no-repeat; filter: brightness(calc(.4 + .6 * var(--slide-focus, 0))); }
 .meeting-slide video, .meeting-slide img { width: 100%; height: 100%; object-fit: contain; display: block; }
 @media (max-width: 760px) {
   .meeting-slide-track { --carousel-card-width: 90cqw; }

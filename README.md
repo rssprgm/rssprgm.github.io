@@ -114,3 +114,6 @@ low-end gate skips GPU effects on 2 GB devices or a single reported CPU core;
 Rebuild the vendored runtime with `scripts/build-glass.sh` (Bun and the sibling
 `glass` checkout required). JavaScript identifiers are mangled, shaders are
 compacted, and source maps are omitted.
+
+Slide placeholders are embedded 8×8 RGB averages. After changing slide JPEGs,
+run `python3 scripts/build-slide-placeholders.py` (Pillow required).
