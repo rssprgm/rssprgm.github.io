@@ -1,7 +1,8 @@
 # Glass runtime
 
-Bundled from the sibling `glass` repository at commit
-`b3339c0` using Bun. Rebuild with `scripts/build-glass.sh`.
+Bundled from the sibling `glass` repository at base commit
+`03d5dd5a1e78f5fe9a42575bdd0d69805613ea11` plus local, uncommitted changes
+using Bun. Rebuild with `scripts/build-glass.sh` from that local checkout.
 JavaScript identifiers, syntax and whitespace are minified; WGSL comments and
 whitespace are removed. Public exports and shader bindings remain intact.
 Source maps are omitted. Identifier mangling is not source-code protection.

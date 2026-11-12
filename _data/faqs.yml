@@ -7,7 +7,13 @@
 - id: meetings
   question: When are meetings?
   answer: >-
-    Meetings are every other Friday at lunch in Room 207 during Fall 2026.
+    Meetings are every other Friday at lunch in Room 207.
+
+- id: meeting-notes
+  question: Where can I find meeting slides and notes?
+  answer: >-
+    The <a href="/meetings.html">Meetings page</a> lists past sessions by date.
+    Open a meeting to view its presentation, summary, session notes, and resources.
 
 - id: rhs-app
   question: How can I download the RHS App?
