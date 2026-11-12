@@ -9,7 +9,7 @@ test('continuous corners follow CSS radii, resizing, hidden dialogs, and square 
   const hidden = { ...element, offsetWidth: 0, style: { ...element.style } };
   globalThis.getComputedStyle = (target) => {
     assert.equal(target.style.borderRadius, undefined, 'read the original stylesheet radius');
-    return { borderTopLeftRadius: target.radius };
+    return { borderTopLeftRadius: target.radius, width: `${target.width ?? target.offsetWidth}px`, height: `${target.height ?? target.offsetHeight}px` };
   };
   let resized, viewportResized;
   const observed = [];
@@ -35,4 +35,9 @@ test('continuous corners follow CSS radii, resizing, hidden dialogs, and square 
   element.radius = '26px';
   updateContinuousCorners(element);
   assert.doesNotMatch(element.style.clipPath, /NaN|Infinity/);
+  element.width = 480.375;
+  element.height = 270.484375;
+  updateContinuousCorners(element);
+  assert.match(element.style.clipPath, /480\.375/);
+  assert.match(element.style.clipPath, /270\.484375/);
 });

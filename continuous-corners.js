@@ -1,10 +1,11 @@
 import { quartzCoreContinuousCSSPath } from './vendor/glass/corners.js';
 
 export function updateContinuousCorners(element) {
-  const width = element.offsetWidth, height = element.offsetHeight;
-  if (!(width > 0 && height > 0)) return;
+  if (!(element.offsetWidth > 0 && element.offsetHeight > 0)) return;
   element.style.removeProperty('border-radius');
-  const radius = parseFloat(getComputedStyle(element).borderTopLeftRadius) || 0;
+  const style = getComputedStyle(element);
+  const width = parseFloat(style.width), height = parseFloat(style.height);
+  const radius = parseFloat(style.borderTopLeftRadius) || 0;
   element.style.clipPath = radius ? quartzCoreContinuousCSSPath(width, height, radius) : 'none';
   element.style.borderRadius = '0';
 }
