@@ -13,7 +13,14 @@ export function setupGalleryControls(root, { onPrevious, onNext, onSelect, onTog
   playback.hidden = false;
   previous.addEventListener('click', onPrevious);
   next.addEventListener('click', onNext);
-  items.forEach((item, index) => item.addEventListener('click', () => onSelect(index)));
+  items.forEach((item, index) => {
+    item.addEventListener('pointerdown', (event) => {
+      if (event.button !== 0) return;
+      event.preventDefault();
+      item.focus({ preventScroll: true });
+    });
+    item.addEventListener('click', () => onSelect(index));
+  });
   toggle.addEventListener('click', () => ended ? onReplay() : onToggle());
   function fadeEdges() {
     window.style.setProperty('--dot-fade-start', window.scrollLeft > 1 ? '16px' : '0px');

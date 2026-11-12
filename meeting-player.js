@@ -106,8 +106,8 @@ export function setupMeetingPlayer(root) {
     clearTimeout(scrollTimer);
     destination = instant || reducedMotion.matches ? null : target;
     track.classList.toggle("is-navigating", destination !== null);
-    activate(target);
     setCarouselScrollLeft(track, getAlignedScrollLeft(track, slides[target], slides[0]), instant || reducedMotion.matches);
+    activate(target);
   }
   function settled() {
     clearTimeout(scrollTimer);
