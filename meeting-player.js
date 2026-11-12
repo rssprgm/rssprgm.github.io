@@ -16,6 +16,7 @@ export function setupMeetingPlayer(root) {
   const sections = [...summary.querySelectorAll('[data-summary-start]')];
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   let index = 0;
+  let destination = null;
   let running = true;
   let complete = false;
   let elapsed = 0;
@@ -87,11 +88,20 @@ export function setupMeetingPlayer(root) {
   }
   function go(value, instant = false) {
     const target = Math.max(0, Math.min(slides.length - 1, value));
+    clearTimeout(scrollTimer);
+    destination = instant || reducedMotion.matches ? null : target;
+    track.classList.toggle("is-navigating", destination !== null);
     activate(target);
     track.scrollTo({ left: getAlignedScrollLeft(track, slides[target], slides[0]), behavior: instant || reducedMotion.matches ? 'instant' : 'smooth' });
   }
   function settled() {
     clearTimeout(scrollTimer);
+    if (destination !== null) {
+      const goal = getAlignedScrollLeft(track, slides[destination], slides[0]);
+      if (Math.abs(track.scrollLeft - goal) > 1) return;
+      destination = null;
+      track.classList.toggle('is-navigating', false);
+    }
     const position = Math.round(track.scrollLeft / (slides[1].offsetLeft - slides[0].offsetLeft));
     if (position !== index) activate(position);
     else if (running) setRunning(true);
@@ -107,7 +117,14 @@ export function setupMeetingPlayer(root) {
     const position = slides.indexOf(card);
     if (position >= 0 && position !== index) go(position);
   });
-  track.addEventListener('pointerdown', stopClock, { passive: true });
+  const interruptNavigation = () => {
+    destination = null;
+    track.classList.toggle('is-navigating', false);
+    stopClock();
+  };
+  track.addEventListener('pointerdown', interruptNavigation, { passive: true });
+  track.addEventListener('wheel', interruptNavigation, { passive: true });
+  track.addEventListener('scrollend', settled, { passive: true });
   track.addEventListener('pointerup', settled, { passive: true });
   track.addEventListener('pointercancel', settled, { passive: true });
   slides.forEach((slide, position) => {

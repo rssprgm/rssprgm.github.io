@@ -51,7 +51,8 @@ test('autoplay runs intro → slides → outro, stops at the end, and Replay res
   const oldMatch = globalThis.matchMedia, oldObserver = globalThis.ResizeObserver, oldFrame = globalThis.requestAnimationFrame, oldCancel = globalThis.cancelAnimationFrame;
   globalThis.requestAnimationFrame = () => 1;
   globalThis.cancelAnimationFrame = () => {};
-  globalThis.matchMedia = () => ({ matches: true });
+  const motion = { matches: true };
+  globalThis.matchMedia = () => motion;
   globalThis.ResizeObserver = class { observe() {} };
   t.after(() => { globalThis.matchMedia = oldMatch; globalThis.ResizeObserver = oldObserver; globalThis.requestAnimationFrame = oldFrame; globalThis.cancelAnimationFrame = oldCancel; });
   let clock = 0;
@@ -83,6 +84,19 @@ test('autoplay runs intro → slides → outro, stops at the end, and Replay res
   assert.equal(intro.currentTime, 0);
   assert.equal(pause.dataset.state, 'pause');
   assert.equal(intro.paused, false);
+  motion.matches = false;
+  const destinations = [];
+  track.scrollTo = ({ left }) => destinations.push(left);
+  next.dispatchEvent(new Event('click'));
+  track.scrollLeft = 30;
+  track.dispatchEvent(new Event('scroll'));
+  t.mock.timers.tick(140);
+  next.dispatchEvent(new Event('click'));
+  assert.equal(destinations.at(-1), 200, 'rapid taps advance from the requested destination, not an intermediate position');
+  track.dispatchEvent(new Event('scrollend'));
+  assert.equal(dots[2].attributes['aria-current'], 'true', 'an interrupted scroll end cannot replace the requested destination');
+  track.scrollLeft = 200;
+  track.dispatchEvent(new Event('scrollend'));
 });
 
  test('dot highlights crossfade continuously while a slide is partially scrolled', async () => {

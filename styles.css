@@ -1884,3 +1884,5 @@ html.reduced-motion [data-component-list*="StaggeredFadeIn"] [data-staggered-ite
 .flat-sdf-ready > .gallery-progress-pill,
 .flat-sdf-ready > .gallery-toggle,
 .flat-sdf-ready > .gallery-toggle:hover { background: transparent; }
+
+.meeting-slide-track.is-navigating { scroll-snap-type: none; }
