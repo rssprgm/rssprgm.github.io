@@ -5,3 +5,4 @@ source=${1:-"$site/../glass"}
 cd "$source"
 bun run scripts/build.ts src/runtime.ts "$site/vendor/glass/glass.js"
 bun run scripts/build.ts src/components/flat-controls/flat-controls.ts "$site/vendor/glass/flat-controls.js"
+bun run scripts/build.ts src/shape/corners.ts "$site/vendor/glass/corners.js"

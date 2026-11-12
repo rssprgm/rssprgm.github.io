@@ -1,0 +1,38 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { setupContinuousCorners, updateContinuousCorners } from '../continuous-corners.js';
+
+test('continuous corners follow CSS radii, resizing, hidden dialogs, and square mobile panels', (t) => {
+  const previous = { getComputedStyle: globalThis.getComputedStyle, document: globalThis.document, window: globalThis.window, ResizeObserver: globalThis.ResizeObserver };
+  t.after(() => Object.assign(globalThis, previous));
+  const element = { offsetWidth: 960, offsetHeight: 540, radius: '28px', style: { removeProperty() { delete this.borderRadius; } } };
+  const hidden = { ...element, offsetWidth: 0, style: { ...element.style } };
+  globalThis.getComputedStyle = (target) => {
+    assert.equal(target.style.borderRadius, undefined, 'read the original stylesheet radius');
+    return { borderTopLeftRadius: target.radius };
+  };
+  let resized, viewportResized;
+  const observed = [];
+  globalThis.document = { querySelectorAll: () => [element, hidden] };
+  globalThis.window = { addEventListener(event, callback) { assert.equal(event, 'resize'); viewportResized = callback; } };
+  globalThis.ResizeObserver = class { constructor(callback) { resized = callback; } observe(target) { observed.push(target); } };
+  setupContinuousCorners();
+  assert.deepEqual(observed, [element, hidden]);
+  assert.ok(element.style.clipPath.startsWith('path("M0 42.80262'));
+  assert.equal(element.style.borderRadius, '0');
+  assert.equal(hidden.style.clipPath, undefined);
+  element.offsetWidth = 480;
+  element.offsetHeight = 270;
+  element.radius = '18px';
+  resized([{ target: element }]);
+  assert.ok(element.style.clipPath.startsWith('path("M0 27.51597'));
+  hidden.offsetWidth = 560;
+  resized([{ target: hidden }]);
+  assert.ok(hidden.style.clipPath.startsWith('path('));
+  element.radius = '0px';
+  viewportResized();
+  assert.equal(element.style.clipPath, 'none');
+  element.radius = '26px';
+  updateContinuousCorners(element);
+  assert.doesNotMatch(element.style.clipPath, /NaN|Infinity/);
+});

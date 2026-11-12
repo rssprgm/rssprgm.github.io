@@ -1,3 +1,4 @@
+import { setupContinuousCorners } from './continuous-corners.js';
 import { setupDeviceDownloads } from './device-downloads.js';
 setupDeviceDownloads();
 import { setupPlaybackEffects } from "./playback-effects.js";
@@ -19,6 +20,7 @@ document.documentElement.classList.toggle(
   !prefersReducedMotion,
 );
 
+setupContinuousCorners();
 setupMeshPlaceholders();
 setupHeroFluid({ prefersReducedMotion });
 
