@@ -1,3 +1,5 @@
+import { setupDeviceDownloads } from './device-downloads.js';
+setupDeviceDownloads();
 import { initButtonEffects } from "./button-effects.js";
 import { setupHeroFluid } from "./hero-fluid.js";
 import { setupJoinDialog } from "./join-dialog.js";

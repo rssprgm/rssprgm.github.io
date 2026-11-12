@@ -13,6 +13,7 @@
           <div class="resource-info">
             <a
               class="resource-name"
+              {% if resource.icon == "vscode" %}data-device-download="vscode"{% endif %}
               href="{{ resource.url }}"
               target="_blank"
               rel="noopener">{{ resource.name }}</a>

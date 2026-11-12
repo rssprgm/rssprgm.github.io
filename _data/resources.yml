@@ -1,7 +1,7 @@
 - title: "Editors & IDEs"
   items:
     - name: VSCode
-      url: https://code.visualstudio.com/
+      url: https://code.visualstudio.com/download
       icon: vscode
     - name: Xcode
       url: https://developer.apple.com/xcode/
