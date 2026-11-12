@@ -1,0 +1,31 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { setCarouselScrollLeft } from '../project-carousel.js';
+
+test('rapid retargeting keeps one moving animation and resize cancels its old destination', (t) => {
+  let next = 0, now = 0;
+  const frames = new Map();
+  const oldFrame = globalThis.requestAnimationFrame, oldCancel = globalThis.cancelAnimationFrame;
+  globalThis.requestAnimationFrame = (callback) => { frames.set(++next, callback); return next; };
+  globalThis.cancelAnimationFrame = (id) => frames.delete(id);
+  t.after(() => { globalThis.requestAnimationFrame = oldFrame; globalThis.cancelAnimationFrame = oldCancel; });
+  t.mock.method(performance, 'now', () => now);
+  const rail = { scrollLeft: 0, scrollWidth: 2000, clientWidth: 300, style: { scrollSnapType: 'x mandatory' } };
+  const tick = () => { now += 16; const pending = [...frames.values()]; frames.clear(); pending.forEach((callback) => callback(now)); };
+  setCarouselScrollLeft(rail, 300);
+  for (let i = 0; i < 8; i++) tick();
+  const before = rail.scrollLeft;
+  setCarouselScrollLeft(rail, 900);
+  assert.equal(frames.size, 1);
+  tick();
+  assert.ok(rail.scrollLeft > before, 'retarget does not restart or jump back');
+  for (let i = 0; i < 150; i++) tick();
+  assert.equal(rail.scrollLeft, 900);
+  assert.equal(rail.style.scrollSnapType, 'x mandatory');
+  setCarouselScrollLeft(rail, 1200);
+  tick();
+  setCarouselScrollLeft(rail, 600, true);
+  tick();
+  assert.equal(rail.scrollLeft, 600);
+  assert.equal(frames.size, 0);
+});

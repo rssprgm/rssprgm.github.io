@@ -50,10 +50,12 @@ test('autoplay runs intro → slides → outro, stops at the end, and Replay res
   summary.children['[data-summary-start]'] = sections.map(({ dataset }) => Object.assign(new Element(), { dataset }));
   const oldMatch = globalThis.matchMedia, oldObserver = globalThis.ResizeObserver, oldFrame = globalThis.requestAnimationFrame, oldCancel = globalThis.cancelAnimationFrame;
   globalThis.requestAnimationFrame = () => 1;
-  globalThis.cancelAnimationFrame = () => {};
+  let cancelledFrames = 0;
+  globalThis.cancelAnimationFrame = () => { cancelledFrames++; };
   const motion = { matches: true };
   globalThis.matchMedia = () => motion;
-  globalThis.ResizeObserver = class { observe() {} };
+  let resize;
+  globalThis.ResizeObserver = class { constructor(callback) { resize = callback; } observe() {} };
   t.after(() => { globalThis.matchMedia = oldMatch; globalThis.ResizeObserver = oldObserver; globalThis.requestAnimationFrame = oldFrame; globalThis.cancelAnimationFrame = oldCancel; });
   let clock = 0;
   t.mock.method(performance, 'now', () => clock);
@@ -84,6 +86,9 @@ test('autoplay runs intro → slides → outro, stops at the end, and Replay res
   assert.equal(intro.currentTime, 0);
   assert.equal(pause.dataset.state, 'pause');
   assert.equal(intro.paused, false);
+  intro.currentTime = 2;
+  dots[0].dispatchEvent(new Event('click'));
+  assert.equal(intro.currentTime, 2, 'selecting the same destination does not restart video playback');
   motion.matches = false;
   intro.currentTime = 3;
   next.dispatchEvent(new Event('click'));
@@ -104,15 +109,25 @@ test('autoplay runs intro → slides → outro, stops at the end, and Replay res
   const destinations = [];
   track.scrollTo = ({ left }) => destinations.push(left);
   next.dispatchEvent(new Event('click'));
+  const cancelledBeforeTap = cancelledFrames;
+  track.dispatchEvent(Object.assign(new Event('pointerdown'), { clientX: 10, clientY: 10 }));
+  assert.equal(cancelledFrames, cancelledBeforeTap, 'a tap does not cancel the in-flight animation');
   track.scrollLeft = 30;
   track.dispatchEvent(new Event('scroll'));
   t.mock.timers.tick(140);
   next.dispatchEvent(new Event('click'));
-  assert.equal(destinations.at(-1), 200, 'rapid taps advance from the requested destination, not an intermediate position');
+  assert.equal(dots[2].attributes['aria-current'], 'true', 'rapid taps advance from the requested destination, not an intermediate position');
   track.dispatchEvent(new Event('scrollend'));
   assert.equal(dots[2].attributes['aria-current'], 'true', 'an interrupted scroll end cannot replace the requested destination');
   track.scrollLeft = 200;
   track.dispatchEvent(new Event('scrollend'));
+  track.scrollLeft = 175;
+  resize();
+  assert.equal(track.scrollLeft, 175, 'height-only resize does not recenter the rail');
+  track.clientWidth = 200;
+  track.scrollWidth = 600;
+  resize();
+  assert.equal(track.scrollLeft, 200, 'width resize preserves the selected slide');
 });
 
  test('dot highlights crossfade continuously while a slide is partially scrolled', async () => {

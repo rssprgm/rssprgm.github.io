@@ -8,6 +8,7 @@ export function setupProjectCarousels({ prefersReducedMotion = false } = {}) {
 
   const rails = Array.from(document.querySelectorAll(".project-rail"));
   let resizeQueued = false;
+  let viewportWidth = window.innerWidth;
 
   rails.forEach((rail) => {
     prepareProjectRail(rail);
@@ -24,6 +25,8 @@ export function setupProjectCarousels({ prefersReducedMotion = false } = {}) {
   });
 
   window.addEventListener("resize", () => {
+    if (window.innerWidth === viewportWidth) return;
+    viewportWidth = window.innerWidth;
     if (resizeQueued) return;
     resizeQueued = true;
 
@@ -231,53 +234,40 @@ function clampCarouselScrollLeft(rail, targetLeft) {
   return Math.min(Math.max(targetLeft, 0), maxScrollLeft);
 }
 
-function setCarouselScrollLeft(rail, targetLeft, immediate = false) {
-  const clampedTarget = clampCarouselScrollLeft(rail, targetLeft);
-  const activeAnimation = carouselAnimations.get(rail);
-  if (activeAnimation) {
-    cancelAnimationFrame(activeAnimation.frame);
-    rail.style.scrollSnapType = activeAnimation.scrollSnapType;
-    carouselAnimations.delete(rail);
-  }
-
+export function setCarouselScrollLeft(rail, targetLeft, immediate = false) {
+  const target = clampCarouselScrollLeft(rail, targetLeft);
+  const active = carouselAnimations.get(rail);
   if (immediate || shouldReduceMotion) {
-    rail.scrollLeft = clampedTarget;
-    return;
-  }
-
-  const startLeft = rail.scrollLeft;
-  const distance = clampedTarget - startLeft;
-  if (Math.abs(distance) < 1) return;
-
-  const duration = Math.min(920, Math.max(620, Math.abs(distance) * 0.9));
-  const startedAt = performance.now();
-  const scrollSnapType = rail.style.scrollSnapType;
-  rail.style.scrollSnapType = "none";
-
-  const step = (now) => {
-    const progress = Math.min(1, (now - startedAt) / duration);
-    rail.scrollLeft = startLeft + distance * easeInOutCubic(progress);
-
-    if (progress < 1) {
-      carouselAnimations.set(rail, {
-        frame: requestAnimationFrame(step),
-        scrollSnapType,
-      });
-    } else {
-      rail.scrollLeft = clampedTarget;
-      rail.style.scrollSnapType = scrollSnapType;
+    if (active) {
+      cancelAnimationFrame(active.frame);
+      rail.style.scrollSnapType = active.scrollSnapType;
       carouselAnimations.delete(rail);
     }
+    rail.scrollLeft = target;
+    return;
+  }
+  if (active) {
+    active.target = target;
+    return;
+  }
+  if (Math.abs(target - rail.scrollLeft) < .5) return;
+  const state = { target, position: rail.scrollLeft, velocity: 0, time: performance.now(), frame: 0, scrollSnapType: rail.style.scrollSnapType };
+  rail.style.scrollSnapType = "none";
+  const step = (now) => {
+    const dt = Math.min(.064, Math.max(0, (now - state.time) / 1000));
+    state.time = now;
+    const offset = state.position - state.target;
+    const decay = Math.exp(-12 * dt);
+    const momentum = state.velocity + 12 * offset;
+    state.position = state.target + (offset + momentum * dt) * decay;
+    state.velocity = (state.velocity - 12 * momentum * dt) * decay;
+    rail.scrollLeft = state.position;
+    if (Math.abs(state.position - state.target) < .5 && Math.abs(state.velocity) < 2) {
+      rail.scrollLeft = state.target;
+      rail.style.scrollSnapType = state.scrollSnapType;
+      carouselAnimations.delete(rail);
+    } else state.frame = requestAnimationFrame(step);
   };
-
-  carouselAnimations.set(rail, {
-    frame: requestAnimationFrame(step),
-    scrollSnapType,
-  });
-}
-
-function easeInOutCubic(progress) {
-  return progress < 0.5
-    ? 4 * progress ** 3
-    : 1 - (-2 * progress + 2) ** 3 / 2;
+  carouselAnimations.set(rail, state);
+  state.frame = requestAnimationFrame(step);
 }

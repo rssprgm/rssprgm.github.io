@@ -1,4 +1,4 @@
-import { getAlignedScrollLeft } from './project-carousel.js';
+import { getAlignedScrollLeft, setCarouselScrollLeft } from './project-carousel.js';
 import { setupGalleryControls, dotEmphasis } from './gallery-controls.js';
 export { dotEmphasis } from './gallery-controls.js';
 
@@ -102,11 +102,12 @@ export function setupMeetingPlayer(root) {
   }
   function go(value, instant = false) {
     const target = Math.max(0, Math.min(slides.length - 1, value));
+    if (!instant && target === index) return;
     clearTimeout(scrollTimer);
     destination = instant || reducedMotion.matches ? null : target;
     track.classList.toggle("is-navigating", destination !== null);
     activate(target);
-    track.scrollTo({ left: getAlignedScrollLeft(track, slides[target], slides[0]), behavior: instant || reducedMotion.matches ? 'instant' : 'smooth' });
+    setCarouselScrollLeft(track, getAlignedScrollLeft(track, slides[target], slides[0]), instant || reducedMotion.matches);
   }
   function settled() {
     clearTimeout(scrollTimer);
@@ -132,15 +133,23 @@ export function setupMeetingPlayer(root) {
     if (position >= 0 && position !== index) go(position);
   });
   const interruptNavigation = () => {
+    setCarouselScrollLeft(track, track.scrollLeft, true);
     destination = null;
     track.classList.toggle('is-navigating', false);
     stopClock();
   };
-  track.addEventListener('pointerdown', interruptNavigation, { passive: true });
+  let pointerStart = null;
+  track.addEventListener('pointerdown', (event) => { pointerStart = { x: event.clientX, y: event.clientY }; }, { passive: true });
+  track.addEventListener('pointermove', (event) => {
+    if (pointerStart && Math.hypot(event.clientX - pointerStart.x, event.clientY - pointerStart.y) > 6) {
+      pointerStart = null;
+      interruptNavigation();
+    }
+  }, { passive: true });
   track.addEventListener('wheel', interruptNavigation, { passive: true });
   track.addEventListener('scrollend', settled, { passive: true });
-  track.addEventListener('pointerup', settled, { passive: true });
-  track.addEventListener('pointercancel', settled, { passive: true });
+  track.addEventListener('pointerup', () => { pointerStart = null; settled(); }, { passive: true });
+  track.addEventListener('pointercancel', () => { pointerStart = null; settled(); }, { passive: true });
   slides.forEach((slide, position) => {
     const video = slide.querySelector('video');
     if (video) {
@@ -171,8 +180,14 @@ export function setupMeetingPlayer(root) {
       go(index + (event.key === 'ArrowRight' ? 1 : -1));
     }
   });
+  let trackWidth = track.clientWidth;
   new ResizeObserver(() => {
-    track.scrollTo({ left: getAlignedScrollLeft(track, slides[index], slides[0]), behavior: 'instant' });
+    if (track.clientWidth === trackWidth) return;
+    trackWidth = track.clientWidth;
+    clearTimeout(scrollTimer);
+    destination = null;
+    track.classList.toggle('is-navigating', false);
+    setCarouselScrollLeft(track, getAlignedScrollLeft(track, slides[index], slides[0]), true);
     renderProgress();
   }).observe(track);
   root.addEventListener('meeting-panel-change', syncSummary);

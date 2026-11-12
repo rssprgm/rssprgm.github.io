@@ -11,6 +11,11 @@ export function setupLenisScroll({ prefersReducedMotion = false } = {}) {
     prevent: (node) => Boolean(node.closest?.("[data-lenis-prevent]")),
   });
 
+  window.addEventListener("resize", () => {
+    lenis.reset();
+    lenis.resize();
+  });
+
   const raf = (time) => {
     lenis.raf(time);
     requestAnimationFrame(raf);
