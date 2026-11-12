@@ -1303,23 +1303,7 @@ html.js .faq-item[data-open="true"] .faq-answer {
 
 .resources {
   display: grid;
-  gap: clamp(32px, 4vw, 52px);
-}
-
-.resources h1 {
-  font-size: clamp(50px, 8vw, 96px);
-  line-height: 0.96;
-  letter-spacing: -0.06em;
-  font-weight: 650;
-}
-
-.resources-lede {
-  max-width: 600px;
-  margin-top: -16px;
-  color: var(--muted);
-  font-size: clamp(18px, 1.8vw, 24px);
-  line-height: 1.2;
-  letter-spacing: -0.03em;
+  gap: 36px;
 }
 
 .resource-category {
@@ -1879,3 +1863,18 @@ html.reduced-motion [data-component-list*="StaggeredFadeIn"] [data-staggered-ite
 .meeting-back a { display: inline-flex; align-items: center; gap: 3px; color: #8bbcf6; font-size: 16px; }
 .meeting-back svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .meeting-notes-scroll { height: 560px; max-height: 70svh; }
+
+/* Shared inner-page hierarchy; presentation cards retain their wider rail. */
+.page-content { max-width: 1080px; padding: 58px 0 100px; }
+.page-heading { padding-bottom: 36px; margin-bottom: 36px; border-bottom: 1px solid var(--line); }
+.page-heading h1, .meeting-detail .page-heading h1 { font-size: clamp(36px, 5vw, 60px); line-height: 1.08; font-weight: 600; letter-spacing: -.045em; margin: 0; }
+.resources .page-heading { margin-bottom: 0; }
+.meeting-heading { width: var(--shell); max-width: 1080px; margin: 58px auto 0; }
+.meeting-heading .meeting-back { padding: 0; margin: 0 0 24px; }
+.meeting-heading time { display: block; margin-top: 20px; color: var(--muted); font-size: 13px; }
+.nav a[aria-current], .mobile-menu-nav a[aria-current] { color: var(--text); }
+@media (max-width: 760px) {
+  .page-content { padding-top: 32px; padding-bottom: 64px; }
+  .page-heading { padding-bottom: 28px; margin-bottom: 28px; }
+  .meeting-heading { margin-top: 32px; margin-bottom: 0; }
+}

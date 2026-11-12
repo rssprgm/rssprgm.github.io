@@ -14,8 +14,8 @@
         <a href="{{ home_url }}#what-we-do">What We Do</a>
         <a href="{{ home_url }}#faq">FAQ</a>
       {% endif %}
-      <a href="{{ meetings_url }}">Meetings</a>
-      <a href="{{ resources_url }}">Resources</a>
+      <a href="{{ meetings_url }}" {% if page.meeting %}aria-current="location"{% elsif page.canonical_path == "/meetings.html" %}aria-current="page"{% endif %}>Meetings</a>
+      <a href="{{ resources_url }}" {% if page.canonical_path == "/resources.html" %}aria-current="page"{% endif %}>Resources</a>
       <button type="button" data-open-join>Join</button>
     </nav>
     <button

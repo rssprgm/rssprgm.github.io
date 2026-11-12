@@ -1,15 +1,25 @@
 ---
 layout: default
 title: Meetings — Richmond Secondary Programming Club
-description: Fall 2026 meeting details and resources for the Richmond Secondary Programming Club.
+description: Browse Programming Club workshops, presentations, summaries, and session notes.
 canonical_path: /meetings.html
 is_home: false
 ---
-<main>
-  <section class="resources meetings-page" aria-labelledby="meetings-title">
-    <h1 id="meetings-title">Meetings</h1>
-    <p class="resources-lede">
-      Meetings are every other Friday at lunch in Room 207 during Fall 2026.
-    </p>
-  </section>
+{% assign sessions = site.pages | where: 'meeting', true | sort: 'meeting_date' | reverse %}
+<main class="meeting-catalogue page-content">
+  <div class="page-heading"><h1>Meetings</h1></div>
+  <div class="meeting-catalogue-grid">
+    {% for session in sessions %}
+    {% assign workshop = site.data[session.workshop] %}
+    <article class="meeting-card">
+      <a href="{{ session.url | relative_url }}" aria-labelledby="session-{{ session.workshop }}">
+        <div class="meeting-card-image"><img src="{{ session.poster | relative_url }}" alt="" width="1920" height="1080" /></div>
+        <div class="meeting-card-copy">
+          <p class="meeting-card-date"><time datetime="{{ session.meeting_date }}">{{ session.meeting_date | date: "%B %-d, %Y" }}</time></p>
+          <h2 id="session-{{ session.workshop }}">{{ workshop.title }}</h2>
+        </div>
+      </a>
+    </article>
+    {% endfor %}
+  </div>
 </main>

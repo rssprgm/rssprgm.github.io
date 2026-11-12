@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 const joinDialog = readFileSync("join-dialog.js", "utf8");
 const joinDialogMarkup = readFileSync("_includes/join-dialog.html", "utf8");
 const defaultLayout = readFileSync("_layouts/default.html", "utf8");
-const pages = ["index.html", "resources.html", "meetings.html"].map((path) => ({
+const pages = ["index.html", "resources.html", "meetings.html", "meetings/git.html", "meetings/introduction.html"].map((path) => ({
   path,
   source: readFileSync(path, "utf8"),
 }));
@@ -21,6 +21,7 @@ test("each Jekyll page uses the shared layout contract", () => {
   assert.match(defaultLayout, /{% include site-header\.html %}/);
   assert.match(defaultLayout, /{% include mobile-menu\.html %}/);
   assert.match(defaultLayout, /{% include join-dialog\.html %}/);
+  assert.match(defaultLayout, /{% include site-footer\.html %}/);
 });
 
 test("the shared join include exposes one native dialog contract", () => {
@@ -71,4 +72,15 @@ test("shared navigation points to the meetings page", () => {
     assert.match(source, /assign meetings_url = '\/meetings\.html' \| relative_url/);
     assert.match(source, /href="{{ meetings_url }}"/);
   });
+});
+
+
+test("meeting titles remain outside tab panels and catalogue headings do not skip levels", () => {
+  const detail = readFileSync("_includes/meeting-detail.html", "utf8");
+  assert.equal((detail.match(/<h1\b/g) || []).length, 1);
+  assert.ok(detail.indexOf('<h1') < detail.indexOf('data-panel='));
+  const catalogue = readFileSync("meetings.html", "utf8");
+  assert.match(catalogue, /<h2 id="session-/);
+  assert.doesNotMatch(catalogue, /<h3/);
+  pages.forEach(({ source }) => assert.doesNotMatch(source, /include site-footer/));
 });

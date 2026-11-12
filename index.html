@@ -104,37 +104,34 @@ is_home: true
     </div>
   </section>
 
+  {% assign meeting_pages = site.pages | where: 'meeting', true | sort: 'meeting_date' | reverse %}
+  {% assign today = site.time | date: '%Y-%m-%d' %}
+  {% for meeting in meeting_pages %}
+    {% if meeting.meeting_date <= today %}{% assign latest_meeting = meeting %}{% break %}{% endif %}
+  {% endfor %}
+  {% if latest_meeting %}
+  {% assign latest_workshop = site.data[latest_meeting.workshop] %}
   <section
     id="next-up"
     class="section next-up"
     aria-labelledby="next-up-title"
     data-component-list="StaggeredFadeIn"
-    data-anim-scroll-group="Next up">
+    data-anim-scroll-group="Latest meeting">
     <div class="next-up-inner">
       <div class="next-up-layout">
         <div class="section-copy">
-          <p class="section-label" data-staggered-item>Next Up</p>
-          <h2 id="next-up-title" data-staggered-item>Fall 2026</h2>
+          <p class="section-label" data-staggered-item>Latest meeting</p>
+          <h2 id="next-up-title" data-staggered-item>{{ latest_workshop.title }}</h2>
         </div>
         <div class="next-up-copy" data-staggered-item>
-          <p>
-            Meetings are every other Friday at lunch in Room 207.
-          </p>
+          <p><time datetime="{{ latest_meeting.meeting_date }}">{{ latest_meeting.meeting_date | date: '%B %-d, %Y' }}</time></p>
+          <p>{{ latest_workshop.description }}</p>
+          <a class="button button-secondary" href="{{ latest_meeting.url | relative_url }}">View meeting</a>
         </div>
-      </div>
-
-      <div
-        id="help-shape"
-        class="help-shape-subsection"
-        aria-labelledby="help-shape-title">
-        <h3 id="help-shape-title" data-staggered-item>Help Shape the Club</h3>
-        <p data-staggered-item>
-          Year one means the club is flexible. Workshops, challenges, and builds
-          will follow what members want to learn and ship.
-        </p>
       </div>
     </div>
   </section>
+  {% endif %}
 
   <section
     id="faq"
@@ -151,5 +148,3 @@ is_home: true
     </div>
   </section>
 </main>
-
-{% include site-footer.html %}
