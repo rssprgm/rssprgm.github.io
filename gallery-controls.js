@@ -1,3 +1,5 @@
+import { setCarouselScrollLeft } from './project-carousel.js';
+
 export function dotEmphasis(position, progress) {
   return Math.max(0, 1 - Math.abs(position - progress));
 }
@@ -10,6 +12,7 @@ export function setupGalleryControls(root, { onPrevious, onNext, onSelect, onTog
   const previous = root.querySelector('[data-gallery-previous]');
   const next = root.querySelector('[data-gallery-next]');
   let ended = false;
+  let dotDestination = null;
   playback.hidden = false;
   previous.addEventListener('click', onPrevious);
   next.addEventListener('click', onNext);
@@ -19,7 +22,11 @@ export function setupGalleryControls(root, { onPrevious, onNext, onSelect, onTog
       event.preventDefault();
       item.focus({ preventScroll: true });
     });
-    item.addEventListener('click', () => onSelect(index));
+    item.addEventListener('click', () => {
+      dotDestination = index;
+      setCarouselScrollLeft(window, window.scrollLeft, true);
+      onSelect(index);
+    });
   });
   toggle.addEventListener('click', () => ended ? onReplay() : onToggle());
   function fadeEdges() {
@@ -41,11 +48,19 @@ export function setupGalleryControls(root, { onPrevious, onNext, onSelect, onTog
     setPosition(position) {
       position = Math.max(0, Math.min(items.length - 1, position));
       items.forEach((item, index) => item.style.setProperty('--dot-emphasis', dotEmphasis(index, position)));
-      const start = Math.floor(position);
+      const viewportPosition = dotDestination ?? position;
+      const start = Math.floor(viewportPosition);
       const from = items[Math.min(start, items.length - 1)];
       const to = items[Math.min(start + 1, items.length - 1)];
-      const center = from.offsetLeft + from.offsetWidth / 2 + (to.offsetLeft + to.offsetWidth / 2 - from.offsetLeft - from.offsetWidth / 2) * (position - start);
-      window.scrollTo({ left: center - window.offsetLeft - window.clientWidth / 2, behavior: 'instant' });
+      const center = from.offsetLeft + from.offsetWidth / 2 + (to.offsetLeft + to.offsetWidth / 2 - from.offsetLeft - from.offsetWidth / 2) * (viewportPosition - start);
+      const targetLeft = center - window.offsetLeft - window.clientWidth / 2;
+      if (dotDestination !== null) {
+        setCarouselScrollLeft(window, targetLeft);
+        if (Math.abs(position - dotDestination) < 0.001 &&
+          Math.abs(window.scrollLeft - Math.max(0, Math.min(window.scrollWidth - window.clientWidth, targetLeft))) < 1) dotDestination = null;
+      } else {
+        window.scrollTo({ left: targetLeft, behavior: 'instant' });
+      }
       fadeEdges();
     },
     setProgress(index, progress) {

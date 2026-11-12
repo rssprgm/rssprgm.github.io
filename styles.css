@@ -1920,3 +1920,9 @@ html.reduced-motion [data-component-list*="StaggeredFadeIn"] [data-staggered-ite
 
 .meeting-detail #about h1 { max-width: none; margin: 0 0 12px; font-size: clamp(26px, 3vw, 34px); font-weight: 700; line-height: 1.15; letter-spacing: -.025em; }
 .meeting-date { display: block; color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+
+.gallery-progress-item:focus:not(:focus-visible),
+.gallery-progress-window:focus:not(:focus-visible),
+.gallery-toggle:focus:not(:focus-visible) { outline: none; }
+.gallery-progress-item:focus-visible { outline: none; }
+.gallery-progress-item:focus-visible .gallery-indicator { box-shadow: 0 0 0 2px var(--gallery-surface), 0 0 0 4px var(--gallery-ink); }
