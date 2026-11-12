@@ -17,9 +17,10 @@
           {% assign slide_path = asset_base | append: 'slides/' | append: slide_number | append: '.jpg' %}
           <div class="gallery-card gallery-media meeting-slide" style="background-image: url('{{ site.data.slide_placeholders[slide_path] }}')" data-slide="{{ forloop.index }}" role="group" aria-label="Slide {{ forloop.index }} of {{ workshop.slide_titles.size }}: {{ title }}">
             {% if forloop.first or forloop.last %}
-            <video class="meeting-video" controls playsinline muted {% if forloop.first %}autoplay{% endif %} preload="metadata" poster="{{ asset_base | append: 'slides/' | append: slide_number | append: '.jpg' | relative_url }}" aria-label="{{ title }}">
+            <video class="meeting-video" playsinline muted {% if forloop.first %}autoplay{% endif %} preload="metadata" poster="{{ asset_base | append: 'slides/' | append: slide_number | append: '.jpg' | relative_url }}" aria-label="{{ title }}">
               {% if forloop.first %}<source src="{{ asset_base | append: 'intro.mp4' | relative_url }}" type="video/mp4" />{% else %}<source src="{{ asset_base | append: 'outro.mp4' | relative_url }}" type="video/mp4" />{% endif %}
             </video>
+            <img class="meeting-video-start-frame" src="{{ slide_path | relative_url }}" alt="" aria-hidden="true" width="1440" height="810" decoding="async" />
             {% else %}
             <img class="meeting-slide-image" src="{{ asset_base | append: 'slides/' | append: slide_number | append: '.jpg' | relative_url }}" alt="Slide {{ forloop.index }}: {{ title }}" width="1440" height="810" loading="lazy" decoding="async" />
             {% endif %}

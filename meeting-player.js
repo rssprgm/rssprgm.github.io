@@ -22,6 +22,7 @@ export function setupMeetingPlayer(root) {
   let elapsed = 0;
   let startedAt = null;
   let timer, frame, scrollTimer;
+  const resetTimers = new Map();
   const controls = setupGalleryControls(player, {
     onPrevious: () => go(index - 1),
     onNext: () => go(index + 1),
@@ -64,7 +65,7 @@ export function setupMeetingPlayer(root) {
     const video = slides[index].querySelector('video');
     if (!running) video?.pause();
     else if (video) {
-      video.play().catch(() => { if (slides[index].contains(video)) setRunning(false); });
+      video.play().catch((error) => { if (error.name !== 'AbortError' && slides[index].querySelector('video') === video) setRunning(false); });
     } else {
       startedAt = performance.now();
       timer = setTimeout(() => go(index + 1), Math.max(0, 15000 - elapsed));
@@ -75,13 +76,26 @@ export function setupMeetingPlayer(root) {
     stopClock();
     elapsed = 0;
     complete = false;
+    const previousVideo = slides[index].querySelector('video');
+    const previousIndex = index;
     index = Math.max(0, Math.min(slides.length - 1, value));
     slides.forEach((slide, position) => {
       if (position !== index) slide.querySelector('video')?.pause();
       const video = slide.querySelector('video');
       if (video) video.inert = position !== index;
     });
-    player.querySelector('.meeting-stage').classList.toggle('is-video', Boolean(slides[index].querySelector('video')));
+    if (previousVideo && previousIndex !== index) {
+      slides[previousIndex].classList.toggle('is-video-playing', false);
+      clearTimeout(resetTimers.get(previousVideo));
+      resetTimers.set(previousVideo, setTimeout(() => { previousVideo.currentTime = 0; resetTimers.delete(previousVideo); }, reducedMotion.matches ? 0 : 200));
+    }
+    const video = slides[index].querySelector('video');
+    if (video && previousIndex !== index) {
+      clearTimeout(resetTimers.get(video));
+      resetTimers.delete(video);
+      video.currentTime = 0;
+      running = true;
+    }
     error.hidden = true;
     syncSummary();
     setRunning(running);
@@ -137,12 +151,16 @@ export function setupMeetingPlayer(root) {
       });
       video.addEventListener('play', () => { if (position === index && !running) { complete = false; setRunning(true); } });
       video.addEventListener('pause', () => { if (position === index && !video.ended && running) setRunning(false); });
-      video.addEventListener('timeupdate', () => { if (position === index && !running) paintTime(); });
+      video.addEventListener('timeupdate', () => {
+        if (position !== index) return;
+        if (video.currentTime > 0) slide.classList.toggle('is-video-playing', true);
+        if (!running) paintTime();
+      });
     }
     slide.querySelector('video, img').addEventListener('error', () => {
       if (position !== index) return;
       setRunning(false);
-      error.textContent = 'Could not load this slide. Try another slide or download the presentation.';
+      error.textContent = 'Could not load this slide. Try another slide or reload the page.';
       error.hidden = false;
     });
   });

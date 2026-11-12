@@ -1857,7 +1857,7 @@ html.reduced-motion [data-component-list*="StaggeredFadeIn"] [data-staggered-ite
 .meeting-summary-scroll .meeting-summary-item { border-left: 2px solid transparent; padding-left: 20px; }
 .meeting-summary-scroll .meeting-summary-item.is-current { border-left-color: #eee; }
 @media (hover: none) { .meeting-slide-edge { opacity: 1; } }
-.meeting-stage.is-video .meeting-slide-edge { bottom: 52px; }
+
 
 .meeting-back { max-width: var(--meeting-width); margin: 0 auto 24px; padding: 0 24px; }
 .meeting-back a { display: inline-flex; align-items: center; gap: 3px; color: #8bbcf6; font-size: 16px; }
@@ -1893,3 +1893,8 @@ html.reduced-motion [data-component-list*="StaggeredFadeIn"] [data-staggered-ite
 .playback-intro > .gallery-toggle { flex-shrink: 0; transition: none; }
 
 .playback-intro { box-sizing: border-box; height: 76px; }
+
+.meeting-video { pointer-events: none; }
+.meeting-slide .meeting-video-start-frame { position: absolute; inset: 0; opacity: 1; pointer-events: none; transition: opacity 200ms linear; }
+.meeting-slide.is-video-playing .meeting-video-start-frame { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .meeting-slide .meeting-video-start-frame { transition: none; } }
