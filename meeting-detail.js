@@ -44,7 +44,7 @@ export function setupMeetingDetail(root) {
   function fromHash(scroll = false) {
     const hash = location.hash.slice(1);
     const note = notes.find((entry) => entry.id === hash);
-    show(note ? 'notes' : tabs.some((tab) => tab.dataset.tab === hash) ? hash : 'summary');
+    show(note ? 'notes' : tabs.some((tab) => tab.dataset.tab === hash) ? hash : 'about');
     if (note) {
       search.value = '';
       filter();

@@ -87,10 +87,8 @@ resources:
     url: https://github.com/signup
   - title: Git reference
     url: https://git-scm.com/docs
-    description: Command documentation
   - title: About GitHub
     url: https://docs.github.com/en/get-started/start-your-journey/what-is-github
-    description: Repositories and collaboration
   - title: Club website
     url: https://rssprgm.github.io
   - title: Club interest form

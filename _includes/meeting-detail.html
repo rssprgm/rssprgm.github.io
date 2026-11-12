@@ -1,11 +1,9 @@
 {% assign workshop = site.data[page.workshop] %}
 {% assign asset_base = page.assets | append: '/' %}
 <main class="meeting-detail" data-meeting-detail>
-  <header class="meeting-heading page-heading">
+  <div class="meeting-heading">
     <div class="meeting-back"><a href="{{ '/meetings.html' | relative_url }}">{% include gallery-icon.html name='previous' %}Back to meetings</a></div>
-    <h1 id="meeting-title">{{ workshop.title }}</h1>
-    <time datetime="{{ page.meeting_date }}">{{ page.meeting_date | date: "%B %-d, %Y" }}</time>
-  </header>
+  </div>
   <section class="meeting-watch" aria-label="Workshop presentation">
     <div class="meeting-player" data-slide-player tabindex="0" aria-label="Slide presentation. Use left and right arrows to change slides.">
       <div class="meeting-stage">
@@ -43,6 +41,8 @@
         <a href="#notes" data-tab="notes">Session Notes</a>
       </nav>
       <section id="about" data-panel="about" aria-labelledby="meeting-title">
+        <h1 id="meeting-title">{{ workshop.title }}</h1>
+        <time class="meeting-date" datetime="{{ page.meeting_date }}">{{ page.meeting_date | date: "%B %-d, %Y" }}</time>
         <div class="meeting-about-grid">
           <div>
             <p class="meeting-description">{{ workshop.description }}</p>
@@ -56,7 +56,7 @@
           <aside class="meeting-resources" aria-label="Workshop resources">
             <h2>Resources</h2>
             {% for resource in workshop.resources %}
-            <a href="{{ resource.url }}"{% if resource.device_download %} data-device-download="{{ resource.device_download }}"{% endif %}>{{ resource.title }}{% if resource.description %}<span>{{ resource.description }}</span>{% endif %}</a>
+            <a href="{{ resource.url }}"{% if resource.device_download %} data-device-download="{{ resource.device_download }}"{% endif %}>{{ resource.title }}</a>
             {% endfor %}
           </aside>
         </div>

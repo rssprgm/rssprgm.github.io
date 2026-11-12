@@ -75,12 +75,14 @@ test("shared navigation points to the meetings page", () => {
 });
 
 
-test("meeting titles remain outside tab panels and catalogue headings do not skip levels", () => {
+test("meeting metadata lives only in About and thumbnail links retain accessible titles", () => {
   const detail = readFileSync("_includes/meeting-detail.html", "utf8");
   assert.equal((detail.match(/<h1\b/g) || []).length, 1);
-  assert.ok(detail.indexOf('<h1') < detail.indexOf('data-panel='));
+  assert.ok(detail.indexOf('<h1') > detail.indexOf('data-panel="about"'));
+  assert.ok(detail.indexOf('<h1') < detail.indexOf('data-panel="summary"'));
+  assert.doesNotMatch(detail.slice(0, detail.indexOf('meeting-watch')), /<h1|<time/);
   const catalogue = readFileSync("meetings.html", "utf8");
-  assert.match(catalogue, /<h2 id="session-/);
-  assert.doesNotMatch(catalogue, /<h3/);
+  assert.match(catalogue, /aria-label="{{ workshop.title \| escape }}"/);
+  assert.doesNotMatch(catalogue, /<h[23]/);
   pages.forEach(({ source }) => assert.doesNotMatch(source, /include site-footer/));
 });
