@@ -1,16 +1,18 @@
 const SIMULATION_CELL_SIZE = 14;
 const STEP_SECONDS = 1 / 30;
 const PRESSURE_PASSES = 10;
-const VISCOSITY = 1.5;
-const VISCOSITY_PASSES = 5;
-const VORTICITY_STRENGTH = 14;
-const SPLAT_SHEAR = 0.35;
-const POINTER_FORCE_PER_CELL = 3.2;
-const MAX_POINTER_FORCE = 10;
+const VISCOSITY = 0.6;
+const VISCOSITY_PASSES = 3;
+const VORTICITY_STRENGTH = 12;
+const SPLAT_SHEAR = 0.15;
+const POINTER_FORCE_PER_CELL = 4.5;
+const MAX_POINTER_FORCE = 14;
+const FORCE_RADIUS = 4;
+const DENSITY_RADIUS = 1.8;
 const DENSITY_PER_CELL = 0.45;
 const MAX_SPLAT_DENSITY = 0.58;
 const MAX_DENSITY = 1;
-const DENSITY_DISSIPATION = 0.35;
+const DENSITY_DISSIPATION = 0.38;
 const GLYPHS = "#$~ ";
 const REFERENCE_LUMA = 0.685;
 const GLYPH_LUMA_STEPS = [0.53125, 0.375, 0.28125];
@@ -45,6 +47,7 @@ export function setupHeroFluid({ prefersReducedMotion = false } = {}) {
   let velocityScratchX = new Float32Array(1);
   let velocityScratchY = new Float32Array(1);
   let density = new Float32Array(1);
+  let activity = new Float32Array(1);
   let densityScratch = new Float32Array(1);
   let pressure = new Float32Array(1);
   let pressureScratch = new Float32Array(1);
@@ -70,6 +73,9 @@ export function setupHeroFluid({ prefersReducedMotion = false } = {}) {
   let accumulatedTime = 0;
   let activeUntil = 0;
   let previousPointer = null;
+  let lastCursor = null;
+  let ripple = null;
+  let rippleAge = 0;
 
   function cellIndex(x, y) {
     return x + y * gridWidth;
@@ -161,6 +167,7 @@ export function setupHeroFluid({ prefersReducedMotion = false } = {}) {
     velocityScratchX = new Float32Array(gridSize);
     velocityScratchY = new Float32Array(gridSize);
     density = new Float32Array(gridSize);
+    activity = new Float32Array(gridSize);
     densityScratch = new Float32Array(gridSize);
     pressure = new Float32Array(gridSize);
     pressureScratch = new Float32Array(gridSize);
@@ -171,12 +178,12 @@ export function setupHeroFluid({ prefersReducedMotion = false } = {}) {
     accumulatedTime = 0;
   }
 
-  function addSplat(centerX, centerY, forceX, forceY, amount, radius) {
+  function addSplat(centerX, centerY, forceX, forceY, amount) {
+    const radius = FORCE_RADIUS * 2;
     const left = Math.max(1, Math.floor(centerX - radius));
     const right = Math.min(gridWidth - 2, Math.ceil(centerX + radius));
     const top = Math.max(1, Math.floor(centerY - radius));
     const bottom = Math.min(gridHeight - 2, Math.ceil(centerY + radius));
-    const inverseRadiusSquared = 1 / (radius * radius);
     const forceMagnitude = Math.hypot(forceX, forceY);
     const tangentX = forceMagnitude ? forceX / forceMagnitude : 0;
     const tangentY = forceMagnitude ? forceY / forceMagnitude : 0;
@@ -187,10 +194,11 @@ export function setupHeroFluid({ prefersReducedMotion = false } = {}) {
       for (let x = left; x <= right; x += 1) {
         const dx = x - centerX;
         const dy = y - centerY;
-        const distance = (dx * dx + dy * dy) * inverseRadiusSquared;
-        if (distance >= 1) continue;
+        const distanceSquared = dx * dx + dy * dy;
+        if (distanceSquared >= radius * radius) continue;
 
-        const falloff = (1 - distance) ** 2;
+        const falloff = fluidFalloff(distanceSquared, FORCE_RADIUS);
+        const densityFalloff = fluidFalloff(distanceSquared, DENSITY_RADIUS);
         const index = cellIndex(x, y);
         const side =
           ((dx * normalX + dy * normalY) / radius) *
@@ -202,7 +210,7 @@ export function setupHeroFluid({ prefersReducedMotion = false } = {}) {
         );
         density[index] = Math.min(
           MAX_DENSITY,
-          density[index] + amount * falloff * densityHeadroom,
+          density[index] + amount * densityFalloff * densityHeadroom,
         );
         velocityX[index] += (forceX + tangentX * side) * falloff;
         velocityY[index] += (forceY + tangentY * side) * falloff;
@@ -219,7 +227,6 @@ export function setupHeroFluid({ prefersReducedMotion = false } = {}) {
         splat.forceX,
         splat.forceY,
         splat.amount,
-        splat.radius,
       );
     }
   }
@@ -260,13 +267,14 @@ export function setupHeroFluid({ prefersReducedMotion = false } = {}) {
     );
     [density, densityScratch] = [densityScratch, density];
 
-    const velocityDecay = Math.exp(-0.65 * deltaSeconds);
+    const velocityDecay = Math.exp(-0.9 * deltaSeconds);
     const densityDecay = Math.exp(-DENSITY_DISSIPATION * deltaSeconds);
 
     for (let index = 0; index < gridSize; index += 1) {
       velocityX[index] *= velocityDecay;
       velocityY[index] *= velocityDecay;
       density[index] *= densityDecay;
+      activity[index] = Math.hypot(velocityX[index], velocityY[index]);
     }
   }
 
@@ -494,13 +502,27 @@ export function setupHeroFluid({ prefersReducedMotion = false } = {}) {
           (x - view.offsetX) / view.simulationScale - 0.5;
         const gridY =
           (y - view.offsetY) / view.simulationScale - 0.5;
-        const amount = sampleField(density, gridX, gridY);
+        const influence = ripple
+          ? rippleInfluence(x / view.height - ripple.x, y / view.height - ripple.y, rippleAge)
+          : 0;
+        const amount = Math.min(1,
+          sampleField(density, gridX, gridY) + influence * 4.96,
+        );
         const glyphIndex = densityGlyphIndex(amount);
 
         if (glyphIndex === GLYPHS.length - 1) continue;
 
-        output.globalAlpha = glyphOpacity(amount);
-        output.fillText(GLYPHS[glyphIndex], x, y);
+        output.globalAlpha = fluidBrightness(glyphOpacity(amount),
+          sampleField(activity, gridX, gridY));
+        if (influence > 0) {
+          output.save();
+          output.translate(x, y);
+          output.scale(1 + influence * 1.08, 1 + influence * 1.08);
+          output.fillText(GLYPHS[glyphIndex], 0, 0);
+          output.restore();
+        } else {
+          output.fillText(GLYPHS[glyphIndex], x, y);
+        }
       }
     }
   }
@@ -533,10 +555,15 @@ export function setupHeroFluid({ prefersReducedMotion = false } = {}) {
       stepped = true;
     }
 
-    if (stepped) render();
+    if (ripple) {
+      rippleAge += elapsed;
+      if (rippleAge >= 1.2) ripple = null;
+    }
+    if (stepped || ripple) render();
 
     const peakDensity = measurePeakDensity();
     const shouldContinue =
+      ripple !== null ||
       time < activeUntil ||
       pendingSplats.length > 0 ||
       peakDensity > MIN_VISIBLE_DENSITY;
@@ -586,6 +613,7 @@ export function setupHeroFluid({ prefersReducedMotion = false } = {}) {
 
   function onPointerMove(event) {
     if (!canAnimate() || !isVisible || !isDocumentVisible) return;
+    lastCursor = { x: event.clientX, y: event.clientY };
     const eventPath = event.composedPath();
     if (
       isOverlayOpen() ||
@@ -661,7 +689,6 @@ export function setupHeroFluid({ prefersReducedMotion = false } = {}) {
         forceX,
         forceY,
         amount: densityAmount,
-        radius: 2.5,
       });
     }
 
@@ -671,6 +698,21 @@ export function setupHeroFluid({ prefersReducedMotion = false } = {}) {
 
     previousPointer = point;
     activeUntil = performance.now() + 5000;
+    requestAnimation();
+  }
+
+  function onFocus() {
+    if (!canAnimate() || !isVisible || !isDocumentVisible || isOverlayOpen()) return;
+    const bounds = canvas.getBoundingClientRect();
+    const inset = bounds.height * 0.02;
+    ripple = {
+      x: clamp(lastCursor ? lastCursor.x - bounds.left : bounds.width / 2,
+        inset, bounds.width - inset) / bounds.height,
+      y: clamp(lastCursor ? lastCursor.y - bounds.top : bounds.height / 2,
+        inset, bounds.height - inset) / bounds.height,
+    };
+    rippleAge = 0;
+    previousPointer = null;
     requestAnimation();
   }
 
@@ -732,6 +774,7 @@ export function setupHeroFluid({ prefersReducedMotion = false } = {}) {
 
   window.addEventListener("pointermove", onPointerMove, { passive: true });
   window.addEventListener("blur", resetPointer);
+  window.addEventListener("focus", onFocus);
   document.documentElement.addEventListener("pointerleave", resetPointer);
   finePointer.addEventListener("change", onPointerCapabilityChange);
   window.addEventListener("resize", resize, { passive: true });
@@ -743,6 +786,7 @@ export function setupHeroFluid({ prefersReducedMotion = false } = {}) {
     intersectionObserver.disconnect();
     window.removeEventListener("pointermove", onPointerMove);
     window.removeEventListener("blur", resetPointer);
+    window.removeEventListener("focus", onFocus);
     document.documentElement.removeEventListener("pointerleave", resetPointer);
     finePointer.removeEventListener("change", onPointerCapabilityChange);
     window.removeEventListener("resize", resize);
@@ -779,4 +823,24 @@ function glyphOpacity(value) {
 
 function clamp(value, minimum, maximum) {
   return Math.min(maximum, Math.max(minimum, value));
+}
+
+// Apple’s filled-disc profile, evaluated separately from fluid advection.
+export function rippleInfluence(dx, dy, age) {
+  if (age < 0 || age >= 1.2) return 0;
+  const distance = Math.hypot(dx, dy);
+  const front = age * 0.17;
+  const core = 1 - 0.8 * clamp(distance / Math.max(front, 0.00001), 0, 1);
+  const disc = core * (1 - smoothstep(0, 0.035, distance - front));
+  const fade = 1 - age / 1.2;
+  return disc * fade * fade;
+}
+
+export function fluidFalloff(distanceSquared, radius) {
+  return Math.exp(-distanceSquared / (radius * radius));
+}
+
+// Motion brightens existing glyphs; density alone decides where they appear.
+export function fluidBrightness(opacity, speed) {
+  return Math.min(1, opacity * (1 + Math.min(0.25, speed * 0.025)));
 }
